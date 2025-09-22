@@ -1,0 +1,1456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPG Spell Creator - Channel Magick</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2a5298;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .character-setup {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .character-setup h3 {
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .setup-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 15px;
+            align-items: start;
+        }
+
+        .setup-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .setup-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .level-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .level-input {
+            width: 60px;
+            padding: 5px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .class-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+        }
+
+        .class-option {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .class-option:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .class-option.selected {
+            background: rgba(255, 255, 255, 0.9);
+            color: #2a5298;
+            border-color: white;
+            font-weight: bold;
+        }
+
+        .class-info {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .spell-builder {
+            display: grid;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            background: linear-gradient(135deg, #f6f8fb 0%, #e9ecf4 100%);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2a5298;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        .spell-type-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .spell-type-card {
+            background: white;
+            border: 3px solid #ddd;
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .spell-type-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .spell-type-card.selected {
+            border-color: #2a5298;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .spell-type-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .spell-type-name {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .spell-base-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .spell-option {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .spell-option:hover {
+            border-color: #2a5298;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(42, 82, 152, 0.2);
+        }
+
+        .spell-option.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #764ba2;
+        }
+
+        .spell-option-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .spell-option-description {
+            font-size: 0.85em;
+            opacity: 0.9;
+            line-height: 1.3;
+        }
+
+        .dice-info {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+
+        .damage-type-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 8px;
+        }
+
+        .damage-type-option {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .damage-type-option:hover {
+            border-color: #2a5298;
+            background: #f0f4ff;
+        }
+
+        .damage-type-option.selected {
+            background: #2a5298;
+            color: white;
+            border-color: #1e3c72;
+        }
+
+        .damage-type-option.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background: #f5f5f5;
+        }
+
+        .damage-type-option.disabled:hover {
+            border-color: #ddd;
+            background: #f5f5f5;
+            transform: none;
+        }
+
+        .damage-type-category {
+            font-weight: bold;
+            color: #666;
+            margin: 15px 0 8px 0;
+            font-size: 0.9em;
+            text-transform: uppercase;
+        }
+
+        .channel-counter {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .channel-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .channel-btn {
+            background: white;
+            color: #333;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .channel-btn:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .channel-display {
+            font-size: 2em;
+            font-weight: bold;
+            min-width: 50px;
+        }
+
+        .component-modules {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .component-module {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .component-module:hover {
+            border-color: #2a5298;
+            background: #f8f9ff;
+        }
+
+        .component-module.selected {
+            background: #2a5298;
+            color: white;
+            border-color: #1e3c72;
+        }
+
+        .component-module.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #f5f5f5;
+        }
+
+        .component-module-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .component-module-description {
+            font-size: 0.85em;
+            line-height: 1.3;
+        }
+
+        .spell-output {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .spell-output.visible {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        .spell-name {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2a5298;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .spell-details {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .detail-value {
+            color: #333;
+        }
+
+        .spell-description {
+            line-height: 1.6;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #eee;
+            font-style: italic;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .generate-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .save-btn {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .export-btn {
+            background: linear-gradient(135deg, #fc4a1a 0%, #f7b733 100%);
+            color: white;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .saved-spells {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #ddd;
+        }
+
+        .saved-spells h2 {
+            color: #2a5298;
+            margin-bottom: 20px;
+        }
+
+        .spell-card {
+            background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .spell-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            color: #e74c3c;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .delete-btn:hover {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        .info-box {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+        }
+
+        .reset-btn {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            color: white;
+            padding: 8px 20px;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-left: auto;
+            transition: all 0.3s ease;
+        }
+
+        .reset-btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ Channel Magick Spell Creator ⚡</h1>
+        <p class="subtitle">Create custom spells by combining base types with component modules</p>
+
+        <!-- Character Setup Section -->
+        <div class="character-setup">
+            <h3>📜 Character Setup</h3>
+            <div class="setup-grid">
+                <div class="setup-section">
+                    <div class="setup-label">Level:</div>
+                    <div class="level-selector">
+                        <input type="number" id="playerLevel" class="level-input" value="5" min="1" max="20" onchange="updatePlayerLevel()">
+                        <span style="font-size: 0.9em; opacity: 0.9;">(affects available conditions/healing)</span>
+                    </div>
+                </div>
+                <div class="setup-section">
+                    <div class="setup-label">Magical Classes (select 1-2):</div>
+                    <div class="class-grid" id="classGrid">
+                        <!-- Classes will be populated here -->
+                    </div>
+                    <div class="class-info" id="classInfo" style="display: none;">
+                        <!-- Class info will appear here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="channel-counter">
+            <div>Channel Magick Actions Available</div>
+            <div class="channel-controls">
+                <button class="channel-btn" onclick="adjustChannelActions(-1)">−</button>
+                <div class="channel-display" id="channelCount">0</div>
+                <button class="channel-btn" onclick="adjustChannelActions(1)">+</button>
+            </div>
+            <div style="font-size: 0.85em; margin-top: 10px; opacity: 0.9;">
+                Each Channel Action adds one Component Module to your spell
+            </div>
+        </div>
+
+        <div class="spell-builder">
+            <!-- Step 1: Choose Spell Type -->
+            <div class="section active" id="spellTypeSection">
+                <div class="section-title">
+                    <span>Step 1: Choose Spell Type</span>
+                    <span class="required">*Required</span>
+                    <button class="reset-btn" onclick="resetSpell()" style="display: none;" id="resetBtn">Start Over</button>
+                </div>
+                <div class="spell-type-selector">
+                    <div class="spell-type-card" onclick="selectSpellType('attack')">
+                        <div class="spell-type-icon">⚔️</div>
+                        <div class="spell-type-name">Attack Spell</div>
+                        <div style="font-size: 0.85em; margin-top: 5px;">Deal damage to enemies</div>
+                    </div>
+                    <div class="spell-type-card" onclick="selectSpellType('heal')">
+                        <div class="spell-type-icon">💚</div>
+                        <div class="spell-type-name">Heal Spell</div>
+                        <div style="font-size: 0.85em; margin-top: 5px;">Restore health to allies</div>
+                    </div>
+                    <div class="spell-type-card" onclick="selectSpellType('effect')">
+                        <div class="spell-type-icon">✨</div>
+                        <div class="spell-type-name">Effect Spell</div>
+                        <div style="font-size: 0.85em; margin-top: 5px;">Apply buffs, debuffs, or conditions</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Choose Spell Base -->
+            <div class="section" id="spellBaseSection">
+                <div class="section-title">
+                    <span>Step 2: Choose <span id="spellTypeLabel"></span> Base</span>
+                    <span class="required">*Required</span>
+                </div>
+                <div id="spellBaseOptions"></div>
+            </div>
+
+            <!-- Step 3: Choose Damage/Heal/Effect Type -->
+            <div class="section" id="damageTypeSection">
+                <div class="section-title">
+                    <span>Step 3: Choose <span id="typeLabel"></span></span>
+                    <span class="required">*Required</span>
+                </div>
+                <div id="typeOptions"></div>
+            </div>
+
+            <!-- Step 4: Component Modules -->
+            <div class="section" id="componentSection">
+                <div class="section-title">
+                    <span>Step 4: Add Component Modules</span>
+                    <span style="color: #3498db; font-weight: normal;">
+                        (Available: <span id="availableModules">0</span>)
+                    </span>
+                </div>
+                <div class="component-modules" id="componentModules"></div>
+            </div>
+        </div>
+
+        <button class="generate-btn" onclick="generateSpell()" id="generateBtn" style="display: none;">Generate Spell</button>
+
+        <div id="spellOutput" class="spell-output">
+            <div class="spell-name" id="spellName"></div>
+            <div class="spell-details">
+                <div id="spellStats"></div>
+                <div class="spell-description" id="spellDescription"></div>
+            </div>
+            <div class="button-group">
+                <button class="save-btn" onclick="saveSpell()">Save Spell</button>
+                <button class="export-btn" onclick="exportSpell()">Export as Text</button>
+            </div>
+        </div>
+
+        <div class="saved-spells">
+            <h2>📖 Saved Spells</h2>
+            <div id="savedSpellsList"></div>
+        </div>
+    </div>
+
+    <script>
+        // Class definitions
+        const classData = {
+            minstrel: {
+                name: "Minstrel",
+                description: "Music, Sound, and Fortune Magick",
+                damageDie: "1d8",
+                healingDie: "1d8",
+                damageTypes: ["sound"]
+            },
+            elementalist: {
+                name: "Elementalist",
+                description: "Fire, Ice, and Lightning Magick",
+                damageDie: "1d12",
+                healingDie: "1d4",
+                damageTypes: ["fire", "ice", "lightning"]
+            },
+            priest: {
+                name: "Priest",
+                description: "Divine, Healing, and Light Magick",
+                damageDie: "1d6",
+                healingDie: "1d10",
+                damageTypes: ["holy"]
+            },
+            occultist: {
+                name: "Occultist",
+                description: "Unholy, Darkness, and Curse Magick",
+                damageDie: "1d10",
+                healingDie: "1d6",
+                damageTypes: ["shadow"]
+            },
+            sage: {
+                name: "Sage",
+                description: "Wind, Earth, Water, and Plant Magick",
+                damageDie: "1d8",
+                healingDie: "1d8",
+                damageTypes: ["slash", "stab", "strike", "poison"]
+            },
+            magician: {
+                name: "Magician",
+                description: "Illusion, Arkane, and Transposition Magick",
+                damageDie: "1d10",
+                healingDie: "1d6",
+                damageTypes: ["arkane"]
+            },
+            conjuror: {
+                name: "Conjuror",
+                description: "Summoning, Creation, and Rune Magick",
+                damageDie: "1d8",
+                healingDie: "1d8",
+                damageTypes: ["poison", "acid"]
+            },
+            esper: {
+                name: "Esper",
+                description: "Psychic, Spirit, and Divination Magick",
+                damageDie: "1d10",
+                healingDie: "1d6",
+                damageTypes: ["psychic"]
+            }
+        };
+
+        // Game data structure
+        const spellData = {
+            attackSpells: {
+                meleeStrike: { 
+                    name: "Melee Spellstrike", 
+                    description: "Replace a Spellcraft Attack with a Melee Attack using a weapon",
+                    damage: "Weapon damage",
+                    range: "Melee"
+                },
+                rangedStrike: { 
+                    name: "Ranged Spellstrike", 
+                    description: "Replace a Spellcraft Attack with a Ranged Attack using a weapon",
+                    damage: "Weapon damage",
+                    range: "Ranged"
+                },
+                bolt: { 
+                    name: "Bolt", 
+                    description: "Deals damage to a single target up to 12 Squares (60 feet) away",
+                    damage: "2",
+                    range: "12 Squares (60 ft)"
+                },
+                touch: { 
+                    name: "Touch", 
+                    description: "Deals damage to a single target within 1 Square (5 feet)",
+                    damage: "3",
+                    range: "1 Square (5 ft)"
+                },
+                cleave: { 
+                    name: "Cleave", 
+                    description: "Deals damage to all targets within a Cone 3 Squares (15 feet) long",
+                    damage: "2",
+                    range: "Cone 3 Squares",
+                    area: "1/3/5 affected Squares"
+                },
+                bomb: { 
+                    name: "Bomb", 
+                    description: "Deals damage to all targets within a Cube 3 Squares (15 feet) on each side",
+                    damage: "1",
+                    range: "6 Squares (30 ft) away",
+                    area: "3x3x3 Cube"
+                },
+                beam: { 
+                    name: "Beam", 
+                    description: "Deals damage to all targets within a Line 1x1x6 Squares",
+                    damage: "1",
+                    range: "Line 6 Squares long"
+                },
+                burst: { 
+                    name: "Burst", 
+                    description: "Deals damage to all targets within 1 Square of the caster, except the caster",
+                    damage: "2",
+                    range: "1 Square radius"
+                }
+            },
+            
+            effectSpells: {
+                aura: {
+                    name: "Aura",
+                    description: "Create an effect within 2 Squares (10 feet) of you that follows you",
+                    range: "2 Squares radius",
+                    trigger: "Start of turn or enters"
+                },
+                pillar: {
+                    name: "Pillar",
+                    description: "Create an effect within a vertical Line 3x3x6 Squares",
+                    range: "Up to 6 Squares away",
+                    area: "3x3x6 Line",
+                    trigger: "Start of turn or enters"
+                },
+                zone: {
+                    name: "Zone",
+                    description: "Create an effect within a Cube 6 Squares on each side",
+                    range: "Up to 6 Squares away",
+                    area: "6x6x6 Cube",
+                    trigger: "Start of turn or enters"
+                }
+            },
+
+            healSpells: {
+                healBolt: {
+                    name: "Healing Bolt",
+                    description: "Heals a single target up to 6 Squares (30 feet) away",
+                    healing: "1",
+                    range: "6 Squares (30 ft)"
+                },
+                healTouch: {
+                    name: "Healing Touch",
+                    description: "Heals a single target within your reach",
+                    healing: "2",
+                    range: "Touch"
+                },
+                healFan: {
+                    name: "Healing Fan",
+                    description: "Heals all targets within a Cone 3 Squares (15 feet) long",
+                    healing: "1",
+                    range: "Cone 3 Squares",
+                    area: "1/3/5 affected Squares"
+                },
+                healBomb: {
+                    name: "Healing Bomb",
+                    description: "Heals all targets within a Cube 3 Squares on each side",
+                    healing: "1",
+                    range: "Up to 6 Squares away",
+                    area: "3x3x3 Cube"
+                },
+                healBeam: {
+                    name: "Healing Beam",
+                    description: "Heals all targets within a Line 1x1x6 Squares",
+                    healing: "1",
+                    range: "Line 6 Squares long"
+                },
+                healBurst: {
+                    name: "Healing Burst",
+                    description: "Heals all targets within 1 Square of the caster, except the caster",
+                    healing: "2",
+                    range: "1 Square radius"
+                }
+            },
+
+            damageTypes: {
+                physical: {
+                    slash: { name: "Slash", defense: "AC or Reflexes" },
+                    stab: { name: "Stab", defense: "AC or Reflexes" },
+                    strike: { name: "Strike", defense: "AC or Toughness" },
+                    sound: { name: "Sound", defense: "AC or Toughness" }
+                },
+                energy: {
+                    fire: { name: "Fire", defense: "AC or Reflexes" },
+                    ice: { name: "Ice", defense: "AC or Toughness" },
+                    lightning: { name: "Lightning", defense: "AC or Reflexes" },
+                    poison: { name: "Poison", defense: "AC or Toughness" },
+                    acid: { name: "Acid", defense: "AC or Reflexes" }
+                },
+               metaphysical: {
+                    arkane: { name: "Arkane", defense: "AC or Intellect" },
+                    holy: { name: "Holy", defense: "AC or Willpower" },
+                    shadow: { name: "Shadow", defense: "AC or Willpower" },
+                    psychic: { name: "Psychic", defense: "AC or Intellect" }
+                }
+            },
+
+            healTypes: {
+                hp: { name: "HP", description: "Expends one Hit Die, adding it to the roll" },
+                tempHp: { name: "Temporary HP", description: "Does not require Hit Dice expenditure" },
+                diseases: { name: "Diseases", description: "Remove diseases", level: 3 },
+                poisons: { name: "Poisons", description: "Remove poisons", level: 3 },
+                reducedStats: { name: "Reduced Max HP/Hit Dice", description: "Restore reduced maximums", level: 3 },
+                lingeringInjuries: { name: "Lingering Injuries", description: "Requires Ritual, 1d10+ Healing Die", level: 5 },
+                death: { name: "Death", description: "Revive (1d8+: 1 min, 1d10+: 1 hour)", level: 5 }
+            },
+
+            positiveEffects: {
+                increaseAC: { name: "Increase AC", single: "+2", multi: "+1" },
+                increaseDefense: { name: "Increase Attribute Defense", single: "+2", multi: "+1" },
+                speedBoost: { name: "Speed Boost", single: "+4", multi: "+2" },
+                attackBonus: { name: "Attack Bonus", single: "+1d6", multi: "+1d4" },
+                damageBonus: { name: "Increase Damage", single: "+1d6", multi: "+1d4" },
+                damageReduction: { name: "Reduce Damage Taken", single: "-1d4", multi: "-1" },
+                skillBonus: { name: "Skill Check Bonus", single: "+1d4", multi: "+1d2" }
+            },
+
+            negativeEffects: {
+                reduceAC: { name: "Reduce AC", single: "-2", multi: "-1", defense: "Reflexes" },
+                reduceDefense: { name: "Reduce Attribute Defense", single: "-2", multi: "-1", defense: "Attribute" },
+                attackPenalty: { name: "Attack Penalty", single: "-1d6", multi: "-1d4", defense: "Willpower" },
+                skillPenalty: { name: "Skill Check Penalty", single: "-1d4", multi: "-1d2", defense: "Intellect" },
+                forcedMovement: { name: "Forced Movement", single: "4 Squares", multi: "2 Squares", defense: "Toughness" }
+            },
+
+            conditions: {
+                charmed: { name: "Charmed", defense: "Intellect", level: 1 },
+                dazed: { name: "Dazed", defense: "Intellect", level: 1 },
+                deafened: { name: "Deafened", defense: "Toughness", level: 1 },
+                frightened: { name: "Frightened", defense: "Willpower", level: 1 },
+                prone: { name: "Prone", defense: "Reflexes", level: 1 },
+                sickened: { name: "Sickened", defense: "Toughness", level: 1 },
+                slowed: { name: "Slowed", defense: "Willpower", level: 1 },
+                blinded: { name: "Blinded", defense: "Toughness", level: 3 },
+                immobilized: { name: "Immobilized", defense: "Reflexes", level: 3 },
+                silenced: { name: "Silenced", defense: "Intellect", level: 3 },
+                staggered: { name: "Staggered", defense: "Intellect", level: 3 },
+                vulnerable: { name: "Vulnerable", defense: "Toughness", level: 5 },
+                weakened: { name: "Weakened", defense: "Willpower", level: 5 },
+                unconscious: { name: "Unconscious", defense: "Willpower", level: 5 }
+            },
+
+            componentModules: {
+                extraDamage: { 
+                    name: "Extra Damage/Healing", 
+                    description: "Add an extra Damage die or Healing die",
+                    applicable: ["attack", "heal"]
+                },
+                extraBuff: { 
+                    name: "Extra Buff/Debuff", 
+                    description: "Adds an additional Positive or Negative effect",
+                    applicable: ["effect"]
+                },
+                additionalTarget: { 
+                    name: "Additional Target", 
+                    description: "Allows an additional creature to be targeted within range",
+                    applicable: ["bolt", "healBolt"]
+                },
+                curvingBolt: { 
+                    name: "Curving Bolt", 
+                    description: "Your Spellcraft Attack ignores Cover",
+                    applicable: ["bolt"]
+                },
+                recurrence: { 
+                    name: "Recurrence", 
+                    description: "Affected creature receives 1 die of healing/damage at start of next turn",
+                    applicable: ["attack", "heal"]
+                },
+                concentration: { 
+                    name: "Concentration", 
+                    description: "Extend effects until end of next round with Concentration Action",
+                    applicable: ["all"]
+                },
+                longBolt: { 
+                    name: "Long Bolt", 
+                    description: "Increase range by 3 Squares (15 feet), max 12 Squares",
+                    applicable: ["bolt", "healBolt"]
+                },
+                wideCleave: { 
+                    name: "Wide Cleave/Fan", 
+                    description: "Increases Cone length by 1 Square, area becomes 1/3/5/7",
+                    applicable: ["cleave", "healFan"]
+                },
+                bigBomb: { 
+                    name: "Big Bomb/Zone", 
+                    description: "Increases Cube sides by 1 Square",
+                    applicable: ["bomb", "healBomb", "zone"]
+                },
+                longBeam: { 
+                    name: "Long Beam", 
+                    description: "Increases Line length by 3 Squares, max 12 Squares",
+                    applicable: ["beam", "healBeam"]
+                },
+                wideBeam: { 
+                    name: "Wide Beam", 
+                    description: "Increases Line width by 1 Square, max 3 Squares",
+                    applicable: ["beam", "healBeam"]
+                },
+                radiateFurther: { 
+                    name: "Radiate Further", 
+                    description: "Increases area around caster by 1 Square in all directions",
+                    applicable: ["burst", "healBurst", "aura"]
+                },
+                additionalAuraTarget: { 
+                    name: "Additional Aura Target", 
+                    description: "Designate another creature for aura to follow (6 Squares range)",
+                    applicable: ["aura"]
+                },
+                changeAuraTarget: { 
+                    name: "Change Aura Target", 
+                    description: "Designate different creature for aura to follow",
+                    applicable: ["aura"]
+                },
+                spellImmunity: { 
+                    name: "Spell Immunity", 
+                    description: "Choose whether allies or enemies ignore certain spell effects",
+                    applicable: ["all"]
+                },
+                nonLethal: { 
+                    name: "Non-lethal Damage", 
+                    description: "Damage can only reduce to 0 HP and knock Unconscious",
+                    applicable: ["attack"]
+                }
+            }
+        };
+
+        // State management
+        let channelActions = 0;
+        let selectedSpellType = null;
+        let selectedBase = null;
+        let selectedDamageType = null;
+        let selectedHealType = null;
+        let selectedEffectType = null;
+        let selectedModules = [];
+        let savedSpells = [];
+        let playerLevel = 5;
+        let selectedClasses = [];
+
+        // Initialize the interface
+        function initializeInterface() {
+            renderClasses();
+            updateSavedSpellsList();
+            updateAvailableModules();
+        }
+
+        // Render class selection
+        function renderClasses() {
+            const container = document.getElementById('classGrid');
+            container.innerHTML = '';
+            
+            for (const [key, cls] of Object.entries(classData)) {
+                const div = document.createElement('div');
+                div.className = 'class-option';
+                div.id = `class-${key}`;
+                div.onclick = () => toggleClass(key);
+                div.textContent = cls.name;
+                container.appendChild(div);
+            }
+        }
+
+        // Toggle class selection
+        function toggleClass(key) {
+            const index = selectedClasses.indexOf(key);
+            
+            if (index > -1) {
+                // Remove class
+                selectedClasses.splice(index, 1);
+            } else {
+                // Add class (max 2)
+                if (selectedClasses.length < 2) {
+                    selectedClasses.push(key);
+                } else {
+                    alert('You can only select up to 2 magical classes!');
+                    return;
+                }
+            }
+            
+            // Update UI
+            document.querySelectorAll('.class-option').forEach(el => {
+                const classKey = el.id.replace('class-', '');
+                if (selectedClasses.includes(classKey)) {
+                    el.classList.add('selected');
+                } else {
+                    el.classList.remove('selected');
+                }
+            });
+            
+            updateClassInfo();
+            
+            // If damage types are visible, update them
+            if (document.getElementById('damageTypeSection').classList.contains('active') && selectedBase?.type === 'attack') {
+                renderDamageTypes();
+            }
+        }
+
+        // Update class info display
+        function updateClassInfo() {
+            const infoDiv = document.getElementById('classInfo');
+            
+            if (selectedClasses.length === 0) {
+                infoDiv.style.display = 'none';
+                return;
+            }
+            
+            let info = '<strong>Selected Classes:</strong><br>';
+            selectedClasses.forEach(key => {
+                const cls = classData[key];
+                info += `• ${cls.name}: ${cls.description}<br>`;
+                info += `  Damage: ${cls.damageDie} | Healing: ${cls.healingDie}<br>`;
+            });
+            
+            // Show combined damage types
+            const availableTypes = getAvailableDamageTypes();
+            if (availableTypes.length > 0) {
+                info += '<br><strong>Available Damage Types:</strong> ';
+                info += availableTypes.map(t => {
+                    for (const category of Object.values(spellData.damageTypes)) {
+                        if (category[t]) return category[t].name;
+                    }
+                    return t;
+                }).join(', ');
+            }
+            
+            infoDiv.innerHTML = info;
+            infoDiv.style.display = 'block';
+        }
+
+        // Get available damage types based on selected classes
+        function getAvailableDamageTypes() {
+            if (selectedClasses.length === 0) {
+                // No classes selected - all types available
+                const allTypes = [];
+                for (const category of Object.values(spellData.damageTypes)) {
+                    allTypes.push(...Object.keys(category));
+                }
+                return allTypes;
+            }
+            
+            const types = new Set();
+            selectedClasses.forEach(key => {
+                classData[key].damageTypes.forEach(type => types.add(type));
+            });
+            return Array.from(types);
+        }
+
+        // Get damage dice for selected classes
+        function getDamageDice() {
+            if (selectedClasses.length === 0) return "1d8"; // Default
+            
+            // Use the best damage die from selected classes
+            const dice = selectedClasses.map(key => classData[key].damageDie);
+            // Sort by die size (d12 > d10 > d8 > d6 > d4)
+            dice.sort((a, b) => {
+                const sizeA = parseInt(a.match(/d(\d+)/)[1]);
+                const sizeB = parseInt(b.match(/d(\d+)/)[1]);
+                return sizeB - sizeA;
+            });
+            return dice[0];
+        }
+
+        // Get healing dice for selected classes
+        function getHealingDice() {
+            if (selectedClasses.length === 0) return "1d8"; // Default
+            
+            // Use the best healing die from selected classes
+            const dice = selectedClasses.map(key => classData[key].healingDie);
+            // Sort by die size
+            dice.sort((a, b) => {
+                const sizeA = parseInt(a.match(/d(\d+)/)[1]);
+                const sizeB = parseInt(b.match(/d(\d+)/)[1]);
+                return sizeB - sizeA;
+            });
+            return dice[0];
+        }
+
+        // Update player level
+        function updatePlayerLevel() {
+            playerLevel = parseInt(document.getElementById('playerLevel').value);
+            
+            // If heal types or effect types are visible, re-render them
+            if (document.getElementById('damageTypeSection').classList.contains('active')) {
+                if (selectedBase?.type === 'heal') {
+                    renderHealTypes();
+                } else if (selectedBase?.type === 'effect') {
+                    renderEffectTypes();
+                }
+            }
+        }
+
+        // Select spell type (attack/heal/effect)
+        function selectSpellType(type) {
+            // Clear previous selections
+            document.querySelectorAll('.spell-type-card').forEach(el => el.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            
+            selectedSpellType = type;
+            selectedBase = null;
+            selectedDamageType = null;
+            selectedHealType = null;
+            selectedEffectType = null;
+            selectedModules = [];
+            
+            // Show reset button
+            document.getElementById('resetBtn').style.display = 'inline-block';
+            
+            // Show spell base section and populate it
+            const baseSection = document.getElementById('spellBaseSection');
+            baseSection.classList.add('active');
+            
+            // Update label
+            const typeLabels = {
+                'attack': 'Attack Spell',
+                'heal': 'Healing Spell',
+                'effect': 'Effect Spell'
+            };
+            document.getElementById('spellTypeLabel').textContent = typeLabels[type];
+            
+            // Render appropriate spell bases
+            renderSpellBases(type);
+            
+            // Hide other sections until base is selected
+            document.getElementById('damageTypeSection').classList.remove('active');
+            document.getElementById('componentSection').classList.remove('active');
+            document.getElementById('generateBtn').style.display = 'none';
+            document.getElementById('spellOutput').classList.remove('visible');
+        }
+
+        // Render spell bases based on type
+        function renderSpellBases(type) {
+            const container = document.getElementById('spellBaseOptions');
+            container.innerHTML = '';
+            
+            let spells = {};
+            let info = '';
+            
+            if (type === 'attack') {
+                spells = spellData.attackSpells;
+            } else if (type === 'heal') {
+                spells = spellData.healSpells;
+                info = '<div class="warning">Healing expends one of the target\'s Hit Dice. If unavailable, they take one level of Fatigue.</div>';
+            } else if (type === 'effect') {
+                spells = spellData.effectSpells;
+                info = '<div class="info-box">Effect spells create areas that trigger when creatures start their turn in or enter the area.</div>';
+            }
+            
+            if (info) container.innerHTML = info;
+            
+            const grid = document.createElement('div');
+            grid.className = 'spell-base-grid';
+            
+            for (const [key, spell] of Object.entries(spells)) {
+                const div = document.createElement('div');
+                div.className = 'spell-option';
+                div.onclick = () => selectSpellBase(key);
+                
+                let diceInfo = '';
+                if (spell.damage) {
+                    const damageDie = getDamageDice();
+                    const diceCount = spell.damage;
+                    diceInfo = `<div class="dice-info">${diceCount}×${damageDie}</div>`;
+                }
+                if (spell.healing) {
+                    const healingDie = getHealingDice();
+                    const diceCount = spell.healing;
+                    diceInfo = `<div class="dice-info">${diceCount}×${healingDie}</div>`;
+                }
+                
+                div.innerHTML = `
+                    <div class="spell-option-title">${spell.name}</div>
+                    <div class="spell-option-description">${spell.description}</div>
+                    ${diceInfo}
+                `;
+                grid.appendChild(div);
+            }
+            
+            container.appendChild(grid);
+        }
+
+        // Select spell base
+        function selectSpellBase(key) {
+            // Clear previous selections
+            document.querySelectorAll('.spell-option').forEach(el => el.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            
+            selectedBase = { type: selectedSpellType, key: key };
+            selectedDamageType = null;
+            selectedHealType = null;
+            selectedEffectType = null;
+            selectedModules = [];
+            
+            // Show appropriate type selection section
+            const damageSection = document.getElementById('damageTypeSection');
+            damageSection.classList.add('active');
+            
+            // Render appropriate type options
+            if (selectedSpellType === 'attack') {
+                document.getElementById('typeLabel').textContent = 'Damage Type';
+                renderDamageTypes();
+            } else if (selectedSpellType === 'heal') {
+                document.getElementById('typeLabel').textContent = 'Healing Type';
+                renderHealTypes();
+            } else if (selectedSpellType === 'effect') {
+                document.getElementById('typeLabel').textContent = 'Effect Type';
+                renderEffectTypes();
+            }
+            
+            // Show component section
+            document.getElementById('componentSection').classList.add('active');
+            renderComponentModules();
+            updateModuleStates();
+            updateAvailableModules();
+            
+            // Show generate button
+            document.getElementById('generateBtn').style.display = 'block';
+        }
+
+        // Render damage types
+        function renderDamageTypes() {
+            const container = document.getElementById('typeOptions');
+            container.innerHTML = '';
+            
+            const availableTypes = getAvailableDamageTypes();
+            
+            for (const [category, types] of Object.entries(spellData.damageTypes)) {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.innerHTML = `<div class="damage-type-category">${category}</div>`;
+                
+                const grid = document.createElement('div');
+                grid.className = 'damage-type-grid';
+                
+                for (const [key, type] of Object.entries(types)) {
+                    const typeDiv = document.createElement('div');
+                    typeDiv.className = 'damage-type-option';
+                    
+                    // Check if this damage type is available
+                    if (!availableTypes.includes(key)) {
+                        typeDiv.classList.add('disabled');
+                        typeDiv.onclick = null;
+                    } else {
+                        typeDiv.onclick = () => selectDamageType(key);
+                    }
+                    
+                    typeDiv.innerHTML = `
+                        <div>${type.name}</div>
+                        <div style="font-size: 0.8em; opacity: 0.8;">vs ${type.defense}</div>
+                    `;
+                    grid.appendChild(typeDiv);
+                }
+                
+                categoryDiv.appendChild(grid);
+                container.appendChild(categoryDiv);
+            }
+            
+            // Add note if classes restrict damage types
+            if (selectedClasses.length > 0 && availableTypes.length < Object.keys(spellData.damageTypes.physical).length + 
+                Object.keys(spellData.damageTypes.energy).length + Object.keys(spellData.damageTypes.metaphysical).length) {
+                const note = document.createElement('div');
+                note.className = 'info-box';
+                note.style.marginTop = '15px';
+                note.textContent = 'Available damage types are limited by your selected magical classes.';
+                container.appendChild(note);
+            }
+        }
+
+        // Render heal types
+        function renderHealTypes() {
+            const container = document.getElementById('typeOptions');
+            container.innerHTML = '';
+            
+            const grid = document.createElement('div');
+            grid.className = 'damage-type-grid';
+            
+            for (const [key, type] of Object.entries(spellData.healTypes)) {
+                const typeDiv = document.createElement('div');
+                typeDiv.className = 'damage-type-option';
+                if (type.level && type.level > playerLevel) {
+                    typeDiv.classList.add('disabled');
+                    typeDiv.onclick = null;
+                } else {
+                    typeDiv.onclick = () => selectHealType(key);
+                }
+                
+                let levelText = type.level ? ` (Lvl ${type.level}+)` : '';
+                typeDiv.innerHTML = `
+                    <div>${type.name}${levelText}</div>
+                    <div style="font-size: 0.8em; opacity: 0.8;">${type.description}</div>
+                `;
+                grid.appendChild(typeDiv);
+            }
+            
+            container.appendChild(grid);
+        }
+
+        // Render effect types
+        function renderEffectTypes() {
+            const container = document.getElementById('typeOptions');
+            container.innerHTML = '';
+            
+            // Positive Effects
+            const posDiv = document.createElement('div');
+            posDiv.innerHTML = '<div class="damage-type-category">Positive Effects (Allies)</div>';
+            const posGrid = document.createElement('div');
+            posGrid.className = 'damage-type-grid';
+            
+            for (const [key, effect] of Object.entries(spellData.positiveEffects)) {
+                const effectDiv = document.createElement('div');
+                effectDiv.className = 'damage-type-option';
+                effectDiv.onclick = () => selectEffectType('positive', key);
+                effectDiv.innerHTML = `
+                    <div>${effect.name}</div>
+                    <div style="font-size: 0.8em;">Single: ${effect.single} | Multi: ${effect.multi}</div>
+                `;
+                posGrid.appendChild(effectDiv);
+            }
+            posDiv.appendChild(posGrid);
+            container.appendChild(posDiv);
+            
+            // Negative Effects
+            const negDiv = document.createElement('div');
+            negDiv.innerHTML = '<div class="damage-type-category">Negative Effects (Enemies)</div>';
+            const negGrid = document.createElement('div');
+            negGrid.className = 'damage-type-grid';
+            
+            for (const [key, effect] of Object.entries(spellData.negativeEffects)) {
+                const effectDiv = document.createElement('div');
+                effectDiv.className = 'damage-type-option';
+                effectDiv.onclick = () => selectEffectType('negative', key);
+                effectDiv.innerHTML = `
+                    <div>${effect.name}</div>
+                    <div style="font-size: 0.8em;">S: ${effect.single} | M: ${effect.multi} | vs ${effect.defense}</div>
+                `;
+                negGrid.appendChild(effectDiv);
+            }
+            negDiv.appendChild(negGrid);
+            container.appendChild(negDiv);
+            
+            // Conditions
+            const condDiv = document.createElement('div');
+            condDiv.innerHTML = '<div class="damage-type-category">Conditions</div>';
+            const condGrid = document.createElement('div');
+            condGrid.className = 'damage-type-grid';
+            
+            for (const [key, condition] of Object.entries(spellData.conditions)) {
+                const conditionDiv = document.createElement('div');
+                conditionDiv.className = 'damage-type-option';
+                if (condition.level > playerLevel) {
+                    conditionDiv.classList.add('disabled');
+                    conditionDiv.onclick = null;
+                } else {
+                    conditionDiv.onclick = () => selectEffectType('condition', key);
+                }
+                
+                let levelText = condition.level > 1 ? ` (Lvl ${condition.level}+)` : '';
+                conditionDiv.innerHTML = `
+                    <div>${condition.name}${levelText}</div>
+                    <div style="font-size: 0.8em;">vs ${condition.defense}</div>
+                `;
+                condGrid.appendChild(conditionDiv);
+            }
+            condDiv.appendChild(condGrid);
+            container.appendChild(condDiv);
+        }
