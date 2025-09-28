@@ -606,7 +606,7 @@
                 <button class="channel-btn" onclick="adjustChannelActions(1)">+</button>
             </div>
             <div style="font-size: 0.85em; margin-top: 10px; opacity: 0.9;">
-                Each Channel Action adds one Component Module to your spell
+                Base: 1 Component Module + 1 per Channel Action
             </div>
         </div>
 
@@ -664,10 +664,31 @@
                     </span>
                 </div>
                 <div class="component-modules" id="componentModules"></div>
+                
+                <!-- Extra Buff/Debuff Selection -->
+                <div id="extraBuffSection" style="display: none; margin-top: 20px; padding-top: 20px; border-top: 2px solid #ddd;">
+                    <h4 style="color: #2a5298; margin-bottom: 15px;">Select Extra Buff/Debuff Effects:</h4>
+                    <div id="extraBuffSelections"></div>
+                </div>
             </div>
         </div>
 
-        <button class="generate-btn" onclick="generateSpell()" id="generateBtn" style="display: none;">Generate Spell</button>
+        <button class="generate-btn" onclick="showSpellNamingDialog()" id="generateBtn" style="display: none;">Generate Spell</button>
+
+        <!-- Spell Naming Dialog -->
+        <div id="spellNamingDialog" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-width: 500px; width: 90%;">
+                <h3 style="color: #2a5298; margin-bottom: 20px; text-align: center;">Name Your Spell</h3>
+                <div style="margin-bottom: 20px;">
+                    <label for="spellNameInput" style="display: block; margin-bottom: 10px; font-weight: bold; color: #555;">Spell Name:</label>
+                    <input type="text" id="spellNameInput" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box;" placeholder="Enter spell name..." onkeypress="handleSpellNameKeypress(event)">
+                </div>
+                <div style="text-align: center;">
+                    <button onclick="confirmSpellGeneration()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 25px; border: none; border-radius: 25px; font-size: 16px; font-weight: bold; cursor: pointer; margin-right: 10px;">Create Spell</button>
+                    <button onclick="closeSpellNamingDialog()" style="background: #ccc; color: #333; padding: 12px 25px; border: none; border-radius: 25px; font-size: 16px; font-weight: bold; cursor: pointer;">Cancel</button>
+                </div>
+            </div>
+        </div>
 
         <div id="spellOutput" class="spell-output">
             <div class="spell-name" id="spellName"></div>
@@ -940,16 +961,15 @@
                     description: "Add an extra Damage die",
                     applicable: ["attack"]
                 },
-		extraHeal: { 
+                extraHeal: { 
                     name: "Extra Healing", 
                     description: "Add an extra Healing die",
                     applicable: ["heal"]
                 },
-
                 extraBuff: { 
                     name: "Extra Buff/Debuff", 
                     description: "Adds an additional Positive or Negative effect",
-                    applicable: ["effect"]
+                    applicable: ["all"]
                 },
                 additionalTarget: { 
                     name: "Additional Target", 
@@ -995,7 +1015,6 @@
                     name: "Big Zone", 
                     description: "Increases Cube sides by 1 Square",
                     applicable: ["zone"]
-
                 },
                 longBeam: { 
                     name: "Long Beam", 
@@ -1043,6 +1062,7 @@
         let selectedHealType = null;
         let selectedEffectType = null;
         let selectedModules = [];
+        let selectedExtraBuffs = {}; // Store extra buff/debuff selections by module instance
         let savedSpells = [];
         let playerLevel = 1;
         let selectedClasses = [];
@@ -1063,7 +1083,7 @@
                 const div = document.createElement('div');
                 div.className = 'class-option';
                 div.id = `class-${key}`;
-                div.onclick = () => toggleClass(key);
+                div.onclick = function() { toggleClass(key); };
                 div.textContent = cls.name;
                 container.appendChild(div);
             }
@@ -1262,7 +1282,7 @@
             for (const [key, spell] of Object.entries(spells)) {
                 const div = document.createElement('div');
                 div.className = 'spell-option';
-                div.onclick = () => selectSpellBase(key);
+                div.onclick = function() { selectSpellBase(key); };
                 
                 let diceInfo = '';
                 if (spell.damage) {
@@ -1325,7 +1345,7 @@
             document.getElementById('generateBtn').style.display = 'block';
         }
 
-       // Render damage types
+        // Render damage types
         function renderDamageTypes() {
             const container = document.getElementById('typeOptions');
             container.innerHTML = '';
@@ -1385,14 +1405,14 @@
             grid.className = 'damage-type-grid';
             
             for (const [key, type] of Object.entries(spellData.healTypes)) {
+                // Skip heal types that require higher level
+                if (type.level && type.level > playerLevel) {
+                    continue;
+                }
+                
                 const typeDiv = document.createElement('div');
                 typeDiv.className = 'damage-type-option';
-                if (type.level && type.level > playerLevel) {
-                    typeDiv.classList.add('disabled');
-                    typeDiv.onclick = null;
-                } else {
-                    typeDiv.onclick = () => selectHealType(key);
-                }
+                typeDiv.onclick = function() { selectHealType(key); };
                 
                 let levelText = type.level ? ` (Lvl ${type.level}+)` : '';
                 typeDiv.innerHTML = `
@@ -1419,7 +1439,7 @@
             for (const [key, effect] of Object.entries(spellData.positiveEffects)) {
                 const effectDiv = document.createElement('div');
                 effectDiv.className = 'damage-type-option';
-                effectDiv.onclick = () => selectEffectType('positive', key);
+                effectDiv.onclick = function() { selectEffectType('positive', key); };
                 effectDiv.innerHTML = `
                     <div>${effect.name}</div>
                     <div style="font-size: 0.8em;">Single: ${effect.single} | Multi: ${effect.multi}</div>
@@ -1438,7 +1458,7 @@
             for (const [key, effect] of Object.entries(spellData.negativeEffects)) {
                 const effectDiv = document.createElement('div');
                 effectDiv.className = 'damage-type-option';
-                effectDiv.onclick = () => selectEffectType('negative', key);
+                effectDiv.onclick = function() { selectEffectType('negative', key); };
                 effectDiv.innerHTML = `
                     <div>${effect.name}</div>
                     <div style="font-size: 0.8em;">S: ${effect.single} | M: ${effect.multi} | vs ${effect.defense}</div>
@@ -1450,19 +1470,21 @@
             
             // Conditions
             const condDiv = document.createElement('div');
-            condDiv.innerHTML = '<div class="damage-type-category">Conditions</div>';
             const condGrid = document.createElement('div');
             condGrid.className = 'damage-type-grid';
             
+            let hasVisibleConditions = false;
+            
             for (const [key, condition] of Object.entries(spellData.conditions)) {
+                // Skip conditions that require higher level
+                if (condition.level > playerLevel) {
+                    continue;
+                }
+                
+                hasVisibleConditions = true;
                 const conditionDiv = document.createElement('div');
                 conditionDiv.className = 'damage-type-option';
-                if (condition.level > playerLevel) {
-                    conditionDiv.classList.add('disabled');
-                    conditionDiv.onclick = null;
-                } else {
-                    conditionDiv.onclick = () => selectEffectType('condition', key);
-                }
+                conditionDiv.onclick = function() { selectEffectType('condition', key); };
                 
                 let levelText = condition.level > 1 ? ` (Lvl ${condition.level}+)` : '';
                 conditionDiv.innerHTML = `
@@ -1471,21 +1493,169 @@
                 `;
                 condGrid.appendChild(conditionDiv);
             }
-            condDiv.appendChild(condGrid);
-            container.appendChild(condDiv);
+            
+            // Only show conditions section if there are visible conditions
+            if (hasVisibleConditions) {
+                condDiv.innerHTML = '<div class="damage-type-category">Conditions</div>';
+                condDiv.appendChild(condGrid);
+                container.appendChild(condDiv);
+            }
         }
 
-        
-        // Render component modules
+        // Update extra buff/debuff selection section
+        function updateExtraBuffSection() {
+            const extraBuffCount = selectedModules.filter(module => module === 'extraBuff').length;
+            const section = document.getElementById('extraBuffSection');
+            const container = document.getElementById('extraBuffSelections');
+            
+            if (extraBuffCount === 0) {
+                section.style.display = 'none';
+                return;
+            }
+            
+            section.style.display = 'block';
+            container.innerHTML = '';
+            
+            // Create selection interface for each extraBuff module
+            for (let i = 0; i < extraBuffCount; i++) {
+                const buffDiv = document.createElement('div');
+                buffDiv.style.marginBottom = '20px';
+                buffDiv.style.padding = '15px';
+                buffDiv.style.background = '#f8f9ff';
+                buffDiv.style.borderRadius = '10px';
+                buffDiv.style.border = '2px solid #ddd';
+                
+                buffDiv.innerHTML = `
+                    <h5 style="color: #2a5298; margin-bottom: 10px;">Extra Effect #${i + 1}:</h5>
+                    <div id="extraBuffOptions_${i}"></div>
+                `;
+                
+                container.appendChild(buffDiv);
+                renderExtraBuffOptions(i);
+            }
+        }
+
+        // Render effect options for extra buff/debuff (same as effect spell types)
+        function renderExtraBuffOptions(index) {
+            const container = document.getElementById(`extraBuffOptions_${index}`);
+            container.innerHTML = '';
+            
+            // Positive Effects
+            const posDiv = document.createElement('div');
+            posDiv.innerHTML = '<div class="damage-type-category">Positive Effects (Allies)</div>';
+            const posGrid = document.createElement('div');
+            posGrid.className = 'damage-type-grid';
+            
+            for (const [key, effect] of Object.entries(spellData.positiveEffects)) {
+                const effectDiv = document.createElement('div');
+                effectDiv.className = 'damage-type-option';
+                effectDiv.onclick = function() { selectExtraBuff(index, 'positive', key); };
+                effectDiv.innerHTML = `
+                    <div>${effect.name}</div>
+                    <div style="font-size: 0.8em;">Single: ${effect.single} | Multi: ${effect.multi}</div>
+                `;
+                posGrid.appendChild(effectDiv);
+            }
+            posDiv.appendChild(posGrid);
+            container.appendChild(posDiv);
+            
+            // Negative Effects
+            const negDiv = document.createElement('div');
+            negDiv.innerHTML = '<div class="damage-type-category">Negative Effects (Enemies)</div>';
+            const negGrid = document.createElement('div');
+            negGrid.className = 'damage-type-grid';
+            
+            for (const [key, effect] of Object.entries(spellData.negativeEffects)) {
+                const effectDiv = document.createElement('div');
+                effectDiv.className = 'damage-type-option';
+                effectDiv.onclick = function() { selectExtraBuff(index, 'negative', key); };
+                effectDiv.innerHTML = `
+                    <div>${effect.name}</div>
+                    <div style="font-size: 0.8em;">S: ${effect.single} | M: ${effect.multi} | vs ${effect.defense}</div>
+                `;
+                negGrid.appendChild(effectDiv);
+            }
+            negDiv.appendChild(negGrid);
+            container.appendChild(negDiv);
+            
+            // Conditions
+            const condDiv = document.createElement('div');
+            const condGrid = document.createElement('div');
+            condGrid.className = 'damage-type-grid';
+            
+            let hasVisibleConditions = false;
+            
+            for (const [key, condition] of Object.entries(spellData.conditions)) {
+                // Skip conditions that require higher level
+                if (condition.level > playerLevel) {
+                    continue;
+                }
+                
+                hasVisibleConditions = true;
+                const conditionDiv = document.createElement('div');
+                conditionDiv.className = 'damage-type-option';
+                conditionDiv.onclick = function() { selectExtraBuff(index, 'condition', key); };
+                
+                let levelText = condition.level > 1 ? ` (Lvl ${condition.level}+)` : '';
+                conditionDiv.innerHTML = `
+                    <div>${condition.name}${levelText}</div>
+                    <div style="font-size: 0.8em;">vs ${condition.defense}</div>
+                `;
+                condGrid.appendChild(conditionDiv);
+            }
+            
+            // Only show conditions section if there are visible conditions
+            if (hasVisibleConditions) {
+                condDiv.innerHTML = '<div class="damage-type-category">Conditions</div>';
+                condDiv.appendChild(condGrid);
+                container.appendChild(condDiv);
+            }
+            
+            // Update selections if any exist
+            updateExtraBuffSelections(index);
+        }
+
+        // Select extra buff/debuff
+        function selectExtraBuff(index, category, key) {
+            const container = document.getElementById(`extraBuffOptions_${index}`);
+            container.querySelectorAll('.damage-type-option').forEach(el => el.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            
+            selectedExtraBuffs[`extraBuff_${index}`] = { category, key };
+        }
+
+        // Update extra buff selections display
+        function updateExtraBuffSelections(index) {
+            const selection = selectedExtraBuffs[`extraBuff_${index}`];
+            if (!selection) return;
+            
+            const container = document.getElementById(`extraBuffOptions_${index}`);
+            container.querySelectorAll('.damage-type-option').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            // Find and select the appropriate option
+            container.querySelectorAll('.damage-type-option').forEach(el => {
+                const onclick = el.getAttribute('onclick');
+                if (onclick && onclick.includes(`'${selection.category}', '${selection.key}'`)) {
+                    el.classList.add('selected');
+                }
+            });
+        }
         function renderComponentModules() {
             const container = document.getElementById('componentModules');
             container.innerHTML = '';
             
             for (const [key, module] of Object.entries(spellData.componentModules)) {
+                // Skip non-applicable modules entirely
+                if (!isModuleApplicable(module)) {
+                    continue;
+                }
+                
                 const div = document.createElement('div');
                 div.className = 'component-module';
                 div.id = `module-${key}`;
-                div.onclick = () => toggleModule(key);
+                div.onclick = function() { toggleModule(key); };
                 div.innerHTML = `
                     <div class="component-module-title">${module.name}</div>
                     <div class="component-module-description">${module.description}</div>
@@ -1523,14 +1693,21 @@
             const index = selectedModules.indexOf(key);
             if (index > -1) {
                 selectedModules.splice(index, 1);
+                // Remove associated extra buff selections
+                if (key === 'extraBuff') {
+                    delete selectedExtraBuffs[`extraBuff_${index}`];
+                }
             } else {
-                if (selectedModules.length < channelActions) {
+                // Allow 1 base module + 1 per channel action
+                const maxModules = channelActions + 1;
+                if (selectedModules.length < maxModules) {
                     selectedModules.push(key);
                 }
             }
             
             updateModuleStates();
             updateAvailableModules();
+            updateExtraBuffSection();
         }
 
         // Check if module is applicable
@@ -1546,15 +1723,12 @@
         function updateModuleStates() {
             document.querySelectorAll('.component-module').forEach(el => {
                 const key = el.id.replace('module-', '');
-                const module = spellData.componentModules[key];
                 
                 el.classList.remove('selected', 'disabled');
                 
-                if (!isModuleApplicable(module)) {
-                    el.classList.add('disabled');
-                } else if (selectedModules.includes(key)) {
+                if (selectedModules.includes(key)) {
                     el.classList.add('selected');
-                } else if (selectedModules.length >= channelActions) {
+                } else if (selectedModules.length >= (channelActions + 1)) {
                     el.classList.add('disabled');
                 }
             });
@@ -1566,16 +1740,18 @@
             document.getElementById('channelCount').textContent = channelActions;
             updateAvailableModules();
             
-            // Remove excess modules if needed
-            if (selectedModules.length > channelActions) {
-                selectedModules = selectedModules.slice(0, channelActions);
+            // Remove excess modules if needed (max is channelActions + 1)
+            const maxModules = channelActions + 1;
+            if (selectedModules.length > maxModules) {
+                selectedModules = selectedModules.slice(0, maxModules);
                 updateModuleStates();
             }
         }
 
         // Update available modules display
         function updateAvailableModules() {
-            const available = channelActions - selectedModules.length;
+            const maxModules = channelActions + 1;
+            const available = maxModules - selectedModules.length;
             document.getElementById('availableModules').textContent = available;
         }
 
@@ -1587,6 +1763,7 @@
             selectedHealType = null;
             selectedEffectType = null;
             selectedModules = [];
+            selectedExtraBuffs = {};
             
             // Reset UI
             document.querySelectorAll('.spell-type-card').forEach(el => el.classList.remove('selected'));
@@ -1595,12 +1772,23 @@
             document.getElementById('resetBtn').style.display = 'none';
             document.getElementById('generateBtn').style.display = 'none';
             document.getElementById('spellOutput').classList.remove('visible');
+            document.getElementById('extraBuffSection').style.display = 'none';
             
             updateAvailableModules();
         }
 
-        // Generate spell
-        function generateSpell() {
+        // Handle keyboard events in spell name input
+        function handleSpellNameKeypress(event) {
+            if (event.key === 'Enter') {
+                confirmSpellGeneration();
+            } else if (event.key === 'Escape') {
+                closeSpellNamingDialog();
+            }
+        }
+
+        // Show spell naming dialog
+        function showSpellNamingDialog() {
+            // First validate the spell is ready
             if (!selectedBase) {
                 alert('Please select a spell base!');
                 return;
@@ -1621,11 +1809,57 @@
                 return;
             }
             
+            // Check if all extra buff/debuff selections are made
+            const extraBuffCount = selectedModules.filter(module => module === 'extraBuff').length;
+            const selectedExtraBuffCount = Object.keys(selectedExtraBuffs).length;
+            
+            if (extraBuffCount > selectedExtraBuffCount) {
+                alert('Please select all extra buff/debuff effects!');
+                return;
+            }
+            
+            // Generate suggested name
+            const tempSpell = compileSpell();
+            const suggestedName = tempSpell.name;
+            
+            // Show dialog with suggested name
+            document.getElementById('spellNameInput').value = suggestedName;
+            document.getElementById('spellNamingDialog').style.display = 'block';
+            
+            // Focus and select the text for easy editing
+            const input = document.getElementById('spellNameInput');
+            input.focus();
+            input.select();
+        }
+
+        // Close spell naming dialog
+        function closeSpellNamingDialog() {
+            document.getElementById('spellNamingDialog').style.display = 'none';
+        }
+
+        // Confirm spell generation with custom name
+        function confirmSpellGeneration() {
+            const customName = document.getElementById('spellNameInput').value.trim();
+            
+            if (!customName) {
+                alert('Please enter a name for your spell!');
+                return;
+            }
+            
             const spell = compileSpell();
+            spell.name = customName; // Override with custom name
+            spell.customName = customName; // Store custom name separately
+            
+            closeSpellNamingDialog();
             displaySpell(spell);
             
             // Store for saving
             window.currentSpell = spell;
+        }
+
+        // Generate spell (old function - now just calls the dialog)
+        function generateSpell() {
+            showSpellNamingDialog();
         }
 
         // Compile spell data
@@ -1633,6 +1867,7 @@
             let spell = {
                 base: selectedBase,
                 modules: selectedModules,
+                extraBuffs: selectedExtraBuffs,
                 channelActions: channelActions,
                 classes: [...selectedClasses],
                 level: playerLevel
@@ -1694,7 +1929,17 @@
             // Add module effects
             spell.modules.forEach(moduleKey => {
                 const module = spellData.componentModules[moduleKey];
-                description += ` [${module.name}: ${module.description}]`;
+                if (moduleKey === 'extraBuff') {
+                    description += ` [${module.name}: ${module.description}]`;
+                } else {
+                    description += ` [${module.name}: ${module.description}]`;
+                }
+            });
+            
+            // Add extra buff/debuff details
+            Object.values(spell.extraBuffs || {}).forEach((extraBuff, index) => {
+                const effectData = getEffectData(extraBuff);
+                description += ` [Extra Effect ${index + 1}: ${effectData.name}]`;
             });
             
             return description;
@@ -1879,7 +2124,7 @@
             selectSpellType(spell.base.type);
             
             // Wait a moment for UI to update, then continue
-            setTimeout(() => {
+            setTimeout(function() {
                 // Select base
                 selectedBase = spell.base;
                 
@@ -1897,9 +2142,15 @@
                 // Select modules
                 selectedModules = [...spell.modules];
                 
+                // Restore extra buff selections
+                if (spell.extraBuffs) {
+                    selectedExtraBuffs = {...spell.extraBuffs};
+                }
+                
                 // Update UI to reflect loaded spell
                 updateModuleStates();
                 updateAvailableModules();
+                updateExtraBuffSection();
                 
                 // Display
                 displaySpell(spell);
