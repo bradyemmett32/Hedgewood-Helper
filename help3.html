@@ -1989,6 +1989,7 @@
             // Effect details
             if (spell.effectType) {
                 const effectData = getEffectData(spell.effectType);
+                stats.push({ label: "Effect Type", value: effectData.name });
                 if (effectData.defense) {
                     stats.push({ label: "Defense", value: effectData.defense });
                 }
