@@ -1974,7 +1974,7 @@
             } else if (baseData.healing) {
                 const healingDie = getHealingDice();
                 let healing = baseData.healing + "×" + healingDie;
-                if (spell.modules.includes('extraDamage')) {
+                if (spell.modules.includes('extraHeal')) {
                     healing += " + 1×" + healingDie;
                 }
                 stats.push({ label: "Healing", value: healing });
@@ -1994,7 +1994,7 @@
                     stats.push({ label: "Defense", value: effectData.defense });
                 }
                 if (effectData.single) {
-                    stats.push({ label: "Effect", value: `Single: ${effectData.single}, Multi: ${effectData.multi}` });
+                    stats.push({ label: "Effect", value: `Single Target: ${effectData.single}, Multi Target: ${effectData.multi}` });
                 }
             }
             
