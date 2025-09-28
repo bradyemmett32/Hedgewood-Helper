@@ -1334,22 +1334,21 @@
             
             for (const [category, types] of Object.entries(spellData.damageTypes)) {
                 const categoryDiv = document.createElement('div');
-                categoryDiv.innerHTML = `<div class="damage-type-category">${category}</div>`;
-                
                 const grid = document.createElement('div');
                 grid.className = 'damage-type-grid';
                 
+                let hasVisibleTypes = false;
+                
                 for (const [key, type] of Object.entries(types)) {
+                    // Skip unavailable damage types entirely
+                    if (!availableTypes.includes(key)) {
+                        continue;
+                    }
+                    
+                    hasVisibleTypes = true;
                     const typeDiv = document.createElement('div');
                     typeDiv.className = 'damage-type-option';
-                    
-                    // Check if this damage type is available
-                    if (!availableTypes.includes(key)) {
-                        typeDiv.classList.add('disabled');
-                        typeDiv.onclick = null;
-                    } else {
-                        typeDiv.onclick = () => selectDamageType(key);
-                    }
+                    typeDiv.onclick = () => selectDamageType(key);
                     
                     typeDiv.innerHTML = `
                         <div>${type.name}</div>
@@ -1358,9 +1357,24 @@
                     grid.appendChild(typeDiv);
                 }
                 
-                categoryDiv.appendChild(grid);
-                container.appendChild(categoryDiv);
+                // Only show category if it has visible types
+                if (hasVisibleTypes) {
+                    categoryDiv.innerHTML = `<div class="damage-type-category">${category}</div>`;
+                    categoryDiv.appendChild(grid);
+                    container.appendChild(categoryDiv);
+                }
             }
+            
+            // Add note if classes restrict damage types
+            if (selectedClasses.length > 0 && availableTypes.length < Object.keys(spellData.damageTypes.physical).length + 
+                Object.keys(spellData.damageTypes.energy).length + Object.keys(spellData.damageTypes.metaphysical).length) {
+                const note = document.createElement('div');
+                note.className = 'info-box';
+                note.style.marginTop = '15px';
+                note.textContent = 'Available damage types are limited by your selected magical classes.';
+                container.appendChild(note);
+            }
+        }
             
             // Add note if classes restrict damage types
             if (selectedClasses.length > 0 && availableTypes.length < Object.keys(spellData.damageTypes.physical).length + 
