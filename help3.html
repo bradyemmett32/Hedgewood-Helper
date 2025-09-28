@@ -582,7 +582,7 @@
                 <div class="setup-section">
                     <div class="setup-label">Level:</div>
                     <div class="level-selector">
-                        <input type="number" id="playerLevel" class="level-input" value="5" min="1" max="20" onchange="updatePlayerLevel()">
+                        <input type="number" id="playerLevel" class="level-input" value="1" min="1" max="10" onchange="updatePlayerLevel()">
                         <span style="font-size: 0.9em; opacity: 0.9;">(affects available conditions/healing)</span>
                     </div>
                 </div>
@@ -1461,7 +1461,7 @@
                 effectDiv.onclick = function() { selectEffectType('negative', key); };
                 effectDiv.innerHTML = `
                     <div>${effect.name}</div>
-                    <div style="font-size: 0.8em;">S: ${effect.single} | M: ${effect.multi} | vs ${effect.defense}</div>
+                    <div style="font-size: 0.8em;">Single: ${effect.single} | Multi: ${effect.multi} | vs ${effect.defense}</div>
                 `;
                 negGrid.appendChild(effectDiv);
             }
@@ -1571,7 +1571,7 @@
                 effectDiv.onclick = function() { selectExtraBuff(index, 'negative', key); };
                 effectDiv.innerHTML = `
                     <div>${effect.name}</div>
-                    <div style="font-size: 0.8em;">S: ${effect.single} | M: ${effect.multi} | vs ${effect.defense}</div>
+                    <div style="font-size: 0.8em;">Single: ${effect.single} | Multi: ${effect.multi} | vs ${effect.defense}</div>
                 `;
                 negGrid.appendChild(effectDiv);
             }
