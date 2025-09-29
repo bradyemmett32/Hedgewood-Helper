@@ -1284,12 +1284,15 @@
                 div.className = 'spell-option';
                 div.onclick = function() { selectSpellBase(key); };
                 
-                let diceInfo = '';
+            let diceInfo = '';
                 if (spell.damage) {
-                    const damageDie = getDamageDice();
-                    const diceCount = spell.damage;
-                    diceInfo = `<div class="dice-info">${diceCount}×${damageDie}</div>`;
-                }
+                // Don't show dice for Spellstrikes
+            if (key !== 'meleeStrike' && key !== 'rangedStrike') {
+                const damageDie = getDamageDice();
+                const diceCount = spell.damage;
+                diceInfo = `<div class="dice-info">${diceCount}×${damageDie}</div>`;
+            }
+        }
                 if (spell.healing) {
                     const healingDie = getHealingDice();
                     const diceCount = spell.healing;
@@ -1970,12 +1973,22 @@
             
             // Damage/Healing with proper dice
             if (baseData.damage) {
+                // Special handling for Spellstrikes - they use weapon damage only
+                if (spell.base.key === 'meleeStrike' || spell.base.key === 'rangedStrike') {
+                let damage = baseData.damage;
+                    if (spell.modules.includes('extraDamage')) {
+                        const damageDie = getDamageDice();
+                        damage += " + 1×" + damageDie;
+                    }
+                stats.push({ label: "Damage", value: damage });
+            } else {
                 const damageDie = getDamageDice();
                 let damage = baseData.damage + "×" + damageDie;
                 if (spell.modules.includes('extraDamage')) {
                     damage += " + 1×" + damageDie;
                 }
                 stats.push({ label: "Damage", value: damage });
+            }
             } else if (baseData.healing) {
                 const healingDie = getHealingDice();
                 let healing = baseData.healing + "×" + healingDie;
