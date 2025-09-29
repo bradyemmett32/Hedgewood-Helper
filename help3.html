@@ -1963,6 +1963,11 @@
                 stats.push({ label: "Range", value: baseData.range });
             }
             
+            // Area (if applicable)
+            if (baseData.area) {
+                stats.push({ label: "Area", value: baseData.area });
+            }
+            
             // Damage/Healing with proper dice
             if (baseData.damage) {
                 const damageDie = getDamageDice();
