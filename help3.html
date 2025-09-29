@@ -1975,15 +1975,20 @@
             if (baseData.damage) {
                 // Special handling for Spellstrikes - they use weapon damage only
                 if (spell.base.key === 'meleeStrike' || spell.base.key === 'rangedStrike') {
-                stats.push({ label: "Damage", value: baseData.damage });
+                let damage = baseData.damage;
+                    if (spell.modules.includes('extraDamage')) {
+                        const damageDie = getDamageDice();
+                        damage += " + 1×" + damageDie;
+                    }
+                stats.push({ label: "Damage", value: damage });
             } else {
-            const damageDie = getDamageDice();
-            let damage = baseData.damage + "×" + damageDie;
-            if (spell.modules.includes('extraDamage')) {
-                damage += " + 1×" + damageDie;
-        }
-        stats.push({ label: "Damage", value: damage });
-    }
+                const damageDie = getDamageDice();
+                let damage = baseData.damage + "×" + damageDie;
+                if (spell.modules.includes('extraDamage')) {
+                    damage += " + 1×" + damageDie;
+                }
+                stats.push({ label: "Damage", value: damage });
+            }
             } else if (baseData.healing) {
                 const healingDie = getHealingDice();
                 let healing = baseData.healing + "×" + healingDie;
