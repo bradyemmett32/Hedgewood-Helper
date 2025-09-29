@@ -2001,6 +2001,7 @@
             // Damage type defense
             if (spell.damageType) {
                 const damageData = findDamageType(spell.damageType);
+                stats.push({ label: "Damage Type", value: damageData.name });
                 stats.push({ label: "Defense", value: damageData.defense });
             }
             
