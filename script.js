@@ -1,0 +1,1086 @@
+// Application State
+const state = {
+    channelActions: 0,
+    playerLevel: 1,
+    selectedClasses: [],
+    selected: {
+        spellType: null,
+        base: null,
+        damageType: null,
+        healType: null,
+        effectType: null,
+        modules: [],
+        extraBuffs: {}
+    },
+    savedSpells: [],
+    currentSpell: null
+};
+
+// DOM Cache
+const DOM = {
+    channelCount: null,
+    playerLevel: null,
+    classGrid: null,
+    classInfo: null,
+    spellTypeSelector: null,
+    spellTypeLabel: null,
+    spellBaseOptions: null,
+    typeLabel: null,
+    typeOptions: null,
+    componentModules: null,
+    extraBuffSection: null,
+    extraBuffSelections: null,
+    availableModules: null,
+    generateBtn: null,
+    resetBtn: null,
+    spellOutput: null,
+    spellName: null,
+    spellStats: null,
+    spellDescription: null,
+    savedSpellsList: null,
+    spellNamingDialog: null,
+    spellNameInput: null,
+    sections: {}
+};
+
+// Initialize DOM Cache
+function cacheDOMElements() {
+    DOM.channelCount = document.getElementById('channelCount');
+    DOM.playerLevel = document.getElementById('playerLevel');
+    DOM.classGrid = document.getElementById('classGrid');
+    DOM.classInfo = document.getElementById('classInfo');
+    DOM.spellTypeSelector = document.getElementById('spellTypeSelector');
+    DOM.spellTypeLabel = document.getElementById('spellTypeLabel');
+    DOM.spellBaseOptions = document.getElementById('spellBaseOptions');
+    DOM.typeLabel = document.getElementById('typeLabel');
+    DOM.typeOptions = document.getElementById('typeOptions');
+    DOM.componentModules = document.getElementById('componentModules');
+    DOM.extraBuffSection = document.getElementById('extraBuffSection');
+    DOM.extraBuffSelections = document.getElementById('extraBuffSelections');
+    DOM.availableModules = document.getElementById('availableModules');
+    DOM.generateBtn = document.getElementById('generateBtn');
+    DOM.resetBtn = document.getElementById('resetBtn');
+    DOM.spellOutput = document.getElementById('spellOutput');
+    DOM.spellName = document.getElementById('spellName');
+    DOM.spellStats = document.getElementById('spellStats');
+    DOM.spellDescription = document.getElementById('spellDescription');
+    DOM.savedSpellsList = document.getElementById('savedSpellsList');
+    DOM.spellNamingDialog = document.getElementById('spellNamingDialog');
+    DOM.spellNameInput = document.getElementById('spellNameInput');
+    
+    DOM.sections = {
+        spellType: document.getElementById('spellTypeSection'),
+        spellBase: document.getElementById('spellBaseSection'),
+        damageType: document.getElementById('damageTypeSection'),
+        component: document.getElementById('componentSection')
+    };
+}
+
+// Event Delegation
+function setupEventListeners() {
+    // Global click handler
+    document.addEventListener('click', handleClick);
+    
+    // Player level change
+    DOM.playerLevel.addEventListener('change', updatePlayerLevel);
+    
+    // Spell name input
+    DOM.spellNameInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') confirmSpellGeneration();
+        if (e.key === 'Escape') closeDialog();
+    });
+}
+
+// Main Click Handler
+function handleClick(e) {
+    const target = e.target;
+    const action = target.dataset.action;
+    
+    if (!action) return;
+    
+    e.preventDefault();
+    
+    const actionHandlers = {
+        'adjust-channel': () => adjustChannelActions(parseInt(target.dataset.value)),
+        'reset': resetSpell,
+        'show-naming-dialog': showSpellNamingDialog,
+        'confirm-spell': confirmSpellGeneration,
+        'close-dialog': closeDialog,
+        'save-spell': saveSpell,
+        'export-spell': exportSpell
+    };
+    
+    if (actionHandlers[action]) {
+        actionHandlers[action]();
+    }
+}
+
+// Utility Functions
+function createElement(tag, className, content) {
+    const el = document.createElement(tag);
+    if (className) el.className = className;
+    if (content) el.innerHTML = content;
+    return el;
+}
+
+function toggleClass(element, className, force) {
+    if (force !== undefined) {
+        element.classList.toggle(className, force);
+    } else {
+        element.classList.toggle(className);
+    }
+}
+
+// Class Management
+function renderClasses() {
+    const fragment = document.createDocumentFragment();
+    
+    Object.entries(classData).forEach(([key, cls]) => {
+        const div = createElement('div', 'class-option', cls.name);
+        div.dataset.classKey = key;
+        div.addEventListener('click', () => toggleClassSelection(key));
+        fragment.appendChild(div);
+    });
+    
+    DOM.classGrid.appendChild(fragment);
+}
+
+function toggleClassSelection(key) {
+    const index = state.selectedClasses.indexOf(key);
+    
+    if (index > -1) {
+        state.selectedClasses.splice(index, 1);
+    } else {
+        if (state.selectedClasses.length >= 2) {
+            alert('You can only select up to 2 magical classes!');
+            return;
+        }
+        state.selectedClasses.push(key);
+    }
+    
+    updateClassUI();
+    updateClassInfo();
+    
+    if (state.selected.base?.type === 'attack' && DOM.sections.damageType.classList.contains('active')) {
+        renderDamageTypes();
+    }
+}
+
+function updateClassUI() {
+    document.querySelectorAll('.class-option').forEach(el => {
+        const key = el.dataset.classKey;
+        toggleClass(el, 'selected', state.selectedClasses.includes(key));
+    });
+}
+
+function updateClassInfo() {
+    if (state.selectedClasses.length === 0) {
+        DOM.classInfo.innerHTML = '';
+        return;
+    }
+    
+    let info = '<strong>Selected Classes:</strong><br>';
+    state.selectedClasses.forEach(key => {
+        const cls = classData[key];
+        info += `• ${cls.name}: ${cls.description}<br>`;
+        info += `  Damage: ${cls.damageDie} | Healing: ${cls.healingDie}<br>`;
+    });
+    
+    const availableTypes = getAvailableDamageTypes();
+    if (availableTypes.length > 0) {
+        info += '<br><strong>Available Damage Types:</strong> ';
+        info += availableTypes.map(t => {
+            for (const category of Object.values(spellData.damageTypes)) {
+                if (category[t]) return category[t].name;
+            }
+            return t;
+        }).join(', ');
+    }
+    
+    DOM.classInfo.innerHTML = info;
+}
+
+function getAvailableDamageTypes() {
+    if (state.selectedClasses.length === 0) {
+        const allTypes = [];
+        for (const category of Object.values(spellData.damageTypes)) {
+            allTypes.push(...Object.keys(category));
+        }
+        return allTypes;
+    }
+    
+    const types = new Set();
+    state.selectedClasses.forEach(key => {
+        classData[key].damageTypes.forEach(type => types.add(type));
+    });
+    return Array.from(types);
+}
+
+function getDamageDice() {
+    if (state.selectedClasses.length === 0) return "1d8";
+    
+    const dice = state.selectedClasses.map(key => classData[key].damageDie);
+    dice.sort((a, b) => {
+        const sizeA = parseInt(a.match(/d(\d+)/)[1]);
+        const sizeB = parseInt(b.match(/d(\d+)/)[1]);
+        return sizeB - sizeA;
+    });
+    return dice[0];
+}
+
+function getHealingDice() {
+    if (state.selectedClasses.length === 0) return "1d8";
+    
+    const dice = state.selectedClasses.map(key => classData[key].healingDie);
+    dice.sort((a, b) => {
+        const sizeA = parseInt(a.match(/d(\d+)/)[1]);
+        const sizeB = parseInt(b.match(/d(\d+)/)[1]);
+        return sizeB - sizeA;
+    });
+    return dice[0];
+}
+
+// Player Level
+function updatePlayerLevel() {
+    state.playerLevel = parseInt(DOM.playerLevel.value);
+    
+    if (DOM.sections.damageType.classList.contains('active')) {
+        if (state.selected.base?.type === 'heal') {
+            renderHealTypes();
+        } else if (state.selected.base?.type === 'effect') {
+            renderEffectTypes();
+        }
+    }
+}
+
+// Channel Actions
+function adjustChannelActions(change) {
+    state.channelActions = Math.max(0, Math.min(10, state.channelActions + change));
+    DOM.channelCount.textContent = state.channelActions;
+    updateAvailableModules();
+    
+    const maxModules = state.channelActions + 1;
+    if (state.selected.modules.length > maxModules) {
+        state.selected.modules = state.selected.modules.slice(0, maxModules);
+        updateModuleStates();
+    }
+}
+
+function updateAvailableModules() {
+    const maxModules = state.channelActions + 1;
+    const available = maxModules - state.selected.modules.length;
+    DOM.availableModules.textContent = available;
+}
+
+// Spell Type Selection
+function renderSpellTypes() {
+    const fragment = document.createDocumentFragment();
+    
+    Object.entries(spellTypeConfig).forEach(([type, config]) => {
+        const card = createElement('div', 'spell-type-card');
+        card.dataset.spellType = type;
+        card.innerHTML = `
+            <div class="spell-type-icon">${config.icon}</div>
+            <div class="spell-type-name">${config.name}</div>
+            <div style="font-size: 0.85em; margin-top: 5px;">${config.description}</div>
+        `;
+        card.addEventListener('click', () => selectSpellType(type));
+        fragment.appendChild(card);
+    });
+    
+    DOM.spellTypeSelector.appendChild(fragment);
+}
+
+function selectSpellType(type) {
+    document.querySelectorAll('.spell-type-card').forEach(el => {
+        toggleClass(el, 'selected', el.dataset.spellType === type);
+    });
+    
+    state.selected.spellType = type;
+    state.selected.base = null;
+    state.selected.damageType = null;
+    state.selected.healType = null;
+    state.selected.effectType = null;
+    state.selected.modules = [];
+    
+    DOM.resetBtn.style.display = 'inline-block';
+    DOM.sections.spellBase.classList.add('active');
+    
+    const typeLabels = {
+        attack: 'Attack Spell',
+        heal: 'Healing Spell',
+        effect: 'Effect Spell'
+    };
+    DOM.spellTypeLabel.textContent = typeLabels[type];
+    
+    renderSpellBases(type);
+    
+    DOM.sections.damageType.classList.remove('active');
+    DOM.sections.component.classList.remove('active');
+    DOM.generateBtn.style.display = 'none';
+    DOM.spellOutput.classList.remove('visible');
+}
+
+// Spell Base Selection
+function renderSpellBases(type) {
+    DOM.spellBaseOptions.innerHTML = '';
+    
+    let spells = {};
+    let info = '';
+    
+    if (type === 'attack') {
+        spells = spellData.attackSpells;
+    } else if (type === 'heal') {
+        spells = spellData.healSpells;
+        info = '<div class="warning">Healing expends one of the target\'s Hit Dice. If unavailable, they take one level of Fatigue.</div>';
+    } else if (type === 'effect') {
+        spells = spellData.effectSpells;
+        info = '<div class="info-box">Effect spells create areas that trigger when creatures start their turn in or enter the area.</div>';
+    }
+    
+    if (info) DOM.spellBaseOptions.innerHTML = info;
+    
+    const grid = createElement('div', 'spell-base-grid');
+    const fragment = document.createDocumentFragment();
+    
+    Object.entries(spells).forEach(([key, spell]) => {
+        const div = createElement('div', 'spell-option');
+        div.dataset.baseKey = key;
+        
+        let diceInfo = '';
+        if (spell.damage && key !== 'meleeStrike' && key !== 'rangedStrike') {
+            const damageDie = getDamageDice();
+            diceInfo = `<div class="dice-info">${spell.damage}×${damageDie}</div>`;
+        }
+        if (spell.healing) {
+            const healingDie = getHealingDice();
+            diceInfo = `<div class="dice-info">${spell.healing}×${healingDie}</div>`;
+        }
+        
+        div.innerHTML = `
+            <div class="spell-option-title">${spell.name}</div>
+            <div class="spell-option-description">${spell.description}</div>
+            ${diceInfo}
+        `;
+        div.addEventListener('click', () => selectSpellBase(key));
+        fragment.appendChild(div);
+    });
+    
+    grid.appendChild(fragment);
+    DOM.spellBaseOptions.appendChild(grid);
+}
+
+function selectSpellBase(key) {
+    document.querySelectorAll('.spell-option').forEach(el => {
+        toggleClass(el, 'selected', el.dataset.baseKey === key);
+    });
+    
+    state.selected.base = { type: state.selected.spellType, key };
+    state.selected.damageType = null;
+    state.selected.healType = null;
+    state.selected.effectType = null;
+    state.selected.modules = [];
+    
+    DOM.sections.damageType.classList.add('active');
+    
+    if (state.selected.spellType === 'attack') {
+        DOM.typeLabel.textContent = 'Damage Type';
+        renderDamageTypes();
+    } else if (state.selected.spellType === 'heal') {
+        DOM.typeLabel.textContent = 'Healing Type';
+        renderHealTypes();
+    } else if (state.selected.spellType === 'effect') {
+        DOM.typeLabel.textContent = 'Effect Type';
+        renderEffectTypes();
+    }
+    
+    DOM.sections.component.classList.add('active');
+    renderComponentModules();
+    updateModuleStates();
+    updateAvailableModules();
+    
+    DOM.generateBtn.style.display = 'block';
+}
+
+// Damage Type Selection
+function renderDamageTypes() {
+    DOM.typeOptions.innerHTML = '';
+    const availableTypes = getAvailableDamageTypes();
+    
+    Object.entries(spellData.damageTypes).forEach(([category, types]) => {
+        const grid = createElement('div', 'damage-type-grid');
+        const fragment = document.createDocumentFragment();
+        let hasVisible = false;
+        
+        Object.entries(types).forEach(([key, type]) => {
+            if (!availableTypes.includes(key)) return;
+            
+            hasVisible = true;
+            const div = createElement('div', 'damage-type-option');
+            div.dataset.damageType = key;
+            div.innerHTML = `
+                <div>${type.name}</div>
+                <div style="font-size: 0.8em; opacity: 0.8;">vs ${type.defense}</div>
+            `;
+            div.addEventListener('click', () => selectDamageType(key));
+            fragment.appendChild(div);
+        });
+        
+        if (hasVisible) {
+            const categoryDiv = createElement('div', 'damage-type-category', category);
+            DOM.typeOptions.appendChild(categoryDiv);
+            grid.appendChild(fragment);
+            DOM.typeOptions.appendChild(grid);
+        }
+    });
+    
+    if (state.selectedClasses.length > 0) {
+        const note = createElement('div', 'info-box');
+        note.style.marginTop = '15px';
+        note.textContent = 'Available damage types are limited by your selected magical classes.';
+        DOM.typeOptions.appendChild(note);
+    }
+}
+
+function selectDamageType(key) {
+    document.querySelectorAll('#typeOptions .damage-type-option').forEach(el => {
+        toggleClass(el, 'selected', el.dataset.damageType === key);
+    });
+    state.selected.damageType = key;
+}
+
+// Heal Type Selection
+function renderHealTypes() {
+    DOM.typeOptions.innerHTML = '';
+    const grid = createElement('div', 'damage-type-grid');
+    const fragment = document.createDocumentFragment();
+    
+    Object.entries(spellData.healTypes).forEach(([key, type]) => {
+        if (type.level && type.level > state.playerLevel) return;
+        
+        const div = createElement('div', 'damage-type-option');
+        div.dataset.healType = key;
+        
+        const levelText = type.level ? ` (Lvl ${type.level}+)` : '';
+        div.innerHTML = `
+            <div>${type.name}${levelText}</div>
+            <div style="font-size: 0.8em; opacity: 0.8;">${type.description}</div>
+        `;
+        div.addEventListener('click', () => selectHealType(key));
+        fragment.appendChild(div);
+    });
+    
+    grid.appendChild(fragment);
+    DOM.typeOptions.appendChild(grid);
+}
+
+function selectHealType(key) {
+    document.querySelectorAll('#typeOptions .damage-type-option').forEach(el => {
+        toggleClass(el, 'selected', el.dataset.healType === key);
+    });
+    state.selected.healType = key;
+}
+
+// Effect Type Selection
+function renderEffectTypes() {
+    DOM.typeOptions.innerHTML = '';
+    
+    // Positive Effects
+    renderEffectCategory('Positive Effects (Allies)', spellData.positiveEffects, 'positive');
+    
+    // Negative Effects
+    renderEffectCategory('Negative Effects (Enemies)', spellData.negativeEffects, 'negative');
+    
+    // Conditions
+    const visibleConditions = Object.entries(spellData.conditions)
+        .filter(([, condition]) => condition.level <= state.playerLevel);
+    
+    if (visibleConditions.length > 0) {
+        renderEffectCategory('Conditions', Object.fromEntries(visibleConditions), 'condition');
+    }
+}
+
+function renderEffectCategory(title, effects, category) {
+    const categoryDiv = createElement('div', 'damage-type-category', title);
+    const grid = createElement('div', 'damage-type-grid');
+    const fragment = document.createDocumentFragment();
+    
+    Object.entries(effects).forEach(([key, effect]) => {
+        const div = createElement('div', 'damage-type-option');
+        div.dataset.effectCategory = category;
+        div.dataset.effectKey = key;
+        
+        let details = '';
+        if (effect.single) {
+            details = `<div style="font-size: 0.8em;">Single: ${effect.single} | Multi: ${effect.multi}${effect.defense ? ` | vs ${effect.defense}` : ''}</div>`;
+        } else if (effect.defense) {
+            const levelText = effect.level > 1 ? ` (Lvl ${effect.level}+)` : '';
+            details = `<div style="font-size: 0.8em;">vs ${effect.defense}${levelText}</div>`;
+        }
+        
+        div.innerHTML = `<div>${effect.name}</div>${details}`;
+        div.addEventListener('click', () => selectEffectType(category, key));
+        fragment.appendChild(div);
+    });
+    
+    grid.appendChild(fragment);
+    DOM.typeOptions.appendChild(categoryDiv);
+    DOM.typeOptions.appendChild(grid);
+}
+
+function selectEffectType(category, key) {
+    document.querySelectorAll('#typeOptions .damage-type-option').forEach(el => {
+        toggleClass(el, 'selected', 
+            el.dataset.effectCategory === category && el.dataset.effectKey === key);
+    });
+    state.selected.effectType = { category, key };
+}
+
+// Component Modules
+function renderComponentModules() {
+    DOM.componentModules.innerHTML = '';
+    const fragment = document.createDocumentFragment();
+    
+    Object.entries(spellData.componentModules).forEach(([key, module]) => {
+        if (!isModuleApplicable(module)) return;
+        
+        const div = createElement('div', 'component-module');
+        div.dataset.moduleKey = key;
+        div.innerHTML = `
+            <div class="component-module-title">${module.name}</div>
+            <div class="component-module-description">${module.description}</div>
+        `;
+        div.addEventListener('click', () => toggleModule(key));
+        fragment.appendChild(div);
+    });
+    
+    DOM.componentModules.appendChild(fragment);
+}
+
+function isModuleApplicable(module) {
+    if (!state.selected.base) return false;
+    if (module.applicable.includes('all')) return true;
+    if (module.applicable.includes(state.selected.base.type)) return true;
+    if (module.applicable.includes(state.selected.base.key)) return true;
+    return false;
+}
+
+function toggleModule(key) {
+    const module = spellData.componentModules[key];
+    if (!isModuleApplicable(module)) return;
+    
+    const index = state.selected.modules.indexOf(key);
+    if (index > -1) {
+        state.selected.modules.splice(index, 1);
+        if (key === 'extraBuff') {
+            delete state.selected.extraBuffs[`extraBuff_${index}`];
+        }
+    } else {
+        const maxModules = state.channelActions + 1;
+        if (state.selected.modules.length < maxModules) {
+            state.selected.modules.push(key);
+        }
+    }
+    
+    updateModuleStates();
+    updateAvailableModules();
+    updateExtraBuffSection();
+}
+
+function updateModuleStates() {
+    document.querySelectorAll('.component-module').forEach(el => {
+        const key = el.dataset.moduleKey;
+        el.classList.remove('selected', 'disabled');
+        
+        if (state.selected.modules.includes(key)) {
+            el.classList.add('selected');
+        } else if (state.selected.modules.length >= (state.channelActions + 1)) {
+            el.classList.add('disabled');
+        }
+    });
+}
+
+// Extra Buff/Debuff
+function updateExtraBuffSection() {
+    const extraBuffCount = state.selected.modules.filter(m => m === 'extraBuff').length;
+    
+    if (extraBuffCount === 0) {
+        DOM.extraBuffSection.style.display = 'none';
+        return;
+    }
+    
+    DOM.extraBuffSection.style.display = 'block';
+    DOM.extraBuffSelections.innerHTML = '';
+    
+    for (let i = 0; i < extraBuffCount; i++) {
+        const buffDiv = createElement('div');
+        buffDiv.style.cssText = 'margin-bottom: 20px; padding: 15px; background: #f8f9ff; border-radius: 10px; border: 2px solid #ddd;';
+        buffDiv.innerHTML = `<h5 style="color: var(--color-primary); margin-bottom: 10px;">Extra Effect #${i + 1}:</h5>`;
+        
+        const container = createElement('div');
+        container.id = `extraBuffOptions_${i}`;
+        buffDiv.appendChild(container);
+        
+        DOM.extraBuffSelections.appendChild(buffDiv);
+        renderExtraBuffOptions(i);
+    }
+}
+
+function renderExtraBuffOptions(index) {
+    const container = document.getElementById(`extraBuffOptions_${index}`);
+    renderEffectCategory('Positive Effects (Allies)', spellData.positiveEffects, 'positive');
+    renderEffectCategory('Negative Effects (Enemies)', spellData.negativeEffects, 'negative');
+    
+    const visibleConditions = Object.entries(spellData.conditions)
+        .filter(([, condition]) => condition.level <= state.playerLevel);
+    
+    if (visibleConditions.length > 0) {
+        renderEffectCategory('Conditions', Object.fromEntries(visibleConditions), 'condition');
+    }
+    
+    // Re-append to correct container
+    while (DOM.typeOptions.firstChild) {
+        container.appendChild(DOM.typeOptions.firstChild);
+    }
+    
+    // Add click handlers for extra buffs
+    container.querySelectorAll('.damage-type-option').forEach(el => {
+        el.addEventListener('click', () => selectExtraBuff(index, el.dataset.effectCategory, el.dataset.effectKey));
+    });
+}
+
+function selectExtraBuff(index, category, key) {
+    const container = document.getElementById(`extraBuffOptions_${index}`);
+    container.querySelectorAll('.damage-type-option').forEach(el => {
+        toggleClass(el, 'selected', 
+            el.dataset.effectCategory === category && el.dataset.effectKey === key);
+    });
+    state.selected.extraBuffs[`extraBuff_${index}`] = { category, key };
+}
+
+// Spell Generation
+function showSpellNamingDialog() {
+    if (!validateSpell()) return;
+    
+    const tempSpell = compileSpell();
+    DOM.spellNameInput.value = tempSpell.name;
+    DOM.spellNamingDialog.classList.add('active');
+    DOM.spellNameInput.focus();
+    DOM.spellNameInput.select();
+}
+
+function validateSpell() {
+    if (!state.selected.base) {
+        alert('Please select a spell base!');
+        return false;
+    }
+    
+    if (state.selected.base.type === 'attack' && !state.selected.damageType) {
+        alert('Please select a damage type!');
+        return false;
+    }
+    
+    if (state.selected.base.type === 'heal' && !state.selected.healType) {
+        alert('Please select a healing type!');
+        return false;
+    }
+    
+    if (state.selected.base.type === 'effect' && !state.selected.effectType) {
+        alert('Please select an effect type!');
+        return false;
+    }
+    
+    const extraBuffCount = state.selected.modules.filter(m => m === 'extraBuff').length;
+    if (extraBuffCount > Object.keys(state.selected.extraBuffs).length) {
+        alert('Please select all extra buff/debuff effects!');
+        return false;
+    }
+    
+    return true;
+}
+
+function closeDialog() {
+    DOM.spellNamingDialog.classList.remove('active');
+}
+
+function confirmSpellGeneration() {
+    const customName = DOM.spellNameInput.value.trim();
+    
+    if (!customName) {
+        alert('Please enter a name for your spell!');
+        return;
+    }
+    
+    const spell = compileSpell();
+    spell.name = customName;
+    spell.customName = customName;
+    
+    closeDialog();
+    displaySpell(spell);
+    state.currentSpell = spell;
+}
+
+function compileSpell() {
+    const spell = {
+        base: state.selected.base,
+        modules: [...state.selected.modules],
+        extraBuffs: {...state.selected.extraBuffs},
+        channelActions: state.channelActions,
+        classes: [...state.selectedClasses],
+        level: state.playerLevel
+    };
+    
+    let baseData;
+    if (state.selected.base.type === 'attack') {
+        baseData = spellData.attackSpells[state.selected.base.key];
+        spell.damageType = state.selected.damageType;
+    } else if (state.selected.base.type === 'heal') {
+        baseData = spellData.healSpells[state.selected.base.key];
+        spell.healType = state.selected.healType;
+    } else {
+        baseData = spellData.effectSpells[state.selected.base.key];
+        spell.effectType = state.selected.effectType;
+    }
+    
+    spell.name = generateSpellName(spell, baseData);
+    spell.description = generateSpellDescription(spell, baseData);
+    spell.stats = generateSpellStats(spell, baseData);
+    
+    return spell;
+}
+
+function generateSpellName(spell, baseData) {
+    let name = baseData.name;
+    
+    if (spell.damageType) {
+        const damageData = findDamageType(spell.damageType);
+        name = damageData.name + " " + name;
+    } else if (spell.healType) {
+        const healData = spellData.healTypes[spell.healType];
+        if (spell.healType !== 'hp') {
+            name = healData.name + " " + name;
+        }
+    } else if (spell.effectType) {
+        const effectData = getEffectData(spell.effectType);
+        name = effectData.name + " " + name;
+    }
+    
+    if (spell.modules.includes('concentration')) {
+        name = "Sustained " + name;
+    }
+    if (spell.modules.includes('extraDamage')) {
+        name = "Empowered " + name;
+    }
+    
+    return name;
+}
+
+function generateSpellDescription(spell, baseData) {
+    let description = baseData.description;
+    
+    spell.modules.forEach(moduleKey => {
+        const module = spellData.componentModules[moduleKey];
+        if (moduleKey === 'extraBuff') {
+            description += ` [${module.name}: ${module.description}]`;
+        } else {
+            description += ` [${module.name}: ${module.description}]`;
+        }
+    });
+    
+    Object.values(spell.extraBuffs || {}).forEach((extraBuff, index) => {
+        const effectData = getEffectData(extraBuff);
+        description += ` [Extra Effect ${index + 1}: ${effectData.name}]`;
+    });
+    
+    return description;
+}
+
+function generateSpellStats(spell, baseData) {
+    const stats = [];
+    
+    if (spell.classes.length > 0) {
+        stats.push({ 
+            label: "Class", 
+            value: spell.classes.map(c => classData[c].name).join(" / ") 
+        });
+    }
+    
+    stats.push({ 
+        label: "Type", 
+        value: spell.base.type.charAt(0).toUpperCase() + spell.base.type.slice(1) 
+    });
+    
+    if (baseData.range) {
+        stats.push({ label: "Range", value: baseData.range });
+    }
+    
+    if (baseData.area) {
+        stats.push({ label: "Area", value: baseData.area });
+    }
+    
+    if (baseData.damage) {
+        if (spell.base.key === 'meleeStrike' || spell.base.key === 'rangedStrike') {
+            let damage = baseData.damage;
+            if (spell.modules.includes('extraDamage')) {
+                damage += " + 1×" + getDamageDice();
+            }
+            stats.push({ label: "Damage", value: damage });
+        } else {
+            const damageDie = getDamageDice();
+            let damage = baseData.damage + "×" + damageDie;
+            if (spell.modules.includes('extraDamage')) {
+                damage += " + 1×" + damageDie;
+            }
+            stats.push({ label: "Damage", value: damage });
+        }
+    } else if (baseData.healing) {
+        const healingDie = getHealingDice();
+        let healing = baseData.healing + "×" + healingDie;
+        if (spell.modules.includes('extraHeal')) {
+            healing += " + 1×" + healingDie;
+        }
+        stats.push({ label: "Healing", value: healing });
+    }
+    
+    if (spell.damageType) {
+        const damageData = findDamageType(spell.damageType);
+        stats.push({ label: "Damage Type", value: damageData.name });
+        stats.push({ label: "Defense", value: damageData.defense });
+    }
+    
+    if (spell.effectType) {
+        const effectData = getEffectData(spell.effectType);
+        stats.push({ label: "Effect Type", value: effectData.name });
+        if (effectData.defense) {
+            stats.push({ label: "Defense", value: effectData.defense });
+        }
+        if (effectData.single) {
+            stats.push({ 
+                label: "Effect", 
+                value: `Single Target: ${effectData.single}, Multi Target: ${effectData.multi}` 
+            });
+        }
+    }
+    
+    const duration = spell.modules.includes('concentration') ? 
+        "Concentration" : "Until end of next turn";
+    stats.push({ label: "Duration", value: duration });
+    
+    stats.push({ label: "Channel Actions", value: state.channelActions });
+    
+    return stats;
+}
+
+function findDamageType(key) {
+    for (const category of Object.values(spellData.damageTypes)) {
+        if (category[key]) return category[key];
+    }
+    return null;
+}
+
+function getEffectData(effectType) {
+    if (effectType.category === 'positive') {
+        return spellData.positiveEffects[effectType.key];
+    } else if (effectType.category === 'negative') {
+        return spellData.negativeEffects[effectType.key];
+    } else {
+        return spellData.conditions[effectType.key];
+    }
+}
+
+function displaySpell(spell) {
+    DOM.spellName.textContent = spell.name;
+    
+    let statsHtml = '';
+    spell.stats.forEach(stat => {
+        statsHtml += `
+            <div class="detail-row">
+                <span class="detail-label">${stat.label}:</span>
+                <span class="detail-value">${stat.value}</span>
+            </div>
+        `;
+    });
+    DOM.spellStats.innerHTML = statsHtml;
+    DOM.spellDescription.textContent = spell.description;
+    
+    DOM.spellOutput.classList.add('visible');
+}
+
+// Save and Export
+function saveSpell() {
+    if (!state.currentSpell) {
+        alert('Generate a spell first!');
+        return;
+    }
+    
+    state.savedSpells.push({...state.currentSpell, id: Date.now()});
+    localStorage.setItem('savedSpells', JSON.stringify(state.savedSpells));
+    updateSavedSpellsList();
+    alert(`${state.currentSpell.name} has been saved!`);
+}
+
+function exportSpell() {
+    if (!state.currentSpell) {
+        alert('Generate a spell first!');
+        return;
+    }
+    
+    const spell = state.currentSpell;
+    let text = `===== ${spell.name} =====\n\n`;
+    
+    if (spell.classes.length > 0) {
+        text += `Classes: ${spell.classes.map(c => classData[c].name).join(', ')}\n`;
+        text += `Level: ${spell.level}\n\n`;
+    }
+    
+    text += `${spell.description}\n\n`;
+    text += `--- Stats ---\n`;
+    spell.stats.forEach(stat => {
+        text += `${stat.label}: ${stat.value}\n`;
+    });
+    
+    const blob = new Blob([text], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${spell.name.replace(/\s+/g, '_')}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function updateSavedSpellsList() {
+    if (state.savedSpells.length === 0) {
+        DOM.savedSpellsList.innerHTML = '<p style="text-align: center; color: #999;">No saved spells yet!</p>';
+        return;
+    }
+    
+    const fragment = document.createDocumentFragment();
+    
+    state.savedSpells.forEach(spell => {
+        const classText = spell.classes.length > 0 ? 
+            ` (${spell.classes.map(c => classData[c]?.name || c).join('/')})` : '';
+        
+        const card = createElement('div', 'spell-card');
+        card.dataset.spellId = spell.id;
+        card.innerHTML = `
+            <button class="delete-btn" data-spell-id="${spell.id}">×</button>
+            <div style="font-weight: bold; font-size: 1.2em; color: var(--color-primary); margin-bottom: 8px;">
+                ${spell.name}${classText}
+            </div>
+            <div style="font-size: 0.95em;">${spell.description}</div>
+            <div style="margin-top: 8px; font-size: 0.85em; color: #666;">
+                Channel Actions: ${spell.channelActions} | Level: ${spell.level}
+            </div>
+        `;
+        
+        card.addEventListener('click', (e) => {
+            if (!e.target.classList.contains('delete-btn')) {
+                loadSpell(spell.id);
+            }
+        });
+        
+        card.querySelector('.delete-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            deleteSpell(spell.id);
+        });
+        
+        fragment.appendChild(card);
+    });
+    
+    DOM.savedSpellsList.innerHTML = '';
+    DOM.savedSpellsList.appendChild(fragment);
+}
+
+function loadSpell(id) {
+    const spell = state.savedSpells.find(s => s.id === id);
+    if (!spell) return;
+    
+    resetSpell();
+    
+    state.channelActions = spell.channelActions;
+    DOM.channelCount.textContent = state.channelActions;
+    
+    if (spell.level) {
+        state.playerLevel = spell.level;
+        DOM.playerLevel.value = spell.level;
+    }
+    
+    if (spell.classes) {
+        state.selectedClasses = [...spell.classes];
+        updateClassUI();
+        updateClassInfo();
+    }
+    
+    selectSpellType(spell.base.type);
+    
+    setTimeout(() => {
+        state.selected.base = spell.base;
+        
+        if (spell.damageType) state.selected.damageType = spell.damageType;
+        if (spell.healType) state.selected.healType = spell.healType;
+        if (spell.effectType) state.selected.effectType = spell.effectType;
+        
+        state.selected.modules = [...spell.modules];
+        
+        if (spell.extraBuffs) {
+            state.selected.extraBuffs = {...spell.extraBuffs};
+        }
+        
+        updateModuleStates();
+        updateAvailableModules();
+        updateExtraBuffSection();
+        displaySpell(spell);
+    }, 100);
+}
+
+function deleteSpell(id) {
+    if (confirm('Delete this spell?')) {
+        state.savedSpells = state.savedSpells.filter(s => s.id !== id);
+        localStorage.setItem('savedSpells', JSON.stringify(state.savedSpells));
+        updateSavedSpellsList();
+    }
+}
+
+function resetSpell() {
+    state.selected = {
+        spellType: null,
+        base: null,
+        damageType: null,
+        healType: null,
+        effectType: null,
+        modules: [],
+        extraBuffs: {}
+    };
+    
+    document.querySelectorAll('.spell-type-card').forEach(el => el.classList.remove('selected'));
+    document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+    DOM.sections.spellType.classList.add('active');
+    DOM.resetBtn.style.display = 'none';
+    DOM.generateBtn.style.display = 'none';
+    DOM.spellOutput.classList.remove('visible');
+    DOM.extraBuffSection.style.display = 'none';
+    
+    updateAvailableModules();
+}
+
+// Initialize Application
+function init() {
+    cacheDOMElements();
+    setupEventListeners();
+    
+    // Load saved spells from localStorage
+    const saved = localStorage.getItem('savedSpells');
+    if (saved) {
+        state.savedSpells = JSON.parse(saved);
+    }
+    
+    renderClasses();
+    renderSpellTypes();
+    updateSavedSpellsList();
+    updateAvailableModules();
+}
+
+// Start the application
+document.addEventListener('DOMContentLoaded', init);
