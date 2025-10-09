@@ -10,7 +10,9 @@
             padding: 0;
             box-sizing: border-box;
         }
-
+html {
+    scroll-behavior: smooth;
+}
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
@@ -56,12 +58,12 @@
             font-size: 1.2em;
         }
 
-        .setup-grid {
-            display: grid;
-            grid-template-columns: auto 1fr;
-            gap: 15px;
-            align-items: start;
-        }
+.setup-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    align-items: start;
+}
 
         .setup-section {
             display: flex;
@@ -89,11 +91,11 @@
             text-align: center;
         }
 
-        .class-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 10px;
-        }
+.class-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px;
+}
 
         .class-option {
             background: rgba(255, 255, 255, 0.2);
@@ -346,11 +348,12 @@
             min-width: 50px;
         }
 
-        .component-modules {
-            max-height: 400px;
-            overflow-y: auto;
-            padding-right: 10px;
-        }
+.component-modules {
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 10px;
+    -webkit-overflow-scrolling: touch;
+}
 
         .component-module {
             background: white;
@@ -568,6 +571,261 @@
         .reset-btn:hover {
             transform: scale(1.05);
         }
+        /* Responsive Design */
+@media (max-width: 640px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 15px;
+        border-radius: 15px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+        margin-bottom: 8px;
+    }
+
+    .subtitle {
+        font-size: 0.9em;
+        margin-bottom: 20px;
+    }
+
+    .character-setup {
+        padding: 15px;
+    }
+
+    .character-setup h3 {
+        font-size: 1.1em;
+    }
+
+    .level-selector {
+        flex-wrap: wrap;
+    }
+
+    .level-selector span {
+        font-size: 0.85em;
+        width: 100%;
+        margin-top: 5px;
+    }
+
+    .level-input {
+        width: 70px;
+        padding: 8px;
+        font-size: 18px;
+    }
+
+    .class-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .class-option {
+        padding: 10px 6px;
+        font-size: 0.85em;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .class-info {
+        font-size: 0.85em;
+        padding: 8px;
+        margin-top: 8px;
+    }
+
+    .spell-type-selector {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .spell-type-card {
+        padding: 15px;
+    }
+
+    .spell-type-icon {
+        font-size: 2em;
+    }
+
+    .spell-type-name {
+        font-size: 1.1em;
+    }
+
+    .spell-base-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .damage-type-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .section {
+        padding: 15px;
+    }
+
+    .section-title {
+        font-size: 1.1em;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    .reset-btn {
+        width: 100%;
+        margin-left: 0;
+        margin-top: 10px;
+    }
+
+    .channel-counter {
+        padding: 12px;
+    }
+
+    .channel-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+    }
+
+    .channel-display {
+        font-size: 1.8em;
+    }
+
+    .component-modules {
+        max-height: 300px;
+        padding-right: 5px;
+    }
+
+    .component-module {
+        padding: 15px;
+        margin-bottom: 12px;
+    }
+
+    .damage-type-option,
+    .spell-option {
+        min-height: 44px;
+    }
+
+    #extraBuffSection {
+        padding: 15px;
+        margin-top: 15px;
+    }
+
+    #extraBuffSection h4 {
+        font-size: 1em;
+    }
+
+    .warning,
+    .info-box {
+        font-size: 0.85em;
+        padding: 8px;
+    }
+
+    .button-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px 20px;
+        font-size: 16px;
+    }
+
+    .generate-btn {
+        padding: 15px 20px;
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
+
+    .spell-output {
+        padding: 20px;
+    }
+
+    .spell-name {
+        font-size: 1.6em;
+    }
+
+    .spell-details {
+        padding: 15px;
+    }
+
+    .detail-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+        padding: 10px 0;
+    }
+
+    .spell-card {
+        padding: 12px;
+    }
+
+    .saved-spells h2 {
+        font-size: 1.5em;
+    }
+
+    .delete-btn {
+        position: static;
+        display: block;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    #spellNamingDialog > div {
+        width: 95% !important;
+        padding: 20px !important;
+    }
+
+    #spellNameInput {
+        font-size: 16px !important;
+    }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+    .container {
+        padding: 25px;
+    }
+
+    h1 {
+        font-size: 2.2em;
+    }
+
+    .class-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .spell-type-selector {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .spell-base-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .damage-type-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .button-group {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .button-group button {
+        min-width: 200px;
+    }
+}
+
+@media (min-width: 1025px) {
+    .spell-type-selector {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .class-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
     </style>
 </head>
 <body>
