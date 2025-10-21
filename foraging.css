@@ -203,6 +203,21 @@
     gap: var(--spacing-sm);
 }
 
+.roll-number {
+    background: var(--gradient-primary);
+    color: white;
+    font-weight: bold;
+    font-size: 1.2em;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+}
+
 .forage-name {
     color: var(--color-primary);
     font-size: 1.1em;
