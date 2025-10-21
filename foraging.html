@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hedgewood Helper - Foraging Guide</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="foraging.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🌿 Foraging & Crafting Guide 🍄</h1>
+        <nav class="main-nav">
+            <a href="index.html" class="nav-link">Spell Creator</a>
+            <a href="foraging.html" class="nav-link active">Foraging Guide</a>
+        </nav>
+
+        <div class="foraging-info">
+            <h3>Crafting Rules</h3>
+            <div class="rules-grid">
+                <div class="rule-card">
+                    <h4>🧪 Alchemist</h4>
+                    <p>Base DC: <strong>16</strong> (oils & poisons)</p>
+                    <p>With 2 ingredients: DC <strong>12</strong></p>
+                </div>
+                <div class="rule-card">
+                    <h4>🌱 Herbalogist</h4>
+                    <p>Base DC: <strong>12</strong> (potions & antidotes)</p>
+                    <p>Stronger potion: DC <strong>16</strong> (2 same-effect ingredients)</p>
+                </div>
+                <div class="rule-card">
+                    <h4>🍳 Cook</h4>
+                    <p>Add qualities to food during Partial or Full Rests</p>
+                    <p>Effects based on ingredients used</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="inventory-section">
+            <h2>📦 Your Inventory</h2>
+            <button class="clear-btn" id="clearInventory">Clear All</button>
+            <div id="inventorySummary" class="inventory-summary"></div>
+        </div>
+
+        <div class="filter-section">
+            <h3>Filter by Effect</h3>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="flammable oil">Flammable Oil</button>
+                <button class="filter-btn" data-filter="slippery oil">Slippery Oil</button>
+                <button class="filter-btn" data-filter="damaging poison">Damaging Poison</button>
+                <button class="filter-btn" data-filter="sickening poison">Sickening Poison</button>
+                <button class="filter-btn" data-filter="health potion">Health Potion</button>
+                <button class="filter-btn" data-filter="mana potion">Mana Potion</button>
+                <button class="filter-btn" data-filter="antidote">Antidote</button>
+                <button class="filter-btn" data-filter="temporary HP">Temporary HP</button>
+                <button class="filter-btn" data-filter="AC bonus">AC Bonus</button>
+                <button class="filter-btn" data-filter="+1 Speed">+1 Speed</button>
+            </div>
+        </div>
+
+        <div class="foraging-content">
+            <section class="forage-section">
+                <h2>🌿 Plants (1d6)</h2>
+                <div class="forage-grid" id="plantsGrid"></div>
+            </section>
+
+            <section class="forage-section">
+                <h2>🍄 Mushrooms (1d10)</h2>
+                <div class="forage-grid" id="mushroomsGrid"></div>
+            </section>
+        </div>
+    </div>
+
+    <script src="foraging-data.js"></script>
+    <script src="foraging.js"></script>
+</body>
+</html>
