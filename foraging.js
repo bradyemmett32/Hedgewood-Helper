@@ -74,7 +74,7 @@ function renderPlants() {
     grid.innerHTML = '';
     
     foragingData.plants.forEach((plant, index) => {
-        const card = createForageCard(plant, `plant-${index}`);
+        const card = createForageCard(plant, `plant-${index}`, index + 1);
         grid.appendChild(card);
     });
 }
@@ -85,13 +85,13 @@ function renderMushrooms() {
     grid.innerHTML = '';
     
     foragingData.mushrooms.forEach((mushroom, index) => {
-        const card = createForageCard(mushroom, `mushroom-${index}`);
+        const card = createForageCard(mushroom, `mushroom-${index}`, index + 1);
         grid.appendChild(card);
     });
 }
 
 // Create a forage card
-function createForageCard(item, id) {
+function createForageCard(item, id, rollNumber) {
     const card = document.createElement('div');
     card.className = 'forage-card';
     card.dataset.effects = Object.values(item.effects).join(',');
@@ -100,6 +100,7 @@ function createForageCard(item, id) {
     
     card.innerHTML = `
         <div class="forage-header">
+            <div class="roll-number">${rollNumber}</div>
             <h3 class="forage-name">${item.name}</h3>
             <div class="quantity-control">
                 <button class="qty-btn minus" data-id="${id}">−</button>
