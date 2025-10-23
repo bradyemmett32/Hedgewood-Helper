@@ -953,3 +953,17 @@ button:disabled {
 #availableModules {
     contain: layout style;
 }
+
+/* Version Footer */
+.version-footer {
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid #ddd;
+    text-align: center;
+}
+
+.version-footer p {
+    color: #666;
+    font-size: 0.85em;
+    opacity: 0.8;
+}
