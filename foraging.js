@@ -1,20 +1,120 @@
+// Security: Input Sanitization
+function sanitizeHTML(str) {
+    const temp = document.createElement('div');
+    temp.textContent = str;
+    return temp.innerHTML;
+}
+
+function sanitizeText(str) {
+    if (typeof str !== 'string') return '';
+    // Remove HTML tags and limit length
+    return str.replace(/<[^>]*>/g, '').trim().slice(0, 200);
+}
+
+// Security: Non-blocking notification system (replaces alert())
+function showNotification(message, type = 'info', duration = 3000) {
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.textContent = message;
+
+    const container = document.getElementById('notificationContainer') || createNotificationContainer();
+    container.appendChild(notification);
+
+    // Trigger animation
+    requestAnimationFrame(() => {
+        notification.classList.add('show');
+    });
+
+    // Auto-dismiss
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+    }, duration);
+}
+
+function createNotificationContainer() {
+    const container = document.createElement('div');
+    container.className = 'notification-container';
+    container.id = 'notificationContainer';
+    document.body.appendChild(container);
+    return container;
+}
+
+// Security: Rate limiting for save operations
+let lastSaveTime = 0;
+const SAVE_COOLDOWN = 1000; // 1 second between saves
+
+function canSave() {
+    const now = Date.now();
+    if (now - lastSaveTime < SAVE_COOLDOWN) {
+        return false;
+    }
+    lastSaveTime = now;
+    return true;
+}
+
 // Application state
 const state = {
     inventory: {},
     currentFilter: 'all'
 };
 
+// Security: Validate inventory data structure
+function isValidInventory(inventory) {
+    if (!inventory || typeof inventory !== 'object' || Array.isArray(inventory)) {
+        return false;
+    }
+
+    // Validate each entry
+    for (const [key, value] of Object.entries(inventory)) {
+        // Key should be string in format "plant-N" or "mushroom-N"
+        if (typeof key !== 'string' || !key.match(/^(plant|mushroom)-\d+$/)) {
+            return false;
+        }
+        // Value should be a positive integer
+        if (typeof value !== 'number' || value < 0 || !Number.isInteger(value)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 // Load inventory from localStorage
 function loadInventory() {
-    const saved = localStorage.getItem('foragingInventory');
-    if (saved) {
-        state.inventory = JSON.parse(saved);
+    // Security: Load and validate saved inventory from localStorage
+    try {
+        const saved = localStorage.getItem('foragingInventory');
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            if (isValidInventory(parsed)) {
+                state.inventory = parsed;
+            } else {
+                console.warn('Invalid inventory data found, resetting inventory');
+                state.inventory = {};
+                localStorage.removeItem('foragingInventory');
+            }
+        }
+    } catch (e) {
+        console.error('Failed to load saved inventory:', e);
+        state.inventory = {};
+        // Clear corrupted data
+        localStorage.removeItem('foragingInventory');
     }
 }
 
-// Save inventory to localStorage
+// Save inventory to localStorage with rate limiting
 function saveInventory() {
-    localStorage.setItem('foragingInventory', JSON.stringify(state.inventory));
+    // Security: Rate limiting
+    if (!canSave()) {
+        return;
+    }
+    try {
+        localStorage.setItem('foragingInventory', JSON.stringify(state.inventory));
+    } catch (e) {
+        console.error('Failed to save to localStorage:', e);
+        showNotification('Failed to save inventory. Storage may be full.', 'error');
+    }
 }
 
 // Initialize the app
@@ -40,12 +140,23 @@ function setupEventListeners() {
 
     // Clear inventory button
     document.getElementById('clearInventory').addEventListener('click', () => {
-        if (confirm('Clear all inventory? This cannot be undone.')) {
+        // Security: Use non-blocking notification instead of confirm
+        showNotification('Click Clear All again within 3 seconds to confirm', 'warning', 3000);
+
+        const btn = document.getElementById('clearInventory');
+        if (btn.dataset.confirmClear === 'true') {
             state.inventory = {};
             saveInventory();
             updateInventorySummary();
             renderPlants();
             renderMushrooms();
+            showNotification('Inventory cleared successfully', 'success');
+            btn.dataset.confirmClear = 'false';
+        } else {
+            btn.dataset.confirmClear = 'true';
+            setTimeout(() => {
+                btn.dataset.confirmClear = 'false';
+            }, 3000);
         }
     });
 }
@@ -95,40 +206,41 @@ function createForageCard(item, id, rollNumber) {
     const card = document.createElement('div');
     card.className = 'forage-card';
     card.dataset.effects = Object.values(item.effects).join(',');
-    
+
     const quantity = state.inventory[id] || 0;
-    
+
+    // Security: Sanitize data even though it's from frozen objects
     card.innerHTML = `
         <div class="forage-header">
-            <div class="roll-number">${rollNumber}</div>
-            <h3 class="forage-name">${item.name}</h3>
+            <div class="roll-number">${sanitizeHTML(String(rollNumber))}</div>
+            <h3 class="forage-name">${sanitizeHTML(item.name)}</h3>
             <div class="quantity-control">
-                <button class="qty-btn minus" data-id="${id}">−</button>
-                <span class="quantity-display">${quantity}</span>
-                <button class="qty-btn plus" data-id="${id}">+</button>
+                <button class="qty-btn minus" data-id="${sanitizeHTML(id)}">−</button>
+                <span class="quantity-display">${sanitizeHTML(String(quantity))}</span>
+                <button class="qty-btn plus" data-id="${sanitizeHTML(id)}">+</button>
             </div>
         </div>
-        <p class="forage-description">${item.description}</p>
+        <p class="forage-description">${sanitizeHTML(item.description)}</p>
         <div class="effects-grid">
             <div class="effect-item">
                 <strong>🧪 Alchemist:</strong>
-                <span>${item.effects.alchemist}</span>
+                <span>${sanitizeHTML(item.effects.alchemist)}</span>
             </div>
             <div class="effect-item">
                 <strong>🍳 Cook:</strong>
-                <span>${item.effects.cook}</span>
+                <span>${sanitizeHTML(item.effects.cook)}</span>
             </div>
             <div class="effect-item">
                 <strong>🌱 Herbalogist:</strong>
-                <span>${item.effects.herbalogist}</span>
+                <span>${sanitizeHTML(item.effects.herbalogist)}</span>
             </div>
         </div>
     `;
-    
+
     // Add event listeners for quantity buttons
     card.querySelector('.minus').addEventListener('click', () => adjustQuantity(id, -1));
     card.querySelector('.plus').addEventListener('click', () => adjustQuantity(id, 1));
-    
+
     return card;
 }
 
@@ -191,17 +303,19 @@ function updateInventorySummary() {
     items.sort((a, b) => b.quantity - a.quantity);
     
     items.forEach(item => {
+        // Security: Sanitize item data
         html += `
             <div class="inventory-item">
-                <span class="item-icon">${item.type}</span>
-                <span class="item-name">${item.name}</span>
-                <span class="item-quantity">×${item.quantity}</span>
+                <span class="item-icon">${sanitizeHTML(item.type)}</span>
+                <span class="item-name">${sanitizeHTML(item.name)}</span>
+                <span class="item-quantity">×${sanitizeHTML(String(item.quantity))}</span>
             </div>
         `;
     });
-    
+
     html += '</div>';
-    html += `<div class="inventory-total">Total Items: ${items.reduce((sum, item) => sum + item.quantity, 0)}</div>`;
+    const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+    html += `<div class="inventory-total">Total Items: ${sanitizeHTML(String(totalItems))}</div>`;
     
     summary.innerHTML = html;
 }
