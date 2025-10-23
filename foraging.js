@@ -59,6 +59,36 @@ const state = {
     currentFilter: 'all'
 };
 
+// DOM Cache
+const DOM = {
+    plantsGrid: null,
+    mushroomsGrid: null,
+    inventorySummary: null,
+    clearInventoryBtn: null
+};
+
+// Performance: Cached Query Results
+const cachedQueries = {
+    filterButtons: null,
+    forageCards: null
+};
+
+function invalidateQueryCache(key = null) {
+    if (key) {
+        cachedQueries[key] = null;
+    } else {
+        Object.keys(cachedQueries).forEach(k => cachedQueries[k] = null);
+    }
+}
+
+// Initialize DOM Cache
+function cacheDOMElements() {
+    DOM.plantsGrid = document.getElementById('plantsGrid');
+    DOM.mushroomsGrid = document.getElementById('mushroomsGrid');
+    DOM.inventorySummary = document.getElementById('inventorySummary');
+    DOM.clearInventoryBtn = document.getElementById('clearInventory');
+}
+
 // Security: Validate inventory data structure
 function isValidInventory(inventory) {
     if (!inventory || typeof inventory !== 'object' || Array.isArray(inventory)) {
@@ -103,22 +133,32 @@ function loadInventory() {
     }
 }
 
+// Performance: Debounce localStorage writes
+let saveTimeout;
+function debouncedLocalStorageSave() {
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(() => {
+        try {
+            localStorage.setItem('foragingInventory', JSON.stringify(state.inventory));
+        } catch (e) {
+            console.error('Failed to save to localStorage:', e);
+            showNotification('Failed to save inventory. Storage may be full.', 'error');
+        }
+    }, 300);
+}
+
 // Save inventory to localStorage with rate limiting
 function saveInventory() {
     // Security: Rate limiting
     if (!canSave()) {
         return;
     }
-    try {
-        localStorage.setItem('foragingInventory', JSON.stringify(state.inventory));
-    } catch (e) {
-        console.error('Failed to save to localStorage:', e);
-        showNotification('Failed to save inventory. Storage may be full.', 'error');
-    }
+    debouncedLocalStorageSave();
 }
 
 // Initialize the app
 function init() {
+    cacheDOMElements();
     loadInventory();
     renderPlants();
     renderMushrooms();
@@ -128,44 +168,76 @@ function init() {
 
 // Setup event listeners
 function setupEventListeners() {
-    // Filter buttons
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            state.currentFilter = btn.dataset.filter;
-            filterItems();
-        });
-    });
+    // Performance: Event delegation for all clicks
+    document.addEventListener('click', handleClick);
+}
+
+// Main Click Handler (Event Delegation)
+function handleClick(e) {
+    const target = e.target;
+
+    // Filter button clicks
+    if (target.classList.contains('filter-btn')) {
+        handleFilterClick(target);
+        return;
+    }
+
+    // Quantity adjustment buttons
+    if (target.classList.contains('qty-btn')) {
+        const id = target.dataset.id;
+        const delta = target.classList.contains('plus') ? 1 : -1;
+        adjustQuantity(id, delta);
+        return;
+    }
 
     // Clear inventory button
-    document.getElementById('clearInventory').addEventListener('click', () => {
-        // Security: Use non-blocking notification instead of confirm
-        showNotification('Click Clear All again within 3 seconds to confirm', 'warning', 3000);
+    if (target.id === 'clearInventory') {
+        handleClearInventory();
+        return;
+    }
+}
 
-        const btn = document.getElementById('clearInventory');
-        if (btn.dataset.confirmClear === 'true') {
-            state.inventory = {};
-            saveInventory();
-            updateInventorySummary();
-            renderPlants();
-            renderMushrooms();
-            showNotification('Inventory cleared successfully', 'success');
-            btn.dataset.confirmClear = 'false';
-        } else {
-            btn.dataset.confirmClear = 'true';
-            setTimeout(() => {
-                btn.dataset.confirmClear = 'false';
-            }, 3000);
-        }
-    });
+// Handle filter button clicks
+function handleFilterClick(btn) {
+    // Performance: Use cached query result
+    if (!cachedQueries.filterButtons) {
+        cachedQueries.filterButtons = document.querySelectorAll('.filter-btn');
+    }
+    cachedQueries.filterButtons.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.currentFilter = btn.dataset.filter;
+    filterItems();
+}
+
+// Handle clear inventory
+function handleClearInventory() {
+    // Security: Use non-blocking notification instead of confirm
+    showNotification('Click Clear All again within 3 seconds to confirm', 'warning', 3000);
+
+    if (DOM.clearInventoryBtn.dataset.confirmClear === 'true') {
+        state.inventory = {};
+        saveInventory();
+        updateInventorySummary();
+        renderPlants();
+        renderMushrooms();
+        showNotification('Inventory cleared successfully', 'success');
+        DOM.clearInventoryBtn.dataset.confirmClear = 'false';
+    } else {
+        DOM.clearInventoryBtn.dataset.confirmClear = 'true';
+        setTimeout(() => {
+            DOM.clearInventoryBtn.dataset.confirmClear = 'false';
+        }, 3000);
+    }
 }
 
 // Filter items based on current filter
 function filterItems() {
-    const allCards = document.querySelectorAll('.forage-card');
-    
-    allCards.forEach(card => {
+    // Performance: Use cached query result and toggle visibility instead of re-rendering
+    if (!cachedQueries.forageCards) {
+        cachedQueries.forageCards = document.querySelectorAll('.forage-card');
+    }
+
+    cachedQueries.forageCards.forEach(card => {
         if (state.currentFilter === 'all') {
             card.style.display = 'block';
         } else {
@@ -181,24 +253,34 @@ function filterItems() {
 
 // Render plants
 function renderPlants() {
-    const grid = document.getElementById('plantsGrid');
-    grid.innerHTML = '';
-    
+    DOM.plantsGrid.innerHTML = '';
+    invalidateQueryCache('forageCards'); // Performance: Clear cache on re-render
+
+    // Performance: Use DocumentFragment for batch DOM operations
+    const fragment = document.createDocumentFragment();
+
     foragingData.plants.forEach((plant, index) => {
         const card = createForageCard(plant, `plant-${index}`, index + 1);
-        grid.appendChild(card);
+        fragment.appendChild(card);
     });
+
+    DOM.plantsGrid.appendChild(fragment);
 }
 
 // Render mushrooms
 function renderMushrooms() {
-    const grid = document.getElementById('mushroomsGrid');
-    grid.innerHTML = '';
-    
+    DOM.mushroomsGrid.innerHTML = '';
+    invalidateQueryCache('forageCards'); // Performance: Clear cache on re-render
+
+    // Performance: Use DocumentFragment for batch DOM operations
+    const fragment = document.createDocumentFragment();
+
     foragingData.mushrooms.forEach((mushroom, index) => {
         const card = createForageCard(mushroom, `mushroom-${index}`, index + 1);
-        grid.appendChild(card);
+        fragment.appendChild(card);
     });
+
+    DOM.mushroomsGrid.appendChild(fragment);
 }
 
 // Create a forage card
@@ -237,9 +319,7 @@ function createForageCard(item, id, rollNumber) {
         </div>
     `;
 
-    // Add event listeners for quantity buttons
-    card.querySelector('.minus').addEventListener('click', () => adjustQuantity(id, -1));
-    card.querySelector('.plus').addEventListener('click', () => adjustQuantity(id, 1));
+    // Performance: No individual event listeners - using event delegation instead
 
     return card;
 }
@@ -265,59 +345,82 @@ function updateQuantityDisplay(id, quantity) {
     const card = document.querySelector(`[data-id="${id}"]`).closest('.forage-card');
     const display = card.querySelector('.quantity-display');
     display.textContent = quantity;
-    
-    // Add animation
+
+    // Performance: Use requestAnimationFrame for animations
     display.classList.add('quantity-updated');
-    setTimeout(() => display.classList.remove('quantity-updated'), 300);
+    requestAnimationFrame(() => {
+        setTimeout(() => {
+            requestAnimationFrame(() => {
+                display.classList.remove('quantity-updated');
+            });
+        }, 300);
+    });
 }
 
 // Update inventory summary
 function updateInventorySummary() {
-    const summary = document.getElementById('inventorySummary');
-    
     if (Object.keys(state.inventory).length === 0) {
-        summary.innerHTML = '<p class="empty-inventory">No items collected yet. Use the + buttons to add items to your inventory.</p>';
+        DOM.inventorySummary.innerHTML = '<p class="empty-inventory">No items collected yet. Use the + buttons to add items to your inventory.</p>';
         return;
     }
-    
-    let html = '<div class="inventory-list">';
-    
+
     // Get all items with quantities
     const items = [];
-    
+
     foragingData.plants.forEach((plant, index) => {
         const id = `plant-${index}`;
         if (state.inventory[id]) {
             items.push({ name: plant.name, quantity: state.inventory[id], type: '🌿' });
         }
     });
-    
+
     foragingData.mushrooms.forEach((mushroom, index) => {
         const id = `mushroom-${index}`;
         if (state.inventory[id]) {
             items.push({ name: mushroom.name, quantity: state.inventory[id], type: '🍄' });
         }
     });
-    
+
     // Sort by quantity descending
     items.sort((a, b) => b.quantity - a.quantity);
-    
+
+    // Performance: Use DocumentFragment for efficient DOM building
+    const fragment = document.createDocumentFragment();
+    const listDiv = document.createElement('div');
+    listDiv.className = 'inventory-list';
+
     items.forEach(item => {
-        // Security: Sanitize item data
-        html += `
-            <div class="inventory-item">
-                <span class="item-icon">${sanitizeHTML(item.type)}</span>
-                <span class="item-name">${sanitizeHTML(item.name)}</span>
-                <span class="item-quantity">×${sanitizeHTML(String(item.quantity))}</span>
-            </div>
-        `;
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'inventory-item';
+
+        const iconSpan = document.createElement('span');
+        iconSpan.className = 'item-icon';
+        iconSpan.textContent = item.type;
+
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'item-name';
+        nameSpan.textContent = item.name;
+
+        const quantitySpan = document.createElement('span');
+        quantitySpan.className = 'item-quantity';
+        quantitySpan.textContent = `×${item.quantity}`;
+
+        itemDiv.appendChild(iconSpan);
+        itemDiv.appendChild(nameSpan);
+        itemDiv.appendChild(quantitySpan);
+        listDiv.appendChild(itemDiv);
     });
 
-    html += '</div>';
+    fragment.appendChild(listDiv);
+
     const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-    html += `<div class="inventory-total">Total Items: ${sanitizeHTML(String(totalItems))}</div>`;
-    
-    summary.innerHTML = html;
+    const totalDiv = document.createElement('div');
+    totalDiv.className = 'inventory-total';
+    totalDiv.textContent = `Total Items: ${totalItems}`;
+    fragment.appendChild(totalDiv);
+
+    DOM.inventorySummary.innerHTML = '';
+    DOM.inventorySummary.appendChild(fragment);
 }
 
 // Start the app
