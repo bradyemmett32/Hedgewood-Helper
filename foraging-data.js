@@ -149,3 +149,21 @@ const foragingData = {
         }
     ]
 };
+
+// Security: Freeze data structure for immutability
+(function freezeForagingData() {
+    // Deep freeze helper
+    function deepFreeze(obj) {
+        Object.freeze(obj);
+        Object.getOwnPropertyNames(obj).forEach(prop => {
+            if (obj[prop] !== null
+                && (typeof obj[prop] === "object" || typeof obj[prop] === "function")
+                && !Object.isFrozen(obj[prop])) {
+                deepFreeze(obj[prop]);
+            }
+        });
+        return obj;
+    }
+
+    deepFreeze(foragingData);
+})();
