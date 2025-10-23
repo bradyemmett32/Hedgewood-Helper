@@ -1,3 +1,16 @@
+// Security: Input Sanitization
+function sanitizeHTML(str) {
+    const temp = document.createElement('div');
+    temp.textContent = str;
+    return temp.innerHTML;
+}
+
+function sanitizeText(str) {
+    if (typeof str !== 'string') return '';
+    // Remove HTML tags and limit length
+    return str.replace(/<[^>]*>/g, '').trim().slice(0, 200);
+}
+
 // Application State
 const state = {
     channelActions: 0,
@@ -42,6 +55,23 @@ const DOM = {
     spellNameInput: null,
     sections: {}
 };
+
+// Performance: Cached Query Results
+const cachedQueries = {
+    spellTypeCards: null,
+    spellOptions: null,
+    damageTypeOptions: null,
+    componentModules: null,
+    classOptions: null
+};
+
+function invalidateQueryCache(key = null) {
+    if (key) {
+        cachedQueries[key] = null;
+    } else {
+        Object.keys(cachedQueries).forEach(k => cachedQueries[k] = null);
+    }
+}
 
 // Initialize DOM Cache
 function cacheDOMElements() {
@@ -116,10 +146,17 @@ function handleClick(e) {
 }
 
 // Utility Functions
-function createElement(tag, className, content) {
+function createElement(tag, className, content, useHTML = false) {
     const el = document.createElement(tag);
     if (className) el.className = className;
-    if (content) el.innerHTML = content;
+    if (content) {
+        // Security: Use textContent by default, innerHTML only when explicitly needed
+        if (useHTML) {
+            el.innerHTML = content;
+        } else {
+            el.textContent = content;
+        }
+    }
     return el;
 }
 
@@ -167,7 +204,11 @@ function toggleClassSelection(key) {
 }
 
 function updateClassUI() {
-    document.querySelectorAll('.class-option').forEach(el => {
+    // Performance: Use cached query result
+    if (!cachedQueries.classOptions) {
+        cachedQueries.classOptions = document.querySelectorAll('.class-option');
+    }
+    cachedQueries.classOptions.forEach(el => {
         const key = el.dataset.classKey;
         toggleClass(el, 'selected', state.selectedClasses.includes(key));
     });
@@ -292,29 +333,33 @@ function renderSpellTypes() {
 }
 
 function selectSpellType(type) {
-    document.querySelectorAll('.spell-type-card').forEach(el => {
+    // Performance: Use cached query result
+    if (!cachedQueries.spellTypeCards) {
+        cachedQueries.spellTypeCards = document.querySelectorAll('.spell-type-card');
+    }
+    cachedQueries.spellTypeCards.forEach(el => {
         toggleClass(el, 'selected', el.dataset.spellType === type);
     });
-    
+
     state.selected.spellType = type;
     state.selected.base = null;
     state.selected.damageType = null;
     state.selected.healType = null;
     state.selected.effectType = null;
     state.selected.modules = [];
-    
+
     DOM.resetBtn.style.display = 'inline-block';
     DOM.sections.spellBase.classList.add('active');
-    
+
     const typeLabels = {
         attack: 'Attack Spell',
         heal: 'Healing Spell',
         effect: 'Effect Spell'
     };
     DOM.spellTypeLabel.textContent = typeLabels[type];
-    
+
     renderSpellBases(type);
-    
+
     DOM.sections.damageType.classList.remove('active');
     DOM.sections.component.classList.remove('active');
     DOM.generateBtn.style.display = 'none';
@@ -324,10 +369,11 @@ function selectSpellType(type) {
 // Spell Base Selection
 function renderSpellBases(type) {
     DOM.spellBaseOptions.innerHTML = '';
-    
+    invalidateQueryCache('spellOptions'); // Performance: Clear cache on re-render
+
     let spells = {};
     let info = '';
-    
+
     if (type === 'attack') {
         spells = spellData.attackSpells;
     } else if (type === 'heal') {
@@ -337,52 +383,56 @@ function renderSpellBases(type) {
         spells = spellData.effectSpells;
         info = '<div class="info-box">Effect spells create areas that trigger when creatures start their turn in or enter the area.</div>';
     }
-    
+
     if (info) DOM.spellBaseOptions.innerHTML = info;
-    
+
     const grid = createElement('div', 'spell-base-grid');
     const fragment = document.createDocumentFragment();
-    
+
     Object.entries(spells).forEach(([key, spell]) => {
         const div = createElement('div', 'spell-option');
         div.dataset.baseKey = key;
-        
+
         let diceInfo = '';
         if (spell.damage && key !== 'meleeStrike' && key !== 'rangedStrike') {
             const damageDie = getDamageDice();
-            diceInfo = `<div class="dice-info">${spell.damage}×${damageDie}</div>`;
+            diceInfo = `<div class="dice-info">${sanitizeHTML(spell.damage)}×${sanitizeHTML(damageDie)}</div>`;
         }
         if (spell.healing) {
             const healingDie = getHealingDice();
-            diceInfo = `<div class="dice-info">${spell.healing}×${healingDie}</div>`;
+            diceInfo = `<div class="dice-info">${sanitizeHTML(spell.healing)}×${sanitizeHTML(healingDie)}</div>`;
         }
-        
+
         div.innerHTML = `
-            <div class="spell-option-title">${spell.name}</div>
-            <div class="spell-option-description">${spell.description}</div>
+            <div class="spell-option-title">${sanitizeHTML(spell.name)}</div>
+            <div class="spell-option-description">${sanitizeHTML(spell.description)}</div>
             ${diceInfo}
         `;
         div.addEventListener('click', () => selectSpellBase(key));
         fragment.appendChild(div);
     });
-    
+
     grid.appendChild(fragment);
     DOM.spellBaseOptions.appendChild(grid);
 }
 
 function selectSpellBase(key) {
-    document.querySelectorAll('.spell-option').forEach(el => {
+    // Performance: Use cached query result
+    if (!cachedQueries.spellOptions) {
+        cachedQueries.spellOptions = document.querySelectorAll('.spell-option');
+    }
+    cachedQueries.spellOptions.forEach(el => {
         toggleClass(el, 'selected', el.dataset.baseKey === key);
     });
-    
+
     state.selected.base = { type: state.selected.spellType, key };
     state.selected.damageType = null;
     state.selected.healType = null;
     state.selected.effectType = null;
     state.selected.modules = [];
-    
+
     DOM.sections.damageType.classList.add('active');
-    
+
     if (state.selected.spellType === 'attack') {
         DOM.typeLabel.textContent = 'Damage Type';
         renderDamageTypes();
@@ -393,18 +443,19 @@ function selectSpellBase(key) {
         DOM.typeLabel.textContent = 'Effect Type';
         renderEffectTypes();
     }
-    
+
     DOM.sections.component.classList.add('active');
     renderComponentModules();
     updateModuleStates();
     updateAvailableModules();
-    
+
     DOM.generateBtn.style.display = 'block';
 }
 
 // Damage Type Selection
 function renderDamageTypes() {
     DOM.typeOptions.innerHTML = '';
+    invalidateQueryCache('damageTypeOptions'); // Performance: Clear cache on re-render
     const availableTypes = getAvailableDamageTypes();
     
     Object.entries(spellData.damageTypes).forEach(([category, types]) => {
@@ -443,6 +494,7 @@ function renderDamageTypes() {
 }
 
 function selectDamageType(key) {
+    // Note: Not caching these queries as they change frequently
     document.querySelectorAll('#typeOptions .damage-type-option').forEach(el => {
         toggleClass(el, 'selected', el.dataset.damageType === key);
     });
@@ -704,17 +756,20 @@ function closeDialog() {
 }
 
 function confirmSpellGeneration() {
-    const customName = DOM.spellNameInput.value.trim();
-    
-    if (!customName) {
-        alert('Please enter a name for your spell!');
+    const rawName = DOM.spellNameInput.value.trim();
+
+    // Security: Sanitize user input - remove HTML tags and limit length
+    const customName = sanitizeText(rawName);
+
+    if (!customName || customName.length < 1 || customName.length > 100) {
+        alert('Please enter a valid spell name (1-100 characters)!');
         return;
     }
-    
+
     const spell = compileSpell();
     spell.name = customName;
     spell.customName = customName;
-    
+
     closeDialog();
     displaySpell(spell);
     state.currentSpell = spell;
@@ -889,21 +944,37 @@ function getEffectData(effectType) {
 }
 
 function displaySpell(spell) {
-    DOM.spellName.textContent = spell.name;
-    
+    // Security: Use textContent for user-provided names
+    DOM.spellName.textContent = sanitizeText(spell.name);
+
+    // Build stats HTML with sanitization
     let statsHtml = '';
     spell.stats.forEach(stat => {
         statsHtml += `
             <div class="detail-row">
-                <span class="detail-label">${stat.label}:</span>
-                <span class="detail-value">${stat.value}</span>
+                <span class="detail-label">${sanitizeHTML(String(stat.label))}:</span>
+                <span class="detail-value">${sanitizeHTML(String(stat.value))}</span>
             </div>
         `;
     });
     DOM.spellStats.innerHTML = statsHtml;
     DOM.spellDescription.textContent = spell.description;
-    
+
     DOM.spellOutput.classList.add('visible');
+}
+
+// Performance: Debounce localStorage writes
+let saveTimeout;
+function debouncedLocalStorageSave() {
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(() => {
+        try {
+            localStorage.setItem('savedSpells', JSON.stringify(state.savedSpells));
+        } catch (e) {
+            console.error('Failed to save to localStorage:', e);
+            alert('Failed to save spell. Storage may be full.');
+        }
+    }, 300);
 }
 
 // Save and Export
@@ -912,11 +983,11 @@ function saveSpell() {
         alert('Generate a spell first!');
         return;
     }
-    
+
     state.savedSpells.push({...state.currentSpell, id: Date.now()});
-    localStorage.setItem('savedSpells', JSON.stringify(state.savedSpells));
+    debouncedLocalStorageSave();
     updateSavedSpellsList();
-    alert(`${state.currentSpell.name} has been saved!`);
+    alert(`${sanitizeText(state.currentSpell.name)} has been saved!`);
 }
 
 function exportSpell() {
@@ -924,26 +995,30 @@ function exportSpell() {
         alert('Generate a spell first!');
         return;
     }
-    
+
     const spell = state.currentSpell;
-    let text = `===== ${spell.name} =====\n\n`;
-    
-    if (spell.classes.length > 0) {
-        text += `Classes: ${spell.classes.map(c => classData[c].name).join(', ')}\n`;
+    // Security: Sanitize spell name for export
+    const safeName = sanitizeText(spell.name);
+    let text = `===== ${safeName} =====\n\n`;
+
+    if (spell.classes && spell.classes.length > 0) {
+        text += `Classes: ${spell.classes.map(c => classData[c]?.name || c).join(', ')}\n`;
         text += `Level: ${spell.level}\n\n`;
     }
-    
+
     text += `${spell.description}\n\n`;
     text += `--- Stats ---\n`;
     spell.stats.forEach(stat => {
         text += `${stat.label}: ${stat.value}\n`;
     });
-    
+
     const blob = new Blob([text], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${spell.name.replace(/\s+/g, '_')}.txt`;
+    // Security: Sanitize filename
+    const safeFilename = safeName.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 50);
+    a.download = `${safeFilename || 'spell'}.txt`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -955,40 +1030,47 @@ function updateSavedSpellsList() {
         DOM.savedSpellsList.innerHTML = '<p style="text-align: center; color: #999;">No saved spells yet!</p>';
         return;
     }
-    
+
     const fragment = document.createDocumentFragment();
-    
+
     state.savedSpells.forEach(spell => {
-        const classText = spell.classes.length > 0 ? 
+        const classText = spell.classes && spell.classes.length > 0 ?
             ` (${spell.classes.map(c => classData[c]?.name || c).join('/')})` : '';
-        
+
         const card = createElement('div', 'spell-card');
         card.dataset.spellId = spell.id;
+
+        // Security: Sanitize user-provided data in saved spells
+        const safeName = sanitizeHTML(String(spell.name || 'Unnamed Spell'));
+        const safeDescription = sanitizeHTML(String(spell.description || ''));
+        const safeChannelActions = parseInt(spell.channelActions) || 0;
+        const safeLevel = parseInt(spell.level) || 1;
+
         card.innerHTML = `
             <button class="delete-btn" data-spell-id="${spell.id}">×</button>
             <div style="font-weight: bold; font-size: 1.2em; color: var(--color-primary); margin-bottom: 8px;">
-                ${spell.name}${classText}
+                ${safeName}${sanitizeHTML(classText)}
             </div>
-            <div style="font-size: 0.95em;">${spell.description}</div>
+            <div style="font-size: 0.95em;">${safeDescription}</div>
             <div style="margin-top: 8px; font-size: 0.85em; color: #666;">
-                Channel Actions: ${spell.channelActions} | Level: ${spell.level}
+                Channel Actions: ${safeChannelActions} | Level: ${safeLevel}
             </div>
         `;
-        
+
         card.addEventListener('click', (e) => {
             if (!e.target.classList.contains('delete-btn')) {
                 loadSpell(spell.id);
             }
         });
-        
+
         card.querySelector('.delete-btn').addEventListener('click', (e) => {
             e.stopPropagation();
             deleteSpell(spell.id);
         });
-        
+
         fragment.appendChild(card);
     });
-    
+
     DOM.savedSpellsList.innerHTML = '';
     DOM.savedSpellsList.appendChild(fragment);
 }
@@ -996,49 +1078,54 @@ function updateSavedSpellsList() {
 function loadSpell(id) {
     const spell = state.savedSpells.find(s => s.id === id);
     if (!spell) return;
-    
+
     resetSpell();
-    
-    state.channelActions = spell.channelActions;
+
+    state.channelActions = spell.channelActions || 0;
     DOM.channelCount.textContent = state.channelActions;
-    
+
     if (spell.level) {
         state.playerLevel = spell.level;
         DOM.playerLevel.value = spell.level;
     }
-    
-    if (spell.classes) {
+
+    if (spell.classes && Array.isArray(spell.classes)) {
         state.selectedClasses = [...spell.classes];
         updateClassUI();
         updateClassInfo();
     }
-    
-    selectSpellType(spell.base.type);
-    
-    setTimeout(() => {
+
+    if (spell.base && spell.base.type) {
+        selectSpellType(spell.base.type);
+    }
+
+    // Performance: Use requestAnimationFrame instead of setTimeout
+    requestAnimationFrame(() => {
         state.selected.base = spell.base;
-        
+
         if (spell.damageType) state.selected.damageType = spell.damageType;
         if (spell.healType) state.selected.healType = spell.healType;
         if (spell.effectType) state.selected.effectType = spell.effectType;
-        
-        state.selected.modules = [...spell.modules];
-        
+
+        if (spell.modules && Array.isArray(spell.modules)) {
+            state.selected.modules = [...spell.modules];
+        }
+
         if (spell.extraBuffs) {
             state.selected.extraBuffs = {...spell.extraBuffs};
         }
-        
+
         updateModuleStates();
         updateAvailableModules();
         updateExtraBuffSection();
         displaySpell(spell);
-    }, 100);
+    });
 }
 
 function deleteSpell(id) {
     if (confirm('Delete this spell?')) {
         state.savedSpells = state.savedSpells.filter(s => s.id !== id);
-        localStorage.setItem('savedSpells', JSON.stringify(state.savedSpells));
+        debouncedLocalStorageSave(); // Performance: Use debounced save
         updateSavedSpellsList();
     }
 }
@@ -1065,17 +1152,48 @@ function resetSpell() {
     updateAvailableModules();
 }
 
+// Security: Validate spell data structure
+function isValidSpell(spell) {
+    return spell &&
+           typeof spell === 'object' &&
+           spell.base &&
+           spell.base.type &&
+           Array.isArray(spell.modules) &&
+           typeof spell.name === 'string' &&
+           typeof spell.id !== 'undefined';
+}
+
 // Initialize Application
 function init() {
     cacheDOMElements();
     setupEventListeners();
-    
-    // Load saved spells from localStorage
-    const saved = localStorage.getItem('savedSpells');
-    if (saved) {
-        state.savedSpells = JSON.parse(saved);
+
+    // Security: Load and validate saved spells from localStorage
+    try {
+        const saved = localStorage.getItem('savedSpells');
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            if (Array.isArray(parsed)) {
+                // Filter out invalid spell data
+                state.savedSpells = parsed.filter(isValidSpell);
+
+                // If some spells were filtered out, update localStorage
+                if (state.savedSpells.length !== parsed.length) {
+                    console.warn('Some saved spells were corrupted and removed');
+                    localStorage.setItem('savedSpells', JSON.stringify(state.savedSpells));
+                }
+            } else {
+                console.error('Invalid saved spells format');
+                state.savedSpells = [];
+            }
+        }
+    } catch (e) {
+        console.error('Failed to load saved spells:', e);
+        state.savedSpells = [];
+        // Clear corrupted data
+        localStorage.removeItem('savedSpells');
     }
-    
+
     renderClasses();
     renderSpellTypes();
     updateSavedSpellsList();
