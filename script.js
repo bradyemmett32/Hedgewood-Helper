@@ -102,7 +102,8 @@ const cachedQueries = {
     spellOptions: null,
     damageTypeOptions: null,
     componentModules: null,
-    classOptions: null
+    classOptions: null,
+    allSections: null
 };
 
 function invalidateQueryCache(key = null) {
@@ -150,14 +151,24 @@ function cacheDOMElements() {
 function setupEventListeners() {
     // Global click handler
     document.addEventListener('click', handleClick);
-    
+
     // Player level change
     DOM.playerLevel.addEventListener('change', updatePlayerLevel);
-    
+
     // Spell name input
     DOM.spellNameInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') confirmSpellGeneration();
         if (e.key === 'Escape') closeDialog();
+    });
+
+    // Performance: Add passive listeners for scroll performance
+    const scrollableElements = [DOM.componentModules];
+    scrollableElements.forEach(element => {
+        if (element) {
+            element.addEventListener('scroll', () => {}, { passive: true });
+            element.addEventListener('touchstart', () => {}, { passive: true });
+            element.addEventListener('touchmove', () => {}, { passive: true });
+        }
     });
 }
 
@@ -235,6 +246,9 @@ function toggleClassSelection(key) {
         state.selectedClasses.push(key);
     }
 
+    // Performance: Invalidate dice cache when classes change
+    invalidateDiceCache();
+
     updateClassUI();
     updateClassInfo();
 
@@ -259,26 +273,44 @@ function updateClassInfo() {
         DOM.classInfo.innerHTML = '';
         return;
     }
-    
-    let info = '<strong>Selected Classes:</strong><br>';
+
+    // Performance: Use DocumentFragment for efficient DOM building
+    const fragment = document.createDocumentFragment();
+
+    const header = createElement('strong', null, 'Selected Classes:');
+    fragment.appendChild(header);
+    fragment.appendChild(document.createElement('br'));
+
     state.selectedClasses.forEach(key => {
         const cls = classData[key];
-        info += `• ${cls.name}: ${cls.description}<br>`;
-        info += `  Damage: ${cls.damageDie} | Healing: ${cls.healingDie}<br>`;
+        const classLine = document.createTextNode(`• ${cls.name}: ${cls.description}`);
+        fragment.appendChild(classLine);
+        fragment.appendChild(document.createElement('br'));
+
+        const statsLine = document.createTextNode(`  Damage: ${cls.damageDie} | Healing: ${cls.healingDie}`);
+        fragment.appendChild(statsLine);
+        fragment.appendChild(document.createElement('br'));
     });
-    
+
     const availableTypes = getAvailableDamageTypes();
     if (availableTypes.length > 0) {
-        info += '<br><strong>Available Damage Types:</strong> ';
-        info += availableTypes.map(t => {
+        fragment.appendChild(document.createElement('br'));
+        const typesHeader = createElement('strong', null, 'Available Damage Types: ');
+        fragment.appendChild(typesHeader);
+
+        const typeNames = availableTypes.map(t => {
             for (const category of Object.values(spellData.damageTypes)) {
                 if (category[t]) return category[t].name;
             }
             return t;
         }).join(', ');
+
+        const typesText = document.createTextNode(typeNames);
+        fragment.appendChild(typesText);
     }
-    
-    DOM.classInfo.innerHTML = info;
+
+    DOM.classInfo.innerHTML = '';
+    DOM.classInfo.appendChild(fragment);
 }
 
 function getAvailableDamageTypes() {
@@ -297,28 +329,74 @@ function getAvailableDamageTypes() {
     return Array.from(types);
 }
 
+// Performance: Cache dice calculations
+const diceCache = {
+    damage: null,
+    healing: null,
+    lastClassesHash: null
+};
+
+function getClassesHash() {
+    return state.selectedClasses.sort().join(',');
+}
+
 function getDamageDice() {
-    if (state.selectedClasses.length === 0) return "1d8";
-    
+    const classesHash = getClassesHash();
+
+    // Performance: Return cached result if classes haven't changed
+    if (diceCache.damage && diceCache.lastClassesHash === classesHash) {
+        return diceCache.damage;
+    }
+
+    if (state.selectedClasses.length === 0) {
+        diceCache.damage = "1d8";
+        diceCache.lastClassesHash = classesHash;
+        return diceCache.damage;
+    }
+
     const dice = state.selectedClasses.map(key => classData[key].damageDie);
     dice.sort((a, b) => {
         const sizeA = parseInt(a.match(/d(\d+)/)[1]);
         const sizeB = parseInt(b.match(/d(\d+)/)[1]);
         return sizeB - sizeA;
     });
-    return dice[0];
+
+    diceCache.damage = dice[0];
+    diceCache.lastClassesHash = classesHash;
+    return diceCache.damage;
 }
 
 function getHealingDice() {
-    if (state.selectedClasses.length === 0) return "1d8";
-    
+    const classesHash = getClassesHash();
+
+    // Performance: Return cached result if classes haven't changed
+    if (diceCache.healing && diceCache.lastClassesHash === classesHash) {
+        return diceCache.healing;
+    }
+
+    if (state.selectedClasses.length === 0) {
+        diceCache.healing = "1d8";
+        diceCache.lastClassesHash = classesHash;
+        return diceCache.healing;
+    }
+
     const dice = state.selectedClasses.map(key => classData[key].healingDie);
     dice.sort((a, b) => {
         const sizeA = parseInt(a.match(/d(\d+)/)[1]);
         const sizeB = parseInt(b.match(/d(\d+)/)[1]);
         return sizeB - sizeA;
     });
-    return dice[0];
+
+    diceCache.healing = dice[0];
+    diceCache.lastClassesHash = classesHash;
+    return diceCache.healing;
+}
+
+// Clear dice cache when classes change
+function invalidateDiceCache() {
+    diceCache.damage = null;
+    diceCache.healing = null;
+    diceCache.lastClassesHash = null;
 }
 
 // Player Level
@@ -1223,15 +1301,25 @@ function resetSpell() {
         modules: [],
         extraBuffs: {}
     };
-    
-    document.querySelectorAll('.spell-type-card').forEach(el => el.classList.remove('selected'));
-    document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+
+    // Performance: Use cached queries for reset operations
+    if (!cachedQueries.spellTypeCards) {
+        cachedQueries.spellTypeCards = document.querySelectorAll('.spell-type-card');
+    }
+    cachedQueries.spellTypeCards.forEach(el => el.classList.remove('selected'));
+
+    // Cache section queries if not already cached
+    if (!cachedQueries.allSections) {
+        cachedQueries.allSections = document.querySelectorAll('.section');
+    }
+    cachedQueries.allSections.forEach(el => el.classList.remove('active'));
+
     DOM.sections.spellType.classList.add('active');
     DOM.resetBtn.style.display = 'none';
     DOM.generateBtn.style.display = 'none';
     DOM.spellOutput.classList.remove('visible');
     DOM.extraBuffSection.style.display = 'none';
-    
+
     updateAvailableModules();
 }
 
