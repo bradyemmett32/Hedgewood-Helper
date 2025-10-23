@@ -282,14 +282,28 @@ h1 {
     }
 }
 
-/* Performance: GPU acceleration for animated elements */
-.section.active,
-.spell-output.visible,
-.spell-type-card,
-.spell-option,
-.component-module,
-.spell-card {
+/* Performance: Apply will-change only during transitions/hover states */
+.spell-type-card:hover,
+.spell-option:hover,
+.component-module:hover,
+.spell-card:hover,
+.class-option:hover,
+.channel-btn:hover,
+button:hover:not(:disabled) {
     will-change: transform;
+}
+
+/* Performance: will-change for actively animating elements only */
+.section.active {
+    will-change: opacity, transform;
+}
+
+.notification {
+    will-change: opacity, transform;
+}
+
+.notification.show {
+    will-change: auto;
 }
 
 .section-title {
@@ -447,9 +461,26 @@ h1 {
     max-height: 400px;
     overflow-y: auto;
     padding-right: var(--spacing-sm);
-    /* Performance: Add containment and will-change hints */
+    /* Performance: Containment for better scroll performance */
     contain: layout;
-    will-change: scroll-position;
+}
+
+.component-modules::-webkit-scrollbar {
+    width: 8px;
+}
+
+.component-modules::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.component-modules::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.component-modules::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
 
 .component-module {
@@ -637,6 +668,11 @@ button:disabled {
     margin-bottom: var(--spacing-lg);
 }
 
+#savedSpellsList {
+    /* Performance: Containment for list rendering */
+    contain: layout;
+}
+
 .spell-card {
     background: var(--gradient-purple);
     padding: var(--spacing-md);
@@ -645,10 +681,12 @@ button:disabled {
     cursor: pointer;
     transition: var(--transition);
     position: relative;
+    /* Performance: Hint that this element transforms */
+    transform: translateZ(0);
 }
 
 .spell-card:hover {
-    transform: translateX(5px);
+    transform: translateX(5px) translateZ(0);
     box-shadow: var(--shadow-md);
 }
 
@@ -691,6 +729,55 @@ button:disabled {
     border: 1px solid #bee5eb;
     color: #0c5460;
     margin-bottom: var(--spacing-md);
+}
+
+/* Notification System */
+.notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 400px;
+}
+
+.notification {
+    background: white;
+    padding: 15px 20px;
+    border-radius: var(--border-radius-sm);
+    box-shadow: var(--shadow-md);
+    border-left: 4px solid var(--color-info);
+    opacity: 0;
+    transform: translateX(400px);
+    transition: all 0.3s ease;
+    font-size: 0.95em;
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.notification-success {
+    border-left-color: var(--color-success);
+    background: linear-gradient(135deg, #f0fff4 0%, #e6f7f0 100%);
+}
+
+.notification-error {
+    border-left-color: var(--color-danger);
+    background: linear-gradient(135deg, #fff5f5 0%, #fee 100%);
+}
+
+.notification-warning {
+    border-left-color: var(--color-warning);
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+}
+
+.notification-info {
+    border-left-color: var(--color-info);
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
 }
 
 /* Modal */
@@ -802,6 +889,19 @@ button:disabled {
         width: 100%;
         margin-top: var(--spacing-sm);
     }
+
+    /* Notification adjustments for mobile */
+    .notification-container {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+
+    .notification {
+        font-size: 0.9em;
+        padding: 12px 15px;
+    }
 }
 
 @media (min-width: 641px) and (max-width: 1024px) {
@@ -816,4 +916,40 @@ button:disabled {
     .damage-type-grid {
         grid-template-columns: repeat(3, 1fr);
     }
+}
+
+/* Accessibility: Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .notification {
+        transition: none;
+        transform: translateX(0);
+    }
+
+    .section.active {
+        animation: none;
+    }
+
+    .spell-type-card:hover,
+    .spell-option:hover,
+    .component-module:hover,
+    .spell-card:hover,
+    button:hover:not(:disabled) {
+        transform: none;
+        will-change: auto;
+    }
+}
+
+/* Performance: Optimize repainting for high-frequency updates */
+.channel-display,
+#availableModules {
+    contain: layout style;
 }
