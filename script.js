@@ -11,6 +11,46 @@ function sanitizeText(str) {
     return str.replace(/<[^>]*>/g, '').trim().slice(0, 200);
 }
 
+// Security: Non-blocking notification system (replaces alert())
+function showNotification(message, type = 'info', duration = 3000) {
+    const notification = createElement('div', `notification notification-${type}`);
+    notification.textContent = message;
+
+    const container = document.getElementById('notificationContainer') || createNotificationContainer();
+    container.appendChild(notification);
+
+    // Trigger animation
+    requestAnimationFrame(() => {
+        notification.classList.add('show');
+    });
+
+    // Auto-dismiss
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+    }, duration);
+}
+
+function createNotificationContainer() {
+    const container = createElement('div', 'notification-container');
+    container.id = 'notificationContainer';
+    document.body.appendChild(container);
+    return container;
+}
+
+// Security: Rate limiting for save operations
+let lastSaveTime = 0;
+const SAVE_COOLDOWN = 1000; // 1 second between saves
+
+function canSave() {
+    const now = Date.now();
+    if (now - lastSaveTime < SAVE_COOLDOWN) {
+        return false;
+    }
+    lastSaveTime = now;
+    return true;
+}
+
 // Application State
 const state = {
     channelActions: 0,
@@ -184,20 +224,20 @@ function renderClasses() {
 
 function toggleClassSelection(key) {
     const index = state.selectedClasses.indexOf(key);
-    
+
     if (index > -1) {
         state.selectedClasses.splice(index, 1);
     } else {
         if (state.selectedClasses.length >= 2) {
-            alert('You can only select up to 2 magical classes!');
+            showNotification('You can only select up to 2 magical classes!', 'warning');
             return;
         }
         state.selectedClasses.push(key);
     }
-    
+
     updateClassUI();
     updateClassInfo();
-    
+
     if (state.selected.base?.type === 'attack' && DOM.sections.damageType.classList.contains('active')) {
         renderDamageTypes();
     }
@@ -283,8 +323,17 @@ function getHealingDice() {
 
 // Player Level
 function updatePlayerLevel() {
-    state.playerLevel = parseInt(DOM.playerLevel.value);
-    
+    // Security: Validate input is integer within bounds
+    let level = parseInt(DOM.playerLevel.value, 10);
+
+    if (isNaN(level) || level < 1 || level > 10) {
+        level = Math.max(1, Math.min(10, level || 1));
+        DOM.playerLevel.value = level;
+        showNotification('Level must be between 1 and 10', 'warning', 2000);
+    }
+
+    state.playerLevel = level;
+
     if (DOM.sections.damageType.classList.contains('active')) {
         if (state.selected.base?.type === 'heal') {
             renderHealTypes();
@@ -316,19 +365,25 @@ function updateAvailableModules() {
 // Spell Type Selection
 function renderSpellTypes() {
     const fragment = document.createDocumentFragment();
-    
+
     Object.entries(spellTypeConfig).forEach(([type, config]) => {
         const card = createElement('div', 'spell-type-card');
         card.dataset.spellType = type;
-        card.innerHTML = `
-            <div class="spell-type-icon">${config.icon}</div>
-            <div class="spell-type-name">${config.name}</div>
-            <div style="font-size: 0.85em; margin-top: 5px;">${config.description}</div>
-        `;
+
+        // Security: Build DOM safely without innerHTML
+        const icon = createElement('div', 'spell-type-icon', config.icon);
+        const name = createElement('div', 'spell-type-name', config.name);
+        const desc = createElement('div', null, config.description);
+        desc.style.fontSize = '0.85em';
+        desc.style.marginTop = '5px';
+
+        card.appendChild(icon);
+        card.appendChild(name);
+        card.appendChild(desc);
         card.addEventListener('click', () => selectSpellType(type));
         fragment.appendChild(card);
     });
-    
+
     DOM.spellTypeSelector.appendChild(fragment);
 }
 
@@ -465,14 +520,19 @@ function renderDamageTypes() {
         
         Object.entries(types).forEach(([key, type]) => {
             if (!availableTypes.includes(key)) return;
-            
+
             hasVisible = true;
             const div = createElement('div', 'damage-type-option');
             div.dataset.damageType = key;
-            div.innerHTML = `
-                <div>${type.name}</div>
-                <div style="font-size: 0.8em; opacity: 0.8;">vs ${type.defense}</div>
-            `;
+
+            // Security: Build DOM safely
+            const nameDiv = createElement('div', null, type.name);
+            const defenseDiv = createElement('div', null, `vs ${type.defense}`);
+            defenseDiv.style.fontSize = '0.8em';
+            defenseDiv.style.opacity = '0.8';
+
+            div.appendChild(nameDiv);
+            div.appendChild(defenseDiv);
             div.addEventListener('click', () => selectDamageType(key));
             fragment.appendChild(div);
         });
@@ -509,15 +569,19 @@ function renderHealTypes() {
     
     Object.entries(spellData.healTypes).forEach(([key, type]) => {
         if (type.level && type.level > state.playerLevel) return;
-        
+
         const div = createElement('div', 'damage-type-option');
         div.dataset.healType = key;
-        
+
+        // Security: Build DOM safely
         const levelText = type.level ? ` (Lvl ${type.level}+)` : '';
-        div.innerHTML = `
-            <div>${type.name}${levelText}</div>
-            <div style="font-size: 0.8em; opacity: 0.8;">${type.description}</div>
-        `;
+        const nameDiv = createElement('div', null, type.name + levelText);
+        const descDiv = createElement('div', null, type.description);
+        descDiv.style.fontSize = '0.8em';
+        descDiv.style.opacity = '0.8';
+
+        div.appendChild(nameDiv);
+        div.appendChild(descDiv);
         div.addEventListener('click', () => selectHealType(key));
         fragment.appendChild(div);
     });
@@ -556,25 +620,32 @@ function renderEffectCategory(title, effects, category) {
     const categoryDiv = createElement('div', 'damage-type-category', title);
     const grid = createElement('div', 'damage-type-grid');
     const fragment = document.createDocumentFragment();
-    
+
     Object.entries(effects).forEach(([key, effect]) => {
         const div = createElement('div', 'damage-type-option');
         div.dataset.effectCategory = category;
         div.dataset.effectKey = key;
-        
-        let details = '';
+
+        // Security: Build DOM safely
+        const nameDiv = createElement('div', null, effect.name);
+        div.appendChild(nameDiv);
+
         if (effect.single) {
-            details = `<div style="font-size: 0.8em;">Single: ${effect.single} | Multi: ${effect.multi}${effect.defense ? ` | vs ${effect.defense}` : ''}</div>`;
+            const detailText = `Single: ${effect.single} | Multi: ${effect.multi}${effect.defense ? ` | vs ${effect.defense}` : ''}`;
+            const detailDiv = createElement('div', null, detailText);
+            detailDiv.style.fontSize = '0.8em';
+            div.appendChild(detailDiv);
         } else if (effect.defense) {
             const levelText = effect.level > 1 ? ` (Lvl ${effect.level}+)` : '';
-            details = `<div style="font-size: 0.8em;">vs ${effect.defense}${levelText}</div>`;
+            const detailDiv = createElement('div', null, `vs ${effect.defense}${levelText}`);
+            detailDiv.style.fontSize = '0.8em';
+            div.appendChild(detailDiv);
         }
-        
-        div.innerHTML = `<div>${effect.name}</div>${details}`;
+
         div.addEventListener('click', () => selectEffectType(category, key));
         fragment.appendChild(div);
     });
-    
+
     grid.appendChild(fragment);
     DOM.typeOptions.appendChild(categoryDiv);
     DOM.typeOptions.appendChild(grid);
@@ -667,12 +738,17 @@ function updateExtraBuffSection() {
     for (let i = 0; i < extraBuffCount; i++) {
         const buffDiv = createElement('div');
         buffDiv.style.cssText = 'margin-bottom: 20px; padding: 15px; background: #f8f9ff; border-radius: 10px; border: 2px solid #ddd;';
-        buffDiv.innerHTML = `<h5 style="color: var(--color-primary); margin-bottom: 10px;">Extra Effect #${i + 1}:</h5>`;
-        
+
+        // Security: Build DOM safely
+        const heading = createElement('h5', null, `Extra Effect #${i + 1}:`);
+        heading.style.color = 'var(--color-primary)';
+        heading.style.marginBottom = '10px';
+        buffDiv.appendChild(heading);
+
         const container = createElement('div');
         container.id = `extraBuffOptions_${i}`;
         buffDiv.appendChild(container);
-        
+
         DOM.extraBuffSelections.appendChild(buffDiv);
         renderExtraBuffOptions(i);
     }
@@ -723,31 +799,31 @@ function showSpellNamingDialog() {
 
 function validateSpell() {
     if (!state.selected.base) {
-        alert('Please select a spell base!');
+        showNotification('Please select a spell base!', 'error');
         return false;
     }
-    
+
     if (state.selected.base.type === 'attack' && !state.selected.damageType) {
-        alert('Please select a damage type!');
+        showNotification('Please select a damage type!', 'error');
         return false;
     }
-    
+
     if (state.selected.base.type === 'heal' && !state.selected.healType) {
-        alert('Please select a healing type!');
+        showNotification('Please select a healing type!', 'error');
         return false;
     }
-    
+
     if (state.selected.base.type === 'effect' && !state.selected.effectType) {
-        alert('Please select an effect type!');
+        showNotification('Please select an effect type!', 'error');
         return false;
     }
-    
+
     const extraBuffCount = state.selected.modules.filter(m => m === 'extraBuff').length;
     if (extraBuffCount > Object.keys(state.selected.extraBuffs).length) {
-        alert('Please select all extra buff/debuff effects!');
+        showNotification('Please select all extra buff/debuff effects!', 'error');
         return false;
     }
-    
+
     return true;
 }
 
@@ -762,7 +838,7 @@ function confirmSpellGeneration() {
     const customName = sanitizeText(rawName);
 
     if (!customName || customName.length < 1 || customName.length > 100) {
-        alert('Please enter a valid spell name (1-100 characters)!');
+        showNotification('Please enter a valid spell name (1-100 characters)!', 'error');
         return;
     }
 
@@ -980,19 +1056,25 @@ function debouncedLocalStorageSave() {
 // Save and Export
 function saveSpell() {
     if (!state.currentSpell) {
-        alert('Generate a spell first!');
+        showNotification('Generate a spell first!', 'warning');
+        return;
+    }
+
+    // Security: Rate limiting
+    if (!canSave()) {
+        showNotification('Please wait before saving again', 'warning', 2000);
         return;
     }
 
     state.savedSpells.push({...state.currentSpell, id: Date.now()});
     debouncedLocalStorageSave();
     updateSavedSpellsList();
-    alert(`${sanitizeText(state.currentSpell.name)} has been saved!`);
+    showNotification(`${sanitizeText(state.currentSpell.name)} has been saved!`, 'success');
 }
 
 function exportSpell() {
     if (!state.currentSpell) {
-        alert('Generate a spell first!');
+        showNotification('Generate a spell first!', 'warning');
         return;
     }
 
@@ -1023,6 +1105,7 @@ function exportSpell() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    showNotification('Spell exported successfully!', 'success');
 }
 
 function updateSavedSpellsList() {

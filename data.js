@@ -356,3 +356,23 @@ const spellTypeConfig = {
         description: "Apply buffs, debuffs, or conditions"
     }
 };
+
+// Security: Freeze all data structures for immutability
+(function freezeGameData() {
+    // Deep freeze helper
+    function deepFreeze(obj) {
+        Object.freeze(obj);
+        Object.getOwnPropertyNames(obj).forEach(prop => {
+            if (obj[prop] !== null
+                && (typeof obj[prop] === "object" || typeof obj[prop] === "function")
+                && !Object.isFrozen(obj[prop])) {
+                deepFreeze(obj[prop]);
+            }
+        });
+        return obj;
+    }
+
+    deepFreeze(classData);
+    deepFreeze(spellData);
+    deepFreeze(spellTypeConfig);
+})();
