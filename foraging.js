@@ -53,6 +53,29 @@ function canSave() {
     return true;
 }
 
+// Utility Functions
+function createElement(tag, className, content, useHTML = false) {
+    const el = document.createElement(tag);
+    if (className) el.className = className;
+    if (content) {
+        // Security: Use textContent by default, innerHTML only when explicitly needed
+        if (useHTML) {
+            el.innerHTML = content;
+        } else {
+            el.textContent = content;
+        }
+    }
+    return el;
+}
+
+function toggleClass(element, className, force) {
+    if (force !== undefined) {
+        element.classList.toggle(className, force);
+    } else {
+        element.classList.toggle(className);
+    }
+}
+
 // Application state
 const state = {
     inventory: {},
@@ -203,8 +226,8 @@ function handleFilterClick(btn) {
     if (!cachedQueries.filterButtons) {
         cachedQueries.filterButtons = document.querySelectorAll('.filter-btn');
     }
-    cachedQueries.filterButtons.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+    cachedQueries.filterButtons.forEach(b => toggleClass(b, 'active', false));
+    toggleClass(btn, 'active', true);
     state.currentFilter = btn.dataset.filter;
     filterItems();
 }
@@ -230,7 +253,7 @@ function handleClearInventory() {
     }
 }
 
-// Filter items based on current filter
+// Filter Management
 function filterItems() {
     // Performance: Use cached query result and toggle visibility instead of re-rendering
     if (!cachedQueries.forageCards) {
@@ -251,7 +274,7 @@ function filterItems() {
     });
 }
 
-// Render plants
+// Plant Rendering
 function renderPlants() {
     DOM.plantsGrid.innerHTML = '';
     invalidateQueryCache('forageCards'); // Performance: Clear cache on re-render
@@ -267,7 +290,7 @@ function renderPlants() {
     DOM.plantsGrid.appendChild(fragment);
 }
 
-// Render mushrooms
+// Mushroom Rendering
 function renderMushrooms() {
     DOM.mushroomsGrid.innerHTML = '';
     invalidateQueryCache('forageCards'); // Performance: Clear cache on re-render
@@ -283,7 +306,7 @@ function renderMushrooms() {
     DOM.mushroomsGrid.appendChild(fragment);
 }
 
-// Create a forage card
+// Card Creation
 function createForageCard(item, id, rollNumber) {
     const card = document.createElement('div');
     card.className = 'forage-card';
@@ -324,17 +347,23 @@ function createForageCard(item, id, rollNumber) {
     return card;
 }
 
-// Adjust quantity
+// Inventory Management
 function adjustQuantity(id, delta) {
+    // Validate inputs
+    if (!id || typeof delta !== 'number') {
+        console.warn('Invalid quantity adjustment parameters');
+        return;
+    }
+
     const current = state.inventory[id] || 0;
     const newValue = Math.max(0, current + delta);
-    
+
     if (newValue === 0) {
         delete state.inventory[id];
     } else {
         state.inventory[id] = newValue;
     }
-    
+
     saveInventory();
     updateQuantityDisplay(id, newValue);
     updateInventorySummary();
@@ -342,19 +371,33 @@ function adjustQuantity(id, delta) {
 
 // Update quantity display for a specific item
 function updateQuantityDisplay(id, quantity) {
-    const card = document.querySelector(`[data-id="${id}"]`).closest('.forage-card');
-    const display = card.querySelector('.quantity-display');
-    display.textContent = quantity;
+    try {
+        const card = document.querySelector(`[data-id="${id}"]`)?.closest('.forage-card');
+        if (!card) {
+            console.warn(`Card not found for id: ${id}`);
+            return;
+        }
 
-    // Performance: Use requestAnimationFrame for animations
-    display.classList.add('quantity-updated');
-    requestAnimationFrame(() => {
-        setTimeout(() => {
-            requestAnimationFrame(() => {
-                display.classList.remove('quantity-updated');
-            });
-        }, 300);
-    });
+        const display = card.querySelector('.quantity-display');
+        if (!display) {
+            console.warn(`Display element not found for id: ${id}`);
+            return;
+        }
+
+        display.textContent = quantity;
+
+        // Performance: Use requestAnimationFrame for animations
+        toggleClass(display, 'quantity-updated', true);
+        requestAnimationFrame(() => {
+            setTimeout(() => {
+                requestAnimationFrame(() => {
+                    toggleClass(display, 'quantity-updated', false);
+                });
+            }, 300);
+        });
+    } catch (e) {
+        console.error('Error updating quantity display:', e);
+    }
 }
 
 // Update inventory summary
@@ -386,24 +429,13 @@ function updateInventorySummary() {
 
     // Performance: Use DocumentFragment for efficient DOM building
     const fragment = document.createDocumentFragment();
-    const listDiv = document.createElement('div');
-    listDiv.className = 'inventory-list';
+    const listDiv = createElement('div', 'inventory-list');
 
     items.forEach(item => {
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'inventory-item';
-
-        const iconSpan = document.createElement('span');
-        iconSpan.className = 'item-icon';
-        iconSpan.textContent = item.type;
-
-        const nameSpan = document.createElement('span');
-        nameSpan.className = 'item-name';
-        nameSpan.textContent = item.name;
-
-        const quantitySpan = document.createElement('span');
-        quantitySpan.className = 'item-quantity';
-        quantitySpan.textContent = `×${item.quantity}`;
+        const itemDiv = createElement('div', 'inventory-item');
+        const iconSpan = createElement('span', 'item-icon', item.type);
+        const nameSpan = createElement('span', 'item-name', item.name);
+        const quantitySpan = createElement('span', 'item-quantity', `×${item.quantity}`);
 
         itemDiv.appendChild(iconSpan);
         itemDiv.appendChild(nameSpan);
@@ -414,9 +446,7 @@ function updateInventorySummary() {
     fragment.appendChild(listDiv);
 
     const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-    const totalDiv = document.createElement('div');
-    totalDiv.className = 'inventory-total';
-    totalDiv.textContent = `Total Items: ${totalItems}`;
+    const totalDiv = createElement('div', 'inventory-total', `Total Items: ${totalItems}`);
     fragment.appendChild(totalDiv);
 
     DOM.inventorySummary.innerHTML = '';
