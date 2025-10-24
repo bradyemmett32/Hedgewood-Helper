@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'">
+    <meta http-equiv="Cache-Control" content="public, max-age=31536000, immutable">
+    <meta name="description" content="Create custom Channel Magick spells by combining base types with component modules">
+    <meta name="theme-color" content="#2a5298">
+    <title>Hedgewood Helper - Channel Magick</title>
+
+    <!-- Preload critical resources -->
+    <link rel="preload" href="dist/styles.min.css" as="style">
+    <link rel="preload" href="dist/data.min.js" as="script">
+    <link rel="preload" href="dist/script.min.js" as="script">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="dist/styles.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ Channel Magick Spell Creator ⚡</h1>
+<nav class="main-nav">
+    <a href="index-optimized.html" class="nav-link active">Spell Creator</a>
+    <a href="foraging-optimized.html" class="nav-link">Foraging Guide</a>
+</nav>
+        <p class="subtitle">Create custom spells by combining base types with component modules</p>
+
+        <!-- Character Setup Section -->
+        <div class="character-setup">
+            <h3>📜 Character Setup</h3>
+            <div class="setup-grid">
+                <div class="setup-section">
+                    <label for="playerLevel" class="setup-label">Level:</label>
+                    <div class="level-selector">
+                        <input type="number" id="playerLevel" class="level-input" value="1" min="1" max="10" aria-label="Player level">
+                        <span class="level-note">(affects available conditions/healing)</span>
+                    </div>
+                </div>
+                <div class="setup-section">
+                    <div class="setup-label">Magical Classes (select 1-2):</div>
+                    <div class="class-grid" id="classGrid"></div>
+                    <div class="class-info" id="classInfo"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="channel-counter">
+            <div>Channel Magick Actions Available</div>
+            <div class="channel-controls">
+                <button class="channel-btn" data-action="adjust-channel" data-value="-1" aria-label="Decrease channel actions">−</button>
+                <div class="channel-display" id="channelCount">0</div>
+                <button class="channel-btn" data-action="adjust-channel" data-value="1" aria-label="Increase channel actions">+</button>
+            </div>
+            <div class="channel-info">
+                Base: 1 Component Module + 1 per Channel Action
+            </div>
+        </div>
+
+        <div class="spell-builder">
+            <!-- Step 1: Choose Spell Type -->
+            <div class="section active" id="spellTypeSection">
+                <div class="section-title">
+                    <span>Step 1: Choose Spell Type</span>
+                    <span class="required">*Required</span>
+                    <button class="reset-btn" id="resetBtn" data-action="reset">Start Over</button>
+                </div>
+                <div class="spell-type-selector" id="spellTypeSelector"></div>
+            </div>
+
+            <!-- Step 2: Choose Spell Base -->
+            <div class="section" id="spellBaseSection">
+                <div class="section-title">
+                    <span>Step 2: Choose <span id="spellTypeLabel"></span> Base</span>
+                    <span class="required">*Required</span>
+                </div>
+                <div id="spellBaseOptions"></div>
+            </div>
+
+            <!-- Step 3: Choose Damage/Heal/Effect Type -->
+            <div class="section" id="damageTypeSection">
+                <div class="section-title">
+                    <span>Step 3: Choose <span id="typeLabel"></span></span>
+                    <span class="required">*Required</span>
+                </div>
+                <div id="typeOptions"></div>
+            </div>
+
+            <!-- Step 4: Component Modules -->
+            <div class="section" id="componentSection">
+                <div class="section-title">
+                    <span>Step 4: Add Component Modules</span>
+                    <span class="module-counter">
+                        (Available: <span id="availableModules">0</span>)
+                    </span>
+                </div>
+                <div class="component-modules" id="componentModules"></div>
+                
+                <!-- Extra Buff/Debuff Selection -->
+                <div id="extraBuffSection" class="extra-buff-section">
+                    <h4>Select Extra Buff/Debuff Effects:</h4>
+                    <div id="extraBuffSelections"></div>
+                </div>
+            </div>
+        </div>
+
+        <button class="generate-btn" id="generateBtn" data-action="show-naming-dialog">Generate Spell</button>
+
+        <!-- Spell Naming Dialog -->
+        <div id="spellNamingDialog" class="modal-overlay">
+            <div class="modal-content">
+                <h3>Name Your Spell</h3>
+                <div class="form-group">
+                    <label for="spellNameInput">Spell Name:</label>
+                    <input type="text" id="spellNameInput" placeholder="Enter spell name..." aria-label="Spell name">
+                </div>
+                <div class="modal-actions">
+                    <button class="btn-primary" data-action="confirm-spell">Create Spell</button>
+                    <button class="btn-secondary" data-action="close-dialog">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="spellOutput" class="spell-output">
+            <div class="spell-name" id="spellName"></div>
+            <div class="spell-details">
+                <div id="spellStats"></div>
+                <div class="spell-description" id="spellDescription"></div>
+            </div>
+            <div class="button-group">
+                <button class="save-btn" data-action="save-spell">Save Spell</button>
+                <button class="export-btn" data-action="export-spell">Export as Text</button>
+            </div>
+        </div>
+
+        <div class="saved-spells">
+            <h2>📖 Saved Spells</h2>
+            <div id="savedSpellsList"></div>
+        </div>
+    </div>
+
+    <script src="dist/data.min.js" defer></script>
+    <script src="dist/script.min.js" defer></script>
+
+    <footer class="version-footer">
+        <p>Version 1.0.0 - Last Updated: 2025-10-23</p>
+    </footer>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('dist/sw.min.js')
+                    .then(reg => console.log('Service Worker registered'))
+                    .catch(err => console.log('Service Worker registration failed'));
+            });
+        }
+    </script>
+</body>
+</html>

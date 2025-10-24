@@ -1,0 +1,21 @@
+{
+  "name": "hedgewood-helper",
+  "version": "1.0.0",
+  "description": "Channel Magick Spell Creator and Foraging Guide",
+  "scripts": {
+    "build": "node build.js",
+    "minify:js": "terser script.js -o dist/script.min.js -c -m && terser data.js -o dist/data.min.js -c -m && terser foraging.js -o dist/foraging.min.js -c -m && terser foraging-data.js -o dist/foraging-data.min.js -c -m",
+    "minify:css": "cleancss -o dist/styles.min.css styles.css && cleancss -o dist/foraging.min.css foraging.css",
+    "minify:sw": "terser sw.js -o dist/sw.min.js -c -m"
+  },
+  "devDependencies": {
+    "terser": "^5.31.0",
+    "clean-css-cli": "^5.6.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bradyemmett32/Hedgewood-Helper"
+  },
+  "author": "",
+  "license": "ISC"
+}
