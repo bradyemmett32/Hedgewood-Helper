@@ -477,100 +477,116 @@ const SPECIES = {
 };
 
 const TRADES = {
+    "alchemist": {
+        "name": "Alchemist",
+        "category": "Handicraft",
+        "skillBonuses": ["craft"],
+        "features": "Create alchemical solutions (acids, oils, poisons) using Trade Tools and Craft Skill.\n\nPartial Rest: Increase potency of one alchemical solution. If deals damage, adds damage equal to twice Craft Ranks. If requires Attack, Attack has Advantage. Must be used within 24 hours or goes inert.\n\nFull Rest: Create one basic acid, simple poison, or standard oil without cost. Must be used before making another.\n\nAt 7th level: Increase potency of solutions equal to Craft Ranks during Partial Rest. Produce one of each solution during Full Rest instead of only one.",
+        "startingEquipment": []
+    },
     "blacksmith": {
         "name": "Blacksmith",
-        "skillBonuses": ["craft", "endure"],
-        "features": "Proficiency with smith's tools. Can repair metal equipment. +1 to AC when wearing crafted armor.",
-        "startingEquipment": []
-    },
-    "herbalist": {
-        "name": "Herbalist",
-        "skillBonuses": ["study", "craft"],
-        "features": "Proficiency with herbalism kit. Can identify plants and create potions. Advantage on foraging checks.",
-        "startingEquipment": []
-    },
-    "scholar": {
-        "name": "Scholar",
-        "skillBonuses": ["study", "barter"],
-        "features": "Proficiency in two languages. Can decipher ancient texts. Advantage on knowledge checks.",
-        "startingEquipment": []
-    },
-    "merchant": {
-        "name": "Merchant",
-        "skillBonuses": ["barter", "deceive"],
-        "features": "Advantage on Barter checks. Start with 50 extra shells. Can appraise items accurately.",
-        "startingEquipment": []
-    },
-    "hunter": {
-        "name": "Hunter",
-        "skillBonuses": ["sneak", "endure"],
-        "features": "Proficiency with bows and traps. Advantage on tracking. +2 damage with ranged weapons against beasts.",
-        "startingEquipment": []
-    },
-    "farmer": {
-        "name": "Farmer",
-        "skillBonuses": ["endure", "craft"],
-        "features": "Proficiency with farming tools. Advantage on animal handling. Can grow crops efficiently.",
-        "startingEquipment": []
-    },
-    "guard": {
-        "name": "Guard",
-        "skillBonuses": ["maneuver", "endure"],
-        "features": "Proficiency with shields and medium armor. Advantage on perception checks during watch. +1 AC.",
-        "startingEquipment": []
-    },
-    "thief": {
-        "name": "Thief",
-        "skillBonuses": ["sneak", "deceive"],
-        "features": "Proficiency with thieves' tools. Can pick locks and disable traps. Advantage on Sneak checks in urban environments.",
+        "category": "Support",
+        "skillBonuses": ["craft"],
+        "features": "Repair and improve metal equipment using Trade Tools and Craft Skill.\n\nAction: Inspect metal object within 1 Square to determine quality, material, and maker's mark. Advantage on Study checks related to crafting.\n\nPartial Rest: Repair any broken metal object with materials and tools.\n\nFull Rest: Improve nonmagickal metal weapon or armor with suitable fire/furnace and materials. Weapon gains +1 to Attack and damage. Armor no longer causes Disadvantage on Sneak and doesn't reduce Speed. Improvements last days equal to half your level (rounded up). Only one object can benefit at a time.\n\nAt 7th level: +1 AC while wearing metal armor. Metal weapons you wield gain +1 to Attack and damage.",
         "startingEquipment": []
     },
     "cook": {
         "name": "Cook",
-        "skillBonuses": ["craft", "barter"],
-        "features": "Proficiency with cook's utensils. Can create meals that provide temporary HP. Advantage on food preparation.",
+        "category": "Support",
+        "skillBonuses": ["craft"],
+        "features": "Create meals and snacks using Trade Tools, Craft Skill, and Ingredients.\n\nAction: Identify if food/drink has been poisoned or tampered with.\n\nPartial Rest: Prepare delicious snack for 2 + Craft Ranks creatures. Each gains temporary HP equal to one roll of smallest Hit Die plus your level.\n\nFull Rest: Prepare nutritious meal for 4 + level creatures. Each increases Fortitude and Reflexes Defenses by 2, and can roll 1d4 in place of expending Hit Die at end of Encounter or when using Recover Action. Benefits last until next Rest.\n\nAt 7th level: Creatures with temporary HP from snacks gain +1 to Attacks. Creatures partaking meals gain +1 to Skill Checks until end of next Full Rest.",
+        "startingEquipment": []
+    },
+    "doctor": {
+        "name": "Doctor",
+        "category": "Support",
+        "skillBonuses": ["study", "craft"],
+        "features": "Diagnose illness and injuries using Study Skill, treat them using Trade Tools and Craft Skill.\n\nAction: Give creature battlefield triage, allowing them to use Recover Action (doesn't count against their one per Encounter). Bonus to HP healed equal to Study Ranks. Once used on creature, cannot use on them again until they finish Rest.\n\nPartial Rest (1 hour): Prepare homeopathic remedy that suppresses disease or poison effects for 24 hours. Advantage on Study check to cure during that time (still need medicine/tools).\n\nFull Rest (2+ hours): Tend to creature's major injury (not missing limb/eye/horrific scar). Make Study check against injury to leave only Minor scar on success.\n\nAt 7th level: When creature within 1 Square recovers HP from Recover Action, that creature regains one of its smallest expended Hit Dice, which can be immediately expended for additional healing.",
         "startingEquipment": []
     },
     "entertainer": {
         "name": "Entertainer",
+        "category": "Utility",
         "skillBonuses": ["deceive", "barter"],
-        "features": "Proficiency with musical instrument. Can perform to earn money. Advantage on social interactions in taverns.",
+        "features": "Use Deceive to tell tales and weave lyrics, Barter to earn money.\n\nAction: Begin distracting performance lasting up to one minute. Make Deceive check. Creatures of your choice that can see/hear you with Willpower Defense equal to or lower than result have Disadvantage on Attacks and Skill checks towards creatures other than you. Once used, cannot use again until Rest.\n\nHour-long performance: Make Barter check. Earn shells equal to half total skill check (rounded up). Once used, cannot benefit again in same town until week passes.\n\nFree food/lodging for yourself and one other at local tavern you perform at (if on good terms with owner).\n\nAt 7th level: Free food/lodging for entire party (up to 10 creatures). Attacks against distracted creatures have Advantage, and those creatures cannot use Channel Magick Action.",
         "startingEquipment": []
     },
-    "sailor": {
-        "name": "Sailor",
-        "skillBonuses": ["maneuver", "endure"],
-        "features": "Proficiency with navigator's tools and water vehicles. Advantage on swimming checks. Can read weather patterns.",
+    "fisher": {
+        "name": "Fisher",
+        "category": "Situational",
+        "skillBonuses": ["endure"],
+        "features": "Catch fish and aquatic crustaceans with fishing gear using Endure Skill.\n\nAction: Cast fishing rod at creature within 6 Squares and begin reeling them towards you. If unwilling, make Melee or Ranged Attack against Toughness. Subsequent Actions pull them 2 Squares towards you.\n\nPartial Rest (near water): Spend 1-8 hours fishing. Make one Endure check at end, gaining bonus equal to half hours spent fishing (rounded down). Result 10+: catch 10 rations of fish/seafood. Every 5 additional points: catch 5 more rations (max 20). Keeps for one week.\n\nFull Rest: Get accurate weather prediction for next 24 hours (temperature, wind, precipitation/storms).\n\nAt 7th level: When fishing check exceeds 20, can catch Wishing Fish instead. Cook into single ration or release for one of three wishes: Wealth (1d20 × 5 shells value), Health (restore companion to full health, remove curses/diseases/injuries), or Your Self (fish joins party for 24 hours, grows to Huge size, can carry two medium creatures or pull large boat, won't engage in combat).",
         "startingEquipment": []
     },
-    "carpenter": {
-        "name": "Carpenter",
-        "skillBonuses": ["craft", "study"],
-        "features": "Proficiency with carpenter's tools. Can build structures and furniture. Advantage on crafting wooden items.",
+    "guard": {
+        "name": "Guard",
+        "category": "Utility",
+        "skillBonuses": ["maneuver"],
+        "features": "Advantage on Deceive and Barter checks towards regular townsfolk. Can wear medium armor and shields. Skilled with one weapon type of choice.\n\nWhile defending town from outside threat: +1 to all Attacks and Skill checks (must be within town).\n\nFree food/lodging for yourself and one other at local guard barracks (if on good terms).\n\nRequisition standard-issued equipment from guard barracks at half cost. Items can only be returned to same barracks for half refund, not sold to other vendors.\n\nAt 7th level: While within 12 miles of town or city, gain +1 to AC and Attribute Defenses.",
         "startingEquipment": []
     },
-    "tailor": {
-        "name": "Tailor",
-        "skillBonuses": ["craft", "barter"],
-        "features": "Proficiency with weaver's tools. Can repair and create clothing. Crafted clothing provides +1 to social checks.",
+    "herbalogist": {
+        "name": "Herbalogist",
+        "category": "Handicraft",
+        "skillBonuses": ["craft"],
+        "features": "Create potions and curatives using Trade Tools, Craft Skill, and Ingredients.\n\nAction: Identify one herb or herbal ingredient within 2 Squares. Immediately know natural properties, medical uses, if poisonous, and how to craft with it.\n\nPartial Rest: Increase effectiveness of one healing potion or antitoxin. Healing potion recovers additional HP equal to Craft Ranks. Antitoxin makes creature immune to poisons and poison damage for one hour. Must be used within 24 hours or goes inert.\n\nFull Rest: Produce one weak healing potion or vial of antitoxin. Must be used before making another.\n\nAt 7th level: Intelligent Plant creatures have Disadvantage on Attacks against you. You have Advantage on Attacks against them. Immunity to any Poison damage they deal. They cannot make you Charmed or Frightened.",
         "startingEquipment": []
     },
-    "apothecary": {
-        "name": "Apothecary",
-        "skillBonuses": ["study", "craft"],
-        "features": "Proficiency with alchemist's supplies. Can create basic medicines. Advantage on identifying poisons.",
+    "inventor": {
+        "name": "Inventor",
+        "category": "Handicraft",
+        "skillBonuses": ["craft"],
+        "features": "Skilled with firearms and explosives. Repair and improve firearms, explosives and mechanical devices using Trade Tools and Craft Skill.\n\nAction: Inspect mechanical object within 1 Square to determine quality, material, and maker's mark. Advantage on Study checks related to crafting.\n\nPartial Rest: Increase effectiveness of one trap or explosive. Trap: increase duration by 1 turn OR damage by Craft Ranks. Explosive: increase radius by 1 Square OR damage by Craft Ranks. Must be used within 24 hours or goes inert.\n\nFull Rest: Produce small grenade, smoke bomb, or single-use leg trap (must be used before making another). OR improve nonmagickal firearm (+1 to Attack and damage, lasts days equal to half level rounded up, only one at a time).\n\nAt 7th level: Finish constructing toy soldier automaton (Small Mechanical). Appears as miniature mechanical version of you. Can wear light armor, shields, wield non-Heavy weapons. Can't be Charmed/Frightened. Immune to poison damage and Sickened. Obeys commands, takes turn after yours. Understands your languages but can't speak. All ability scores 10, speed 4, HP = 4 × your level. Adds Craft Ranks to Attacks, Skill checks, and weapon damage. If reduced to 0 HP, repair during Full Rest with 10 shells materials. If beyond recovery, build new one with one week of work (8 hours/day) and 100 shells materials.",
         "startingEquipment": []
     },
-    "messenger": {
-        "name": "Messenger",
-        "skillBonuses": ["maneuver", "endure"],
-        "features": "Increased movement speed (+1 square). Advantage on navigation checks. Can memorize long messages.",
+    "journalist": {
+        "name": "Journalist",
+        "category": "Utility",
+        "skillBonuses": ["study"],
+        "features": "Know two additional languages of choice. Advantage on Study checks to glean information from people conversing with or tell if they're lying.\n\nOver one minute: Create detailed accurate sketch of person, place, or object you've seen or another can accurately describe. While sketch on your person, know when subject is visible to you.\n\nWhile Resting in town (1-8 hours): Spend time reveling, gambling, or playing instrument in public. At end of Rest, make Study check to glean useful information about town. Gain bonus equal to hours spent carousing. Success may reveal potential job, recent rumor, or insidious secret. DM may ask what kind of info you prefer.\n\nAt 7th level: When you use Aim action, gain Advantage on all Attacks against that creature until end of current turn, or end of next turn if don't attack until then.",
         "startingEquipment": []
     },
-    "scribe": {
-        "name": "Scribe",
-        "skillBonuses": ["study", "deceive"],
-        "features": "Proficiency with calligrapher's supplies. Can forge documents. Advantage on reading and writing checks.",
+    "knitster": {
+        "name": "Knitster",
+        "category": "Handicraft",
+        "skillBonuses": ["craft"],
+        "features": "Create knitted gifts and cloth or woven armor using Trade Tools and Craft Skill.\n\nAction: Inspect woven object or cloth object within 1 Square to determine quality, material, and maker's mark. Advantage on Study checks related to crafting.\n\nPartial Rest: Give handmade gift to one traveling companion. If accept: they gain bonus to each Attribute Defense while they can see you. If refuse: you gain bonus to Attack and Damage while you can see them. Bonus = half Craft Ranks (rounded up). Benefits last until next Rest or either reduced to 0 HP.\n\nFull Rest: Supply traveling companions with warm clothes. Any number of creatures of choice get warm clothes (hats, mittens, scarfs). While wearing (can fit over/under armor): Advantage on Endure checks against extreme cold, Ice Damage Reduction 5, cannot catch disease from extreme cold. Benefits last until finish another Full Rest.\n\nAt 7th level: Gain +1 to attack and damage rolls with weapons dealing Stab damage.",
+        "startingEquipment": []
+    },
+    "leatherweaver": {
+        "name": "Leatherweaver",
+        "category": "Support",
+        "skillBonuses": ["craft"],
+        "features": "Repair and improve leather/hide equipment using Trade Tools and Craft Skill, as well as ranged weapons other than firearms.\n\nAction: Inspect leather/hide object within 1 Square to determine quality, material, and maker's mark. Advantage on Study checks related to crafting.\n\nPartial Rest (1 hour): Repair broken leather/hide object or ranged weapon (not firearm) with materials and tools.\n\nFull Rest: Improve nonmagickal ranged weapon (not firearm) or leather/hide armor. Ranged weapon: +1 to Attack and damage. Armor: no longer causes Disadvantage on Sneak, grants wearer +1 Speed and Sneak checks. Improvements last days equal to half level (rounded up). Only one object at a time.\n\nAt 7th level: +2 to Attacks using ranged weapons (not firearms). While not wearing metal armor or holding metal shield, Speed increases by 2 (10 feet).",
+        "startingEquipment": []
+    },
+    "merchant": {
+        "name": "Merchant",
+        "category": "Utility",
+        "skillBonuses": ["barter"],
+        "features": "Action: Inspect art object or valuable within 1 Square to determine quality, material, and value in shells. If has maker's mark, find that and have Advantage on Study checks related to crafting.\n\nWhen selling items in town: Make Barter check contested by shopkeeper's Intellect or Willpower Defense (their choice). On success, sell up to twice your Barter Ranks items to shopkeeper at full price (if acceptable condition). Once used, cannot benefit again at that shop until week passes.\n\nAt 7th level: While carrying valuables worth more than 200 shells, gain +1 to all Attacks and Skill checks (instinctively wish to protect valuables).",
+        "startingEquipment": []
+    },
+    "rancher": {
+        "name": "Rancher",
+        "category": "Situational",
+        "skillBonuses": [],
+        "features": "Action: Inspect domesticated creature and get general understanding of current mood and health. If suffering diseases, know which and have Advantage on Study checks to determine remedy.\n\nPartial Rest: Form platonic bond with one willing friendly creature who can see you. While within 4 Squares of each other: both gain +1 AC, both have Advantage on Attacks against creatures within 1 Square of each other. Benefits last until next Rest or either reduced to 0 HP.\n\nFull Rest (along road or in Plains, not in town/city): Party travels at double normal pace for next 8 hours. You gain 1 Momentum (only spendable by you, lost at next Full Rest).\n\nAt 7th level: While within 4 Squares of bonded creature, both gain +1 to each Attribute Defense. When either hit with Attack, other can use Reaction to make single attack against attacking creature.",
+        "startingEquipment": []
+    },
+    "stonemason": {
+        "name": "Stonemason",
+        "category": "Situational",
+        "skillBonuses": ["study"],
+        "features": "When you hit stone object (big rock) with Attack using Hammer, Warpick, or pickaxe, roll one additional damage die and add to damage dealt.\n\nWhen making Study check related to origin of stonework: Advantage on check and gain temporary bonus equal to half your level (rounded up).\n\nWhile traveling underground: Advantage on Endure and Study checks to notice structural weakness in ground, walls, or ceiling.\n\nAt 7th level: When you hit creature with Hammer, Warpick, or pickaxe, can turn standard hit into Critical Hit if creature is made of rock, crystal, or metal. Once used to get Critical Hit on a creature, cannot use on that creature again until finish Rest.",
+        "startingEquipment": []
+    },
+    "woodcutter": {
+        "name": "Woodcutter",
+        "category": "Situational",
+        "skillBonuses": ["endure"],
+        "features": "When you hit wooden object (tree or wooden door) with Attack using Axe, deal additional damage equal to Endure Ranks.\n\nWhile traveling through Forest environment: Advantage on Study, Maneuver, or Endure checks related to environment. When foraging for food, find twice as much as normally would.\n\nWhen taking Rest in Forest: Always find enough wood to create large campfire. Large campfire sheds bright light in 6 Square (30-foot) radius and dim light for additional 6 Squares. Creatures within bright light have Ice Damage Reduction 10 and are immune to extreme cold effects.\n\nAt 7th level: When you hit Intelligent Plant creature with Axe, that creature has Slash Damage Vulnerability 5 until end of current turn (including for triggering attack). Once used, cannot use again until finish Rest.",
         "startingEquipment": []
     }
 };
