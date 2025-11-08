@@ -341,92 +341,137 @@ const CLASSES = {
 const SPECIES = {
     "mouse": {
         "name": "Mouse",
-        "attributeBonuses": ["reflexes", "intellect"],
-        "features": "Small size (Size ¼). Advantage on Sneak checks. Can fit through tiny spaces.",
+        "size": 0.5,
+        "speed": 5,
+        "origins": ["Commoner", "Courtier"],
+        "languages": ["Common", "Smallfolk", "+1 Other"],
+        "features": "Bravery: If Frightened and you use Recover Action, become immune to Frightened for remainder of encounter.\n\nScurry: Can move through space of any creature at least one size larger. Don't provoke Opportunity Attacks while moving through another creature's space. First time per turn, Speed increases by 1 for remainder of turn. Can spend one Momentum to take Charge, Dash, or Disengage Actions.\n\nHopeful: Once per session, when you roll Natural 1 on d20 and GM gains Doom point, you also gain one Momentum.",
         "startingEquipment": []
     },
-    "rabbit": {
-        "name": "Rabbit",
-        "attributeBonuses": ["reflexes", "willpower"],
-        "features": "Medium size (Size ½). Increased movement speed (+2 squares). Keen hearing.",
-        "startingEquipment": []
-    },
-    "squirrel": {
-        "name": "Squirrel",
-        "attributeBonuses": ["reflexes", "intellect"],
-        "features": "Small size (Size ¼). Climbing speed equal to walking speed. Can glide short distances.",
-        "startingEquipment": []
-    },
-    "hedgehog": {
-        "name": "Hedgehog",
-        "attributeBonuses": ["toughness", "willpower"],
-        "features": "Small size (Size ½). Natural armor (+1 AC). Defensive curl ability.",
-        "startingEquipment": []
-    },
-    "fox": {
-        "name": "Fox",
-        "attributeBonuses": ["intellect", "willpower"],
-        "features": "Medium size (Size 1). Advantage on Deceive checks. Keen senses.",
-        "startingEquipment": []
-    },
-    "badger": {
-        "name": "Badger",
-        "attributeBonuses": ["toughness", "willpower"],
-        "features": "Medium size (Size 1). Powerful build. Advantage on Endure checks.",
-        "startingEquipment": []
-    },
-    "otter": {
-        "name": "Otter",
-        "attributeBonuses": ["reflexes", "toughness"],
-        "features": "Medium size (Size 1). Swimming speed equal to walking speed. Hold breath for extended periods.",
+    "chipmunk": {
+        "name": "Chipmunk",
+        "size": 0.5,
+        "speed": 5,
+        "origins": ["Townie", "Rural"],
+        "languages": ["Common", "Smallfolk", "Forester"],
+        "features": "Talented Climber: Speed not reduced while climbing. Have Advantage on Sneak and Maneuver checks while climbing.\n\nAdorable Performance: As Action, make yourself distractingly cute. Until start of next turn, any number of creatures of your choice within 2 Squares are either Charmed or Taunted by you as long as they can see you. Attacks against creatures Charmed or Taunted in this way have Advantage. Once a creature affected for two rounds (consecutive or nonconsecutive), immune until Full Rest.\n\nDeep Cheeks: Once per session as Action, reveal a useful item by pulling it from your mouth. Item must safely fit in your oversized gob and be something you could afford or logically found within last day. Can spend one Momentum to reveal second useful item.",
         "startingEquipment": []
     },
     "mole": {
         "name": "Mole",
-        "attributeBonuses": ["toughness", "intellect"],
-        "features": "Small size (Size ½). Burrow speed. Tremor sense within 10 feet.",
+        "size": 0.5,
+        "speed": 5,
+        "origins": ["Deep Mountain", "Underhill"],
+        "languages": ["Common", "Smallfolk", "Mountaineer"],
+        "features": "Compact Build: Count as Medium sized creature for carry capacity and weapons you can wield. HP maximum increased by 1 per level.\n\nDigging Claws: Can dig through loose sediments at normal Speed minus 1. Can dig through solid sediments at Speed of 1 even without tools. Claws deal 1d6 Stab or Slash damage. Can spend one Momentum when hitting to move creature up to 2 Squares into unoccupied space within 1 Square of you.\n\nTunnelvision: Can see easily in dark, cramped places. Ignore Disadvantage from darkness/dim light, not Blinded in darkness, Advantage on Attacks against creatures Blinded in darkness. Disadvantage on Attacks and Skill checks relying on sight while you or target in bright light.",
         "startingEquipment": []
     },
-    "deer": {
-        "name": "Deer",
-        "attributeBonuses": ["reflexes", "willpower"],
-        "features": "Large size (Size 2). Increased movement speed (+3 squares). Graceful.",
+    "lesserBat": {
+        "name": "Lesser Bat",
+        "size": 0.5,
+        "speed": 4,
+        "origins": ["Cave", "Canopy"],
+        "languages": ["Common", "Smallfolk", "Vermin"],
+        "features": "Flight: Can fly on your turn, but cannot fly if wearing medium/heavy armor or holding shield. If you make Attack or Use Item, begin to fall. Don't provoke Opportunity Attacks while flying.\n\nEcholocation: Use echolocation to perceive surroundings within 6 Squares. Creatures treat your Intellect or Willpower Defense as 5 higher when trying to become Hidden. When taking Search Action or Study check, can focus on one creature/object in radius - cannot become Hidden from you until end of next turn unless leaves area. Cannot use while Deafened. Have Sound Damage Vulnerability 5. Can spend Momentum to extend range to 12 Squares until end of next turn.\n\nNight Denizen: Disadvantage on Attacks and Skill checks relying on sight while you or target in direct sunlight. Advantage on Study and Sneak checks at night and in total darkness.",
         "startingEquipment": []
     },
-    "raccoon": {
-        "name": "Raccoon",
-        "attributeBonuses": ["reflexes", "intellect"],
-        "features": "Medium size (Size 1). Advantage on Craft checks. Nimble hands.",
+    "jerboa": {
+        "name": "Jerboa",
+        "size": 0.5,
+        "speed": 7,
+        "origins": ["Deserter", "Ambassador"],
+        "languages": ["Common", "Smallfolk", "Dunish"],
+        "features": "Desert Dweller: Have Fire Damage Reduction 5. Immune to effects of extreme heat.\n\nExpert Jumper: When you Jump on turn, increase horizontal Jump by 3 additional Squares and vertical Jump by 2 additional Squares. Can Jump off another creature at least one size larger than you. Can spend one Momentum to continue repeating Jump with same Minor Action as long as jump off different creature not jumped off this turn and don't exceed remaining movement.\n\nShort Hibernation: When taking Partial Rest, can enter deep sleep to recover one additional Hit Die (even with Fatigue level) and can spend one additional Hit Die to recover HP. When taking Full Rest and making Endure check to resist negative conditions, have Advantage.",
         "startingEquipment": []
     },
-    "owl": {
-        "name": "Owl",
-        "attributeBonuses": ["intellect", "willpower"],
-        "features": "Medium size (Size 1). Flight. Superior darkvision.",
+    "rabbit": {
+        "name": "Rabbit",
+        "size": 1,
+        "speed": 7,
+        "origins": ["Peasant", "Royalty"],
+        "languages": ["Common", "Forester", "+1 Other"],
+        "features": "Leporine Kick: Your Kicks deal 1d8 Strike damage and have Reach.\n\nExpert Jumper: When you Jump on turn, increase horizontal Jump by 2 additional Squares and vertical Jump by 1 additional Square.\n\nEvasive Hop: As Reaction when creature targets you with Attack, can Jump in any direction to evade, giving attacker Disadvantage. Can spend one Momentum to increase distance moved to 3 Squares, and if movement causes you to be out of reach/range of triggering Attack, Attack automatically misses.",
         "startingEquipment": []
     },
-    "raven": {
-        "name": "Raven",
-        "attributeBonuses": ["intellect", "reflexes"],
-        "features": "Small size (Size ½). Flight. Mimicry ability.",
+    "squirrel": {
+        "name": "Squirrel",
+        "size": 1,
+        "speed": 7,
+        "origins": ["Great Tree", "Ground"],
+        "languages": ["Common", "Forester"],
+        "features": "Talented Climber: Speed not reduced while climbing. Have Advantage on Sneak and Maneuver checks while climbing.\n\nFluffy Tail: Your large fluffy tail distracts enemies. When you Attack creature on turn, can use Reaction to swing tail and gain Advantage. When enemy Attacks you, can use Reaction to swing tail to give them Disadvantage. Can spend one Momentum to either give yourself Advantage twice or give enemy Attacking you Disadvantage twice.\n\nStrong Bite: Your Bites deal 1d6 Stab damage. Once per encounter when you hit with Bite Attack, can deal additional damage equal to twice your level.",
         "startingEquipment": []
     },
-    "bear": {
-        "name": "Bear",
-        "attributeBonuses": ["toughness", "toughness"],
-        "features": "Large size (Size 3). Powerful build (+2 carrying capacity multiplier). Natural weapons.",
+    "hedgehog": {
+        "name": "Hedgehog",
+        "size": 1,
+        "speed": 5,
+        "origins": ["Hermit", "Socalite"],
+        "languages": ["Common", "Mountaineer"],
+        "features": "Quilled: When creature misses you with Melee Attack targeting AC or Toughness/Reflexes Defense, deal 1d2 Stab damage to them (1d4 at 5th level, 1d6 at 9th level).\n\nDefense Curl: As Action, curl into defensive ball. While curled, speed is 3 and can only roll (speed becomes 6 on downward slope). AC and all Defenses (except Intellect) increase by 3. Cannot take Actions/Minor Actions/Reactions except uncurling (Action). Uncurl when reduced to 0 HP. When moving while using Defense Curl, can spend one Momentum to crash into creature, dealing Stab damage equal to one Quilled die per Square moved (max 6 dice).\n\nHedgehog Vitality: Have Poison Damage Reduction 5, cannot be Sickened by poisons, Toughness Defense increases by 5 against poisons.",
         "startingEquipment": []
     },
-    "wolf": {
-        "name": "Wolf",
-        "attributeBonuses": ["toughness", "reflexes"],
-        "features": "Medium size (Size 1). Pack tactics. Keen smell.",
+    "weasel": {
+        "name": "Weasel",
+        "size": 1,
+        "speed": 6,
+        "origins": ["Coastal", "Inland"],
+        "languages": ["Common", "Vermin", "+1 Other"],
+        "features": "Silver Tongue: Have Advantage on Deceive and Barter checks. Can speak to any intelligent creature that knows at least one language, even if you don't share one.\n\nSly Movement: After rolling Initiative, can use Reaction to move up to half your speed (rounded up). Can spend Momentum to take Action (two Momentum) and/or Minor Action (one Momentum) after rolling Initiative but before encounter begins.\n\nStrong Bite: Your Bites deal 1d6 Stab damage. Once per encounter when you hit with Bite Attack, can deal additional damage equal to twice your level.",
         "startingEquipment": []
     },
-    "cat": {
-        "name": "Cat",
-        "attributeBonuses": ["reflexes", "reflexes"],
-        "features": "Small size (Size ½). Always land on feet. Advantage on Maneuver checks.",
+    "groundhog": {
+        "name": "Groundhog",
+        "size": 1,
+        "speed": 6,
+        "origins": ["Burrow", "City"],
+        "languages": ["Common", "Prairietalk"],
+        "features": "Burrower: Can dig through loose sediments at half your normal speed (rounded up).\n\nPotent Portents: When you finish Full Rest, roll d20 and save result as Portent. Whenever creature you can see other than yourself makes Attack or Skill check, can replace one d20 roll with your Portent. After using Portent, roll another d20 for new Portent. Can use this twice. Once out of uses, cannot use again until Full Rest. Any remaining Portents lost when finishing Full Rest if you roll new Portent. Uses increase to 3 at 5th level and 4 at 9th level. Can spend one Momentum when out of uses to gain another Portent immediately.\n\nDeny Fate: Once per session when player rolls Natural 1 on d20 roll, can prevent result from granting GM Doom point. You then gain additional use of Potent Portents feature, rolling d20 and saving as Portent until Full Rest.",
+        "startingEquipment": []
+    },
+    "badger": {
+        "name": "Badger",
+        "size": 2,
+        "speed": 6,
+        "origins": ["Imperial", "Wanderer"],
+        "languages": ["Common", "Bigfolk", "Mountaineer"],
+        "features": "Tremendous Impact: When you score Critical Hit with Attack, damage you deal to one creature with that Attack increased by amount equal to twice your level.\n\nIntimidating: Have Advantage on Deceive and Barter checks against creatures smaller in size than you.\n\nInsurmountable: When creature would get Critical Hit against you, it becomes normal hit instead. Once used, cannot use again until finish Rest. After using but before becoming available again from Rest, can use again by spending one Momentum.",
+        "startingEquipment": []
+    },
+    "hare": {
+        "name": "Hare",
+        "size": 2,
+        "speed": 7,
+        "origins": ["Nomad", "Settler"],
+        "languages": ["Common", "Bigfolk", "Prairietalk"],
+        "features": "Leporine Kick: Your Kicks deal 1d10 Strike damage and have Reach. When you hit creature your size or smaller with Leporine Kick Attack, can spend one Momentum to push them back 1 Square.\n\nExpert Jumper: When you Jump on turn, increase horizontal Jump by 3 additional Squares and vertical Jump by 2 additional Squares.\n\nBig-Ears: Have Advantage on Study checks using hearing. If succeed, can make out specific sounds (like conversations) up to quarter-mile away, or eighth-mile if muffled. Cannot use while Deafened. Have Sound Damage Vulnerability 5.",
+        "startingEquipment": []
+    },
+    "otter": {
+        "name": "Otter",
+        "size": 2,
+        "speed": 6,
+        "origins": ["Lake", "River", "Sea"],
+        "languages": ["Common", "Bigfolk", "Mariner"],
+        "features": "Born Swimmer: Speed not reduced when swimming. Have Advantage on Sneak and Maneuver checks while swimming.\n\nSoothing Touch: As Minor Action, can touch another creature within 1 Square and cause them to regain HP equal to your level. Creature submerged in water regains twice as much. Once creature regained HP from this feature, cannot use again until finish Rest. Can spend one Momentum when using Soothing Touch to regain HP equal to your level (twice as much if submerged).\n\nSub Aquatic: Can hold breath for up to 10 minutes underwater. While underwater, have Advantage on Attacks against creatures that are neither Aquatic nor Subaquatic who are also underwater.",
+        "startingEquipment": []
+    },
+    "fox": {
+        "name": "Fox",
+        "size": 2,
+        "speed": 6,
+        "origins": ["Arctic", "Forest", "Desert"],
+        "languages": ["Common", "Bigfolk", "+1 Other"],
+        "features": "Magickal Aptitude: Your MP maximum increased by 1, and increases by additional 1 every time you gain level.\n\nMystical Cunning: Increase Intellect and Willpower Defenses by 2 against spells and magick effects (increases to 3 at 5th level, 5 at 9th level). When targeted by spell or magickal effect and use Mystical Cunning, can spend one Momentum to gain Damage Reduction to one damage type that spell deals equal to your Mystical Cunning defense bonus until start of next turn.\n\nVulpine Sorcery: Choose one Magick Class: Minstrel, Priest, Sage, Magician, Elementalist, Occultist, Conjuror, or Esper. You can cast spells that Class knows using your MP.",
+        "startingEquipment": []
+    },
+    "wildCat": {
+        "name": "Wild Cat",
+        "size": 2,
+        "speed": 7,
+        "origins": ["Domestic", "Wildling"],
+        "languages": ["Common", "Bigfolk", "Feline"],
+        "features": "Nine Lives: When reduced to 0 HP but not killed outright, may drop to 1 HP instead. Once used, cannot use again until finish Full Rest.\n\nRetractable Claws: Movement speed not reduced when climbing. Claws deal 2d4 Stab or Slash damage. When you hit creature with Retractable Claws Attack, can spend one Momentum to Grapple them as part of same Attack.\n\nPredatory Rush: Thanks to concentrated zoomies, can call upon burst of speed when pursuing prey. Double movement gained when you Dash, Charge, or Shift directly towards enemy. Can use once every encounter.\n\nFear of Water: Have Disadvantage on all Attacks and Checks while you or target is swimming or submerged in water. Movement reduced to 1 Square while swimming.",
         "startingEquipment": []
     }
 };
