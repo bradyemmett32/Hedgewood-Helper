@@ -208,8 +208,14 @@
 
 .hp-tracker {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: var(--spacing-md);
+}
+
+@media (min-width: 768px) {
+    .hp-tracker {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 
 .hp-field {
@@ -528,6 +534,20 @@
     border-radius: var(--border-radius-sm);
     text-align: center;
     font-size: 0.9em;
+}
+
+/* Skills Container - Two Column Layout */
+.skills-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+}
+
+@media (max-width: 1024px) {
+    .skills-container {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* Combat Section */
