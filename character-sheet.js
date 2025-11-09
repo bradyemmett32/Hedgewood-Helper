@@ -279,6 +279,9 @@ function handleAction(e) {
         case 'use-hit-dice':
             useHitDice(e.target.dataset.class);
             break;
+        case 'adjust-hit-dice':
+            adjustHitDice(e.target.dataset.class, parseInt(e.target.dataset.amount));
+            break;
         case 'add-weapon':
             addWeapon();
             break;
@@ -354,6 +357,9 @@ function updateAllCalculations() {
 
     // Update MP
     updateMagickPoints();
+
+    // Update hit dice display
+    updateHitDiceDisplay();
 
     // Update carry capacity
     updateCarryCapacity();
@@ -629,6 +635,17 @@ function adjustMP(classSlot, amount) {
 }
 
 // Hit Dice Management
+function adjustHitDice(classSlot, amount) {
+    const diceData = currentCharacter.hitDice[classSlot];
+    const newCurrent = diceData.current + amount;
+
+    // Clamp between 0 and total
+    diceData.current = Math.max(0, Math.min(diceData.total, newCurrent));
+
+    updateHitDiceDisplay();
+    saveCharacter();
+}
+
 function useHitDice(classSlot) {
     const diceData = currentCharacter.hitDice[classSlot];
 
@@ -658,8 +675,7 @@ function useHitDice(classSlot) {
     diceData.current--;
     diceData.expended++;
 
-    document.getElementById(`${classSlot}CurrentDice`).value = diceData.current;
-
+    updateHitDiceDisplay();
     updateHPBar();
     checkBloodiedStatus();
     saveCharacter();
@@ -667,13 +683,56 @@ function useHitDice(classSlot) {
     showNotification(`Used ${dieType}! Rolled ${roll} + ${toughMod} = ${healing} HP healed.`, 'success');
 }
 
-// Hit Dice Total Update
+// Hit Dice Total Update - locks total to character level
 function updateHitDiceTotal(classSlot) {
     const level = currentCharacter.characterInfo.level;
     currentCharacter.hitDice[classSlot].total = level;
 
-    const totalDiceInput = document.getElementById(`${classSlot}TotalDice`);
-    if (totalDiceInput) totalDiceInput.value = level;
+    // Ensure current doesn't exceed new total
+    if (currentCharacter.hitDice[classSlot].current > level) {
+        currentCharacter.hitDice[classSlot].current = level;
+    }
+
+    updateHitDiceDisplay();
+}
+
+// Update hit dice display
+function updateHitDiceDisplay() {
+    // Update class 1
+    updateClassHitDiceDisplay('class1');
+
+    // Update class 2
+    updateClassHitDiceDisplay('class2');
+
+    // Update total
+    const totalHitDice = currentCharacter.hitDice.class1.total + currentCharacter.hitDice.class2.total;
+    const totalElement = document.getElementById('totalHitDice');
+    if (totalElement) {
+        totalElement.textContent = totalHitDice;
+    }
+}
+
+function updateClassHitDiceDisplay(classSlot) {
+    const diceData = currentCharacter.hitDice[classSlot];
+    const classId = currentCharacter.characterInfo[classSlot];
+
+    // Update class name
+    const nameElement = document.getElementById(`${classSlot}HitDiceName`);
+    if (nameElement && classId && CLASSES[classId]) {
+        nameElement.textContent = CLASSES[classId].name;
+    }
+
+    // Update available dice
+    const availableElement = document.getElementById(`${classSlot}AvailableDice`);
+    if (availableElement) {
+        availableElement.textContent = diceData.current;
+    }
+
+    // Update total dice (locked to level)
+    const totalElement = document.getElementById(`${classSlot}TotalDice`);
+    if (totalElement) {
+        totalElement.textContent = diceData.total;
+    }
 }
 
 // Carry Capacity

@@ -422,38 +422,51 @@
         <!-- Hit Dice Section -->
         <div class="character-section hit-dice-section">
             <h2>Hit Dice</h2>
-            <div class="hit-dice-grid">
-                <div class="hit-dice-tracker">
-                    <h3>Class 1 Hit Dice</h3>
-                    <div class="dice-type">
-                        <label>Die Type</label>
-                        <div class="die-type-display" id="class1DieType">d6</div>
-                    </div>
-                    <div class="dice-count">
-                        <label>Available / Total</label>
-                        <div class="dice-display">
-                            <input type="number" id="class1CurrentDice" value="1" min="0" data-field="hitDice.class1.current">
-                            <span>/</span>
-                            <input type="number" id="class1TotalDice" value="1" min="0" data-field="hitDice.class1.total">
+            <div class="hit-dice-unified">
+                <div class="hit-dice-info">
+                    <div class="hit-dice-class-info">
+                        <h3 id="class1HitDiceName">Class 1</h3>
+                        <div class="dice-type-row">
+                            <span class="die-type-label">Die:</span>
+                            <div class="die-type-display" id="class1DieType">d6</div>
                         </div>
+                        <div class="dice-count-row">
+                            <span class="dice-count-label">Available:</span>
+                            <div class="dice-controls">
+                                <button class="dice-adjust-btn" data-action="adjust-hit-dice" data-class="class1" data-amount="-1">−</button>
+                                <span class="dice-value" id="class1AvailableDice">0</span>
+                                <button class="dice-adjust-btn" data-action="adjust-hit-dice" data-class="class1" data-amount="1">+</button>
+                            </div>
+                            <span class="dice-total">/ <span id="class1TotalDice">0</span></span>
+                        </div>
+                        <button class="use-dice-btn" data-action="use-hit-dice" data-class="class1">Use Hit Die</button>
                     </div>
-                    <button class="use-dice-btn" data-action="use-hit-dice" data-class="class1">Use Hit Die</button>
+                    <div class="hit-dice-class-info">
+                        <h3 id="class2HitDiceName">Class 2</h3>
+                        <div class="dice-type-row">
+                            <span class="die-type-label">Die:</span>
+                            <div class="die-type-display" id="class2DieType">d6</div>
+                        </div>
+                        <div class="dice-count-row">
+                            <span class="dice-count-label">Available:</span>
+                            <div class="dice-controls">
+                                <button class="dice-adjust-btn" data-action="adjust-hit-dice" data-class="class2" data-amount="-1">−</button>
+                                <span class="dice-value" id="class2AvailableDice">0</span>
+                                <button class="dice-adjust-btn" data-action="adjust-hit-dice" data-class="class2" data-amount="1">+</button>
+                            </div>
+                            <span class="dice-total">/ <span id="class2TotalDice">0</span></span>
+                        </div>
+                        <button class="use-dice-btn" data-action="use-hit-dice" data-class="class2">Use Hit Die</button>
+                    </div>
                 </div>
-                <div class="hit-dice-tracker">
-                    <h3>Class 2 Hit Dice</h3>
-                    <div class="dice-type">
-                        <label>Die Type</label>
-                        <div class="die-type-display" id="class2DieType">d6</div>
+                <div class="hit-dice-summary">
+                    <div class="total-hit-dice">
+                        <span class="total-label">Total Hit Dice:</span>
+                        <span class="total-value" id="totalHitDice">0</span>
                     </div>
-                    <div class="dice-count">
-                        <label>Available / Total</label>
-                        <div class="dice-display">
-                            <input type="number" id="class2CurrentDice" value="1" min="0" data-field="hitDice.class2.current">
-                            <span>/</span>
-                            <input type="number" id="class2TotalDice" value="1" min="0" data-field="hitDice.class2.total">
-                        </div>
+                    <div class="recovery-info">
+                        <strong>Recovery:</strong> Partial Rest (regain half, min 1) | Full Rest (regain all)
                     </div>
-                    <button class="use-dice-btn" data-action="use-hit-dice" data-class="class2">Use Hit Die</button>
                 </div>
             </div>
         </div>
