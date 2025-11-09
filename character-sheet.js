@@ -66,19 +66,19 @@ let currentCharacter = {
         armorClass: 10,
         speed: 6,
         combatSkills: {
-            melee: { rank: 0, primaryAttribute: "toughness", bonus: 0 },
-            ranged: { rank: 0, primaryAttribute: "reflexes", bonus: 0 },
-            spellcraft: { rank: 0, primaryAttribute: "intellect", bonus: 0 }
+            melee: { rank: 0 },
+            ranged: { rank: 0 },
+            spellcraft: { rank: 0 }
         }
     },
     generalSkills: {
-        maneuver: { rank: 0, bonus: 0, primaryAttribute: "toughness" },
-        sneak: { rank: 0, bonus: 0, primaryAttribute: "reflexes" },
-        study: { rank: 0, bonus: 0, primaryAttribute: "intellect" },
-        craft: { rank: 0, bonus: 0, primaryAttribute: "toughness" },
-        barter: { rank: 0, bonus: 0, primaryAttribute: "intellect" },
-        endure: { rank: 0, bonus: 0, primaryAttribute: "toughness" },
-        deceive: { rank: 0, bonus: 0, primaryAttribute: "reflexes" }
+        maneuver: { rank: 0, bonus: 0 },
+        sneak: { rank: 0, bonus: 0 },
+        study: { rank: 0, bonus: 0 },
+        craft: { rank: 0, bonus: 0 },
+        barter: { rank: 0, bonus: 0 },
+        endure: { rank: 0, bonus: 0 },
+        deceive: { rank: 0, bonus: 0 }
     },
     equipment: {
         weapons: [],
@@ -217,6 +217,37 @@ function setupEventListeners() {
 
     // Size changes
     document.getElementById('size').addEventListener('change', updateCarryCapacity);
+
+    // Combat skill rank changes
+    ['melee', 'ranged', 'spellcraft'].forEach(skill => {
+        const rankInput = document.getElementById(`${skill}Rank`);
+        if (rankInput) {
+            rankInput.addEventListener('input', () => {
+                updateCombatSkill(skill);
+                saveCharacter();
+            });
+        }
+    });
+
+    // General skill rank and bonus changes
+    ['maneuver', 'sneak', 'study', 'craft', 'barter', 'endure', 'deceive'].forEach(skill => {
+        const rankInput = document.getElementById(`${skill}Rank`);
+        const bonusInput = document.getElementById(`${skill}Bonus`);
+
+        if (rankInput) {
+            rankInput.addEventListener('input', () => {
+                updateGeneralSkill(skill);
+                saveCharacter();
+            });
+        }
+
+        if (bonusInput) {
+            bonusInput.addEventListener('input', () => {
+                updateGeneralSkill(skill);
+                saveCharacter();
+            });
+        }
+    });
 }
 
 // Handle actions
@@ -338,6 +369,7 @@ function updateAllCalculations() {
 function updateAttributeModifier(attribute) {
     const scoreInput = document.getElementById(`${attribute}Score`);
     const modifierDisplay = document.getElementById(`${attribute}Modifier`);
+    const defenseInput = document.getElementById(`${attribute}Defense`);
 
     if (!scoreInput || !modifierDisplay) return;
 
@@ -347,47 +379,88 @@ function updateAttributeModifier(attribute) {
     currentCharacter.attributes[attribute].score = score;
     currentCharacter.attributes[attribute].modifier = modifier;
 
+    // Update defense to match score by default
+    currentCharacter.attributes[attribute].defense = score;
+    if (defenseInput) {
+        defenseInput.value = score;
+    }
+
     modifierDisplay.textContent = modifier >= 0 ? `+${modifier}` : modifier;
 }
+
+// Skill attribute mappings
+const SKILL_ATTRIBUTES = {
+    combat: {
+        melee: ['toughness', 'reflexes'],
+        ranged: ['toughness', 'reflexes'],
+        spellcraft: ['intellect', 'willpower']
+    },
+    general: {
+        maneuver: ['toughness', 'reflexes'],
+        sneak: ['reflexes', 'intellect'],
+        study: ['intellect', 'willpower'],
+        craft: ['toughness', 'intellect'],
+        barter: ['intellect', 'willpower'],
+        endure: ['toughness', 'willpower'],
+        deceive: ['reflexes', 'willpower']
+    }
+};
 
 // Update all skill bonuses
 function updateAllSkillBonuses() {
     // Combat skills
-    updateSkillBonus('melee', 'combat.combatSkills');
-    updateSkillBonus('ranged', 'combat.combatSkills');
-    updateSkillBonus('spellcraft', 'combat.combatSkills');
+    updateCombatSkill('melee');
+    updateCombatSkill('ranged');
+    updateCombatSkill('spellcraft');
 
     // General skills
-    updateSkillBonus('maneuver', 'generalSkills');
-    updateSkillBonus('sneak', 'generalSkills');
-    updateSkillBonus('study', 'generalSkills');
-    updateSkillBonus('craft', 'generalSkills');
-    updateSkillBonus('barter', 'generalSkills');
-    updateSkillBonus('endure', 'generalSkills');
-    updateSkillBonus('deceive', 'generalSkills');
+    updateGeneralSkill('maneuver');
+    updateGeneralSkill('sneak');
+    updateGeneralSkill('study');
+    updateGeneralSkill('craft');
+    updateGeneralSkill('barter');
+    updateGeneralSkill('endure');
+    updateGeneralSkill('deceive');
 }
 
-// Update individual skill bonus
-function updateSkillBonus(skillName, skillCategory) {
+// Update combat skill (shows both attribute scores)
+function updateCombatSkill(skillName) {
     const rankInput = document.getElementById(`${skillName}Rank`);
-    const attrSelect = document.getElementById(`${skillName}Attr`);
-    const bonusDisplay = document.getElementById(`${skillName}Bonus`);
-
-    if (!rankInput || !bonusDisplay) return;
+    if (!rankInput) return;
 
     const rank = parseInt(rankInput.value) || 0;
-    const primaryAttr = attrSelect ? attrSelect.value : currentCharacter[skillCategory][skillName]?.primaryAttribute || 'toughness';
-    const attrModifier = currentCharacter.attributes[primaryAttr]?.modifier || 0;
+    const attributes = SKILL_ATTRIBUTES.combat[skillName];
 
-    const bonus = rank + attrModifier;
+    attributes.forEach(attr => {
+        const displayElement = document.getElementById(`${skillName}${attr.charAt(0).toUpperCase() + attr.slice(1)}`);
+        if (!displayElement) return;
 
-    if (skillCategory === 'combat.combatSkills') {
-        currentCharacter.combat.combatSkills[skillName].bonus = bonus;
-    } else {
-        currentCharacter.generalSkills[skillName].bonus = bonus;
-    }
+        const attrModifier = currentCharacter.attributes[attr]?.modifier || 0;
+        const score = rank + attrModifier;
 
-    bonusDisplay.textContent = bonus >= 0 ? `+${bonus}` : bonus;
+        displayElement.textContent = score >= 0 ? `+${score}` : score;
+    });
+}
+
+// Update general skill (shows both attribute scores with bonus)
+function updateGeneralSkill(skillName) {
+    const rankInput = document.getElementById(`${skillName}Rank`);
+    const bonusInput = document.getElementById(`${skillName}Bonus`);
+    if (!rankInput || !bonusInput) return;
+
+    const rank = parseInt(rankInput.value) || 0;
+    const bonus = parseInt(bonusInput.value) || 0;
+    const attributes = SKILL_ATTRIBUTES.general[skillName];
+
+    attributes.forEach(attr => {
+        const displayElement = document.getElementById(`${skillName}${attr.charAt(0).toUpperCase() + attr.slice(1)}`);
+        if (!displayElement) return;
+
+        const attrModifier = currentCharacter.attributes[attr]?.modifier || 0;
+        const score = rank + attrModifier + bonus;
+
+        displayElement.textContent = score >= 0 ? `+${score}` : score;
+    });
 }
 
 // HP Management
@@ -594,6 +667,15 @@ function useHitDice(classSlot) {
     showNotification(`Used ${dieType}! Rolled ${roll} + ${toughMod} = ${healing} HP healed.`, 'success');
 }
 
+// Hit Dice Total Update
+function updateHitDiceTotal(classSlot) {
+    const level = currentCharacter.characterInfo.level;
+    currentCharacter.hitDice[classSlot].total = level;
+
+    const totalDiceInput = document.getElementById(`${classSlot}TotalDice`);
+    if (totalDiceInput) totalDiceInput.value = level;
+}
+
 // Carry Capacity
 function updateCarryCapacity() {
     const toughnessScore = currentCharacter.attributes.toughness.score;
@@ -639,7 +721,11 @@ function handleClassChange(e) {
 
     // Update hit die for this class
     currentCharacter.hitDice[classSlot].dieType = classData.hitDie;
-    document.getElementById(`${classSlot}DieType`).value = classData.hitDie;
+    const dieTypeDisplay = document.getElementById(`${classSlot}DieType`);
+    if (dieTypeDisplay) dieTypeDisplay.textContent = classData.hitDie;
+
+    // Update hit dice total based on level
+    updateHitDiceTotal(classSlot);
 
     // Update multi-class name
     updateMultiClassName();
@@ -788,11 +874,8 @@ function handleLevelChange(e) {
     currentCharacter.characterInfo.level = newLevel;
 
     // Update hit dice totals
-    currentCharacter.hitDice.class1.total = newLevel;
-    currentCharacter.hitDice.class2.total = newLevel;
-
-    document.getElementById('class1TotalDice').textContent = newLevel;
-    document.getElementById('class2TotalDice').textContent = newLevel;
+    updateHitDiceTotal('class1');
+    updateHitDiceTotal('class2');
 
     // Update XP threshold
     updateXPThreshold();
@@ -1092,19 +1175,19 @@ function newCharacter() {
                 armorClass: 10,
                 speed: 6,
                 combatSkills: {
-                    melee: { rank: 0, primaryAttribute: "toughness", bonus: 0 },
-                    ranged: { rank: 0, primaryAttribute: "reflexes", bonus: 0 },
-                    spellcraft: { rank: 0, primaryAttribute: "intellect", bonus: 0 }
+                    melee: { rank: 0 },
+                    ranged: { rank: 0 },
+                    spellcraft: { rank: 0 }
                 }
             },
             generalSkills: {
-                maneuver: { rank: 0, bonus: 0, primaryAttribute: "toughness" },
-                sneak: { rank: 0, bonus: 0, primaryAttribute: "reflexes" },
-                study: { rank: 0, bonus: 0, primaryAttribute: "intellect" },
-                craft: { rank: 0, bonus: 0, primaryAttribute: "toughness" },
-                barter: { rank: 0, bonus: 0, primaryAttribute: "intellect" },
-                endure: { rank: 0, bonus: 0, primaryAttribute: "toughness" },
-                deceive: { rank: 0, bonus: 0, primaryAttribute: "reflexes" }
+                maneuver: { rank: 0, bonus: 0 },
+                sneak: { rank: 0, bonus: 0 },
+                study: { rank: 0, bonus: 0 },
+                craft: { rank: 0, bonus: 0 },
+                barter: { rank: 0, bonus: 0 },
+                endure: { rank: 0, bonus: 0 },
+                deceive: { rank: 0, bonus: 0 }
             },
             equipment: {
                 weapons: [],
