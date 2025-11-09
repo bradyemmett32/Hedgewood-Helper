@@ -2,8 +2,293 @@
 // Classes, Species, and Trades for Hedgewood TTRPG
 
 const CLASSES = {
+    "knight": {
+        "name": "Knight",
+        "category": "Martial Enabler",
+        "hitDie": "d10",
+        "combatSkillBonus": "melee",
+        "hasSpellcasting": false,
+        "weaponTraining": ["Four types of Melee", "One type of Ranged or Spellcraft"],
+        "armorTraining": ["Light", "Medium", "Heavy", "Shields"],
+        "bloodiedEffect": {
+            "name": "For Glory!",
+            "trigger": "When Bloodied for first time in encounter or start encounter Bloodied",
+            "description": "Gain temporary HP equal to your level, plus additional temporary HP equal to number of friendly creatures (max 5). At start of each turn while Bloodied, can make one creature that can see/hear you Taunted until end of their next turn.",
+            "duration": "While Bloodied"
+        },
+        "features": {
+            "level1": "Visibly Dangerous (taunt enemies on initiative), Protect (reaction to increase ally AC by Melee Ranks)",
+            "level2": "Challenge (action to taunt creature), Steadfast (bonus to Toughness Defense, reduce forced movement in Heavy Armor)",
+            "level3": "Additional Action (3 total), Attribute Increase/Distinction, Knightly Arts (bonus to Maneuver/Craft), Vigilant Until Death (can't be Surprised, Advantage on Initiative)",
+            "level4": "Armor Training (+1 AC in Heavy Armor, reduced speed penalty), Goading Attack (taunt on hit)",
+            "level5": "Attribute Increase/Distinction, Iron Skin (take 1 less damage in Heavy Armor)",
+            "level6": "Additional Action (4 total), Castling Maneuver (reaction to swap with ally being attacked)",
+            "level7": "Attribute Increase/Distinction, Mass Challenge (challenge multiple creatures)",
+            "level8": "Phalanx Stance (grant AC/Reflexes to nearby allies), Turn the Blade (reflect damage)",
+            "level9": "Additional Action (5 total), Attribute Increase/Distinction, Steel Will (immunity to Charm/Frighten/Taunt)",
+            "level10": "Master of Metal (+2 AC, -2 damage, no speed penalty), Living Fortress (+10 HP max, temp HP + bonus damage)"
+        }
+    },
+    "berserker": {
+        "name": "Berserker",
+        "category": "Martial Exploiter",
+        "hitDie": "d12",
+        "combatSkillBonus": "melee",
+        "hasSpellcasting": false,
+        "weaponTraining": ["Four types of Melee", "One type of Ranged or Spellcraft"],
+        "armorTraining": ["Light", "Medium", "Shields"],
+        "bloodiedEffect": {
+            "name": "Bloodlust",
+            "trigger": "When Bloodied for first time in encounter or start encounter Bloodied",
+            "description": "Speed increases by 1 Square. Once per turn can expend Hit Die when damaging creature with Attack to add die to damage.",
+            "duration": "While Bloodied"
+        },
+        "features": {
+            "level1": "Barbaric Instinct (bonus to Reflexes, Shift on hit), Berserking (increase Toughness, gain Damage Reduction)",
+            "level2": "Reckless Assault (bonus to attack/defense trade-off), Intimidating Shout (frighten creature)",
+            "level3": "Additional Action (3 total), Attribute Increase/Distinction, Survivor (bonus to Maneuver/Endure), Running Tackle (grapple + damage on Charge)",
+            "level4": "Aggression (+2 Speed, improved Charge), Savage Swing (secondary Toughness target for Daze)",
+            "level5": "Attribute Increase/Distinction, Heavy Handed (Heavy Attack as one Action)",
+            "level6": "Additional Action (4 total), Adrenaline Rush (crit/kill grants movement + Action)",
+            "level7": "Attribute Increase/Distinction, Frightening Glare (auto-frighten on being hit)",
+            "level8": "Menacing Attacker (Advantage vs Frightened), Resilient Anger (extra Damage Reduction types)",
+            "level9": "Additional Action (5 total), Attribute Increase/Distinction, Focusing Temper (Charm/Frighten immunity while Berserking)",
+            "level10": "Absolutely Barbaric (extra crit damage + temp HP), Too Angry to Die (don't fall unconscious at 0 HP)"
+        }
+    },
+    "duelist": {
+        "name": "Duelist",
+        "category": "Martial Exploiter",
+        "hitDie": "d8",
+        "combatSkillBonus": "melee",
+        "hasSpellcasting": false,
+        "weaponTraining": ["Four types of Melee", "One type of Ranged or Spellcraft"],
+        "armorTraining": ["Light", "Medium", "Shields"],
+        "bloodiedEffect": {
+            "name": "The Match",
+            "trigger": "While Bloodied",
+            "description": "Gain special Match Reaction. When Parry prevents hit, regain Match Reaction to immediately Riposte. When Match Reaction Attack is crit/kill, regain Match Reaction.",
+            "duration": "While Bloodied"
+        },
+        "features": {
+            "level1": "Reactive Fighting (two Reactions per round), Parry (reaction +2 AC), Riposte (reaction attack on miss)",
+            "level2": "En Garde (provoke creature to attack), Lunging Attack (extended reach + damage on Charge)",
+            "level3": "Additional Action (3 total), Attribute Increase/Distinction, Swagger (bonus to Maneuver/Barter), Fleurish (expend Reaction for Minor Action)",
+            "level4": "Retreating Strike (Shift after Attack), Painful Mercy (end condition for damage)",
+            "level5": "Attribute Increase/Distinction, Unflinching (can react while Dazed)",
+            "level6": "Additional Action (4 total), Retaliation (reaction attack when hit)",
+            "level7": "Attribute Increase/Distinction, Evasiveness (Disadvantage on Opportunity Attacks, Reflexes bonus)",
+            "level8": "Cruel Counterer (Immobilize/Slow on reaction hit), Evolving Defense (Disadvantage if already hit this turn)",
+            "level9": "Additional Action (5 total), Attribute Increase/Distinction, The Greatest Offense (Parry +4, affects Reflexes/Intellect)",
+            "level10": "Legendary Panache (regain Reaction when attacked), Master of Duels (Advantage on reaction Attacks, temp HP on kill)"
+        }
+    },
+    "brawler": {
+        "name": "Brawler",
+        "category": "Martial Enabler",
+        "hitDie": "d10",
+        "combatSkillBonus": "melee",
+        "hasSpellcasting": false,
+        "weaponTraining": ["Two types of Melee", "One type of Ranged or Spellcraft"],
+        "armorTraining": ["Light", "Medium"],
+        "bloodiedEffect": {
+            "name": "Instinct Activation",
+            "trigger": "When Bloodied for first time in encounter or start encounter Bloodied",
+            "description": "Increase AC by Reflexes or Toughness modifier (whichever higher). Advantage on Unarmed Strike Attacks.",
+            "duration": "While Bloodied"
+        },
+        "features": {
+            "level1": "Brawling (trade Actions for Minor Actions, use Toughness/Reflexes for Unarmed), Quick Footwork (+2 Speed, +2 AC/Reflexes unarmored)",
+            "level2": "Flowing Strikes (gain Flow on hit, max 5), Rushing River (spend Flow to Charge/Dash as Minor), Butterfly Float (spend Flow to Dodge as Reaction)",
+            "level3": "Additional Action (3 total), Attribute Increase/Distinction, Meditation (bonus to Endure/Study), Gut Punch (spend Flow to Sicken)",
+            "level4": "Blitz (spend Flow for speed/Advantage), Fighting Focus (Flow on initiative/miss), Sweep the Leg (spend Flow to knock Prone)",
+            "level5": "Attribute Increase/Distinction, Haymaker (spend Flow to Daze), Invigorate (spend Flow for temp HP)",
+            "level6": "Additional Action (4 total), Dirty Fighting (spend Flow to Blind), Go for the Throat (spend Flow to Silence)",
+            "level7": "Attribute Increase/Distinction, Stream of Power (gain Flow each turn), Roundhouse Kick (spend Flow to Stagger)",
+            "level8": "Rapid Recovery (spend Flow to Recover as Minor), State of Flow (ignore DR at 3+, Disadvantage vs you at 5)",
+            "level9": "Additional Action (5 total), Attribute Increase/Distinction, Striking River (extra damage when spending Flow)",
+            "level10": "Armor of Self (+5 AC/Defenses unarmored), Tranquil Sea (regain HP when gaining Flow)"
+        }
+    },
+    "thief": {
+        "name": "Thief",
+        "category": "Martial Exploiter",
+        "hitDie": "d8",
+        "combatSkillBonus": "ranged",
+        "hasSpellcasting": false,
+        "weaponTraining": ["Two types of Melee", "Two types of Ranged", "One Spellcraft"],
+        "armorTraining": ["Light"],
+        "bloodiedEffect": {
+            "name": "Grace Under Pressure",
+            "trigger": "While Bloodied",
+            "description": "Gain bonus to all Skill checks equal to half your level.",
+            "duration": "While Bloodied"
+        },
+        "features": {
+            "level1": "Pickpocket (steal/plant items), Extra Skilled (bonus to one General Skill)",
+            "level2": "Expert Climber (no speed reduction climbing), Tumble (Dash/Disengage as Minor)",
+            "level3": "Additional Action (3 total), Attribute Increase/Distinction, Night Eyes (ignore darkness Disadvantage), Disarming Attack (knock object from hands)",
+            "level4": "Disappear (Hide as Minor Action), Flanking (Advantage with ally nearby)",
+            "level5": "Attribute Increase/Distinction, Turnabout (use stolen object/weapon immediately), Extra Skilled (second skill)",
+            "level6": "Additional Action (4 total), Close Call (reaction to halve damage)",
+            "level7": "Attribute Increase/Distinction, Double Trouble (two turns first round)",
+            "level8": "Hard to Hit (Disadvantage on attacks vs you, Shift on miss), Copycat (copy non-magickal features)",
+            "level9": "Additional Action (5 total), Attribute Increase/Distinction, Slink (stay Hidden while moving), Sleuth (higher Defense vs Hidden), Extra Skilled (third skill)",
+            "level10": "Master Thief (Disadvantage/Slow on Pickpocket), Ready for Anything (no Surprise, choose Initiative attribute)"
+        }
+    },
+    "hunter": {
+        "name": "Hunter",
+        "category": "Martial Exploiter",
+        "hitDie": "d8",
+        "combatSkillBonus": "ranged",
+        "hasSpellcasting": false,
+        "weaponTraining": ["Two types of Melee", "Three types of Ranged", "One Spellcraft"],
+        "armorTraining": ["Light"],
+        "bloodiedEffect": {
+            "name": "Bloody Tracker",
+            "trigger": "While Bloodied",
+            "description": "Advantage on tracking/searching for creatures. Advantage on Attacks against Bloodied creatures.",
+            "duration": "While Bloodied"
+        },
+        "features": {
+            "level1": "Favored Prey (choose creature type for bonuses), Harrying Mark (mark target for extra damage)",
+            "level2": "Steadied Aim (sacrifice movement for Advantage), Hunting Fever (high mark roll grants Advantage)",
+            "level3": "Additional Action (3 total), Attribute Increase/Distinction, Knowledgeable Hunter (bonus vs Favored Prey), Retreating Shot (Shift + Ranged Attack)",
+            "level4": "Preemptive Shot (reaction attack on enter/exit range), Terrain Specialist (ignore difficult/hazardous terrain), Additional Favored Prey",
+            "level5": "Attribute Increase/Distinction, Point Blank (Heavy Attacks at close range)",
+            "level6": "Additional Action (4 total), High Ground (Advantage from elevation), Prey Slayer (Advantage + damage vs Favored Prey)",
+            "level7": "Attribute Increase/Distinction, Long Shot (double range attack), Additional Favored Prey",
+            "level8": "Barrage (attack multiple targets in area), Focused Precision (ignore partial cover)",
+            "level9": "Additional Action (5 total), Attribute Increase/Distinction, Deadly Mark (Advantage + extra die on marked target)",
+            "level10": "Living Arsenal (double ammo, extra attacks), Ultimate Predator (+2 Speed, Dash/Charge toward Favored Prey), Additional Favored Prey"
+        }
+    },
+    "assassin": {
+        "name": "Assassin",
+        "category": "Martial Exploiter",
+        "hitDie": "d8",
+        "combatSkillBonus": "melee",
+        "hasSpellcasting": false,
+        "weaponTraining": ["Three types of Melee", "Two types of Ranged", "One Spellcraft"],
+        "armorTraining": ["Light"],
+        "bloodiedEffect": {
+            "name": "Blood for Blood",
+            "trigger": "While Bloodied",
+            "description": "Advantage on Attacks against creatures at full HP or with temp HP.",
+            "duration": "While Bloodied"
+        },
+        "features": {
+            "level1": "Hidden Weapons (hide weapons on person), Twist the Knife (bonus damage based on Advantage dice)",
+            "level2": "Assassin's Knack (Advantage on Initiative, Poison Reduction), Seize the Moment (Advantage with hidden weapon)",
+            "level3": "Additional Action (3 total), Attribute Increase/Distinction, Second Identity (disguise benefits), Hamstring (Slow instead of damage)",
+            "level4": "Assassinate (Advantage vs creatures pre-turn), The Reveal (reveal identity for Advantage)",
+            "level5": "Attribute Increase/Distinction, Lacerate (create Wounds instead of damage)",
+            "level6": "Additional Action (4 total), Element of Surprise (double Advantage from features)",
+            "level7": "Attribute Increase/Distinction, Crippling Strike (Immobilize instead of Slow)",
+            "level8": "Potent Poisons (double duration, ignore DR), Sudden Death (fake death as Reaction)",
+            "level9": "Additional Action (5 total), Attribute Increase/Distinction, Terrible Wounds (prevent HP recovery)",
+            "level10": "Executioner (regain HP on Twist the Knife kill), Master of Cloak and Dagger (single d20 hit = 5 Advantage)"
+        }
+    },
+    "tactician": {
+        "name": "Tactician",
+        "category": "Martial Enabler",
+        "hitDie": "d10",
+        "combatSkillBonus": "melee",
+        "hasSpellcasting": false,
+        "weaponTraining": ["Three types of Melee", "Two types of Ranged", "One Spellcraft"],
+        "armorTraining": ["Light", "Medium", "Heavy", "Shields"],
+        "bloodiedEffect": {
+            "name": "Warrior's Resolve",
+            "trigger": "When Bloodied for first time in encounter or start encounter Bloodied",
+            "description": "Regain one expended Hit Die. If all Hit Dice available, gain temporary Hit Die.",
+            "duration": "Instant"
+        },
+        "features": {
+            "level1": "Rally (grant temp HP to ally), Tactical Assist (Reaction to grant Advantage, extended Help)",
+            "level2": "Weight of Leadership (expend Hit Die for attack/damage bonus), Inspiring Speech (grant temp HP after Rest)",
+            "level3": "Additional Action (3 total), Attribute Increase/Distinction, Tactical Wit (bonus to Study/Barter), Replenish Stamina (regain Hit Die after combat)",
+            "level4": "Shoving Attack (secondary Toughness for push/prone), Commanding Strike (ally attacks/moves on your hit)",
+            "level5": "Attribute Increase/Distinction, Positive Influence (+2 Defenses to nearby allies)",
+            "level6": "Additional Action (4 total), Motivate (grant ally extra Action)",
+            "level7": "Attribute Increase/Distinction, Battle Cry (allies gain speed/temp HP/Advantage, enemies Disadvantage)",
+            "level8": "Awaken the Fallen (Rally + Hit Die, can target 0 HP allies), Charismatic Presence (extended aura, bonuses with temp HP)",
+            "level9": "Additional Action (5 total), Attribute Increase/Distinction, Worthy Cause (temp HP + reaction attack when ally drops)",
+            "level10": "Commander's Empathy (gain half temp HP others gain), Selfless Leader (Hit Die grants Advantage to ally)"
+        }
+    },
+    "minstrel": {
+        "name": "Minstrel",
+        "category": "Magickal Enabler",
+        "hitDie": "d6",
+        "combatSkillBonus": "spellcraft",
+        "hasSpellcasting": true,
+        "spellcasting": {
+            "attribute": "willpower",
+            "magickTypes": ["Music", "Sound", "Fortune"],
+            "damageDie": "1d8",
+            "healingDie": "1d8",
+            "damageTypes": ["Sound"]
+        },
+        "weaponTraining": ["Two types of Melee", "Two types of Ranged", "Two types of Spellcraft"],
+        "armorTraining": ["Light"],
+        "bloodiedEffect": {
+            "name": "The Show Must Go On",
+            "trigger": "When Bloodied for first time in encounter or start encounter Bloodied",
+            "description": "Grant yourself Fortune (doesn't count vs limit). While Bloodied, creatures with Fortune can expend it to reduce damage.",
+            "duration": "While Bloodied"
+        },
+        "features": {
+            "level1": "Tune (perfect pitch, play any instrument), Fortune (grant d6 to ally), Spellcasting (Willpower), Magick Recovery",
+            "level2": "Misfortune (impose d6 penalty), Versatile Skill (raise General Skill rank)",
+            "level3": "Additional Action (3 total), Attribute Increase/Distinction, Storied Adventurer (bonus to Barter/Deceive), Fast Tempo (speed + no Opportunity Attacks after spell)",
+            "level4": "Dueling Fates (multiple Fortune/Misfortune), Defense Melody (Channel Magick increases Defenses), Versatile Skill",
+            "level5": "Attribute Increase/Distinction, Harmonic Spellcrafting (expend Fortune/Misfortune for spell boost)",
+            "level6": "Additional Action (4 total), Experienced Talespinner (d8 dice, can expend others' Fortune/Misfortune), Versatile Skill",
+            "level7": "Attribute Increase/Distinction, Spell Interruption (reaction to counter spells)",
+            "level8": "Echo of Magick (copy witnessed spells), Power Discord (damage when expending Misfortune), Versatile Skill",
+            "level9": "Additional Action (5 total), Attribute Increase/Distinction, Encore (cast duplicate spell)",
+            "level10": "Grand Finale (musical solo after spell for temp HP/damage), Master Muse (d10 dice, regain MP on Initiative), Versatile Skill"
+        }
+    },
+    "elementalist": {
+        "name": "Elementalist",
+        "category": "Magickal Exploiter",
+        "hitDie": "d6",
+        "combatSkillBonus": "spellcraft",
+        "hasSpellcasting": true,
+        "spellcasting": {
+            "attribute": "intellect",
+            "magickTypes": ["Fire", "Ice", "Lightning"],
+            "damageDie": "1d12",
+            "healingDie": "1d4",
+            "damageTypes": ["Fire", "Ice", "Lightning"]
+        },
+        "weaponTraining": ["Two types of Melee", "One type of Ranged", "Three types of Spellcraft"],
+        "armorTraining": ["Light"],
+        "bloodiedEffect": {
+            "name": "Elements Unleashed",
+            "trigger": "At start of each turn while Bloodied",
+            "description": "Create one Bright Wisp matching current element. Can expend for 2d12 damage instead of 1d12. Only one Bright Wisp at a time.",
+            "duration": "While Bloodied"
+        },
+        "features": {
+            "level1": "Flicker (minor elemental effects), Elemental Wisp (create wisps for bonus damage), Spellcasting (Intellect), Magick Recovery",
+            "level2": "Elementary Connection (choose element for DR + ignore DR), Magickal Ward (HP shield)",
+            "level3": "Additional Action (3 total), Attribute Increase/Distinction, Sorcerous Academia (bonus to Study/Craft), Spell Fusion (extra damage if different element)",
+            "level4": "Imploding Elements (reroll 1s on damage), Ward Refresh (spend MP to heal ward)",
+            "level5": "Attribute Increase/Distinction, Motes of Magick (expend Wisp instead of MP for Channel Magick)",
+            "level6": "Additional Action (4 total), Destructive Feedback (reaction damage when ward hit)",
+            "level7": "Attribute Increase/Distinction, Power Surge (reroll damage for chosen element)",
+            "level8": "Energy Conduit (chosen element ignores DR), Spell Siphon (regain MP on kill)",
+            "level9": "Additional Action (5 total), Attribute Increase/Distinction, Chain Reaction (destroy all wisps for massive damage)",
+            "level10": "Elemental Archon (immunity to chosen element, change on Rest), Ultimate Defense (ward HP = score, +1 AC/Defenses at 0)"
+        }
+    },
     "priest": {
         "name": "Priest",
+        "category": "Magickal Enabler",
         "hitDie": "d6",
         "combatSkillBonus": "spellcraft",
         "hasSpellcasting": true,
@@ -14,326 +299,195 @@ const CLASSES = {
             "healingDie": "1d10",
             "damageTypes": ["Holy"]
         },
+        "weaponTraining": ["Two types of Melee", "One type of Ranged", "Two types of Spellcraft"],
+        "armorTraining": ["Light", "Medium", "Shields"],
         "bloodiedEffect": {
             "name": "Blood of the Martyr",
-            "trigger": "When Bloodied for first time in encounter",
-            "description": "Your faith strengthens in times of dire need.",
-            "mechanics": "Gain advantage on all Willpower-based checks and saving throws until no longer Bloodied or reduced to 0 HP.",
-            "duration": "Until no longer Bloodied or reduced to 0 HP"
+            "trigger": "When Bloodied for first time in encounter or start encounter Bloodied",
+            "description": "At start of each turn, friendly creatures within 4 Squares gain temp HP equal to Willpower modifier.",
+            "duration": "Until reduced to 0 HP or no longer Bloodied"
         },
         "features": {
-            "level1": "Divine Channel, Healing Touch",
-            "level2": "Turn Undead"
+            "level1": "Aspect of Divinity (minor divine displays), Blessed Renewal (boost Recovery Action), Spellcasting (Willpower), Magick Recovery",
+            "level2": "Empowered Healing (cure poison/disease with healing), Purge Unholy (damage Unholy creatures in area)",
+            "level3": "Additional Action (3 total), Attribute Increase/Distinction, Divine Emissary (bonus to Barter/Endure), Warrior's Blessing (Advantage after healing)",
+            "level4": "Holy Strike (1d6 extra Holy damage), Font of Restoration (don't expend Hit Die on healing)",
+            "level5": "Attribute Increase/Distinction, Radiant Aura (create light, impose Disadvantage on attacks)",
+            "level6": "Additional Action (4 total), Curse Breaker (end spell/curse with healing)",
+            "level7": "Attribute Increase/Distinction, Bane of Unholy (Advantage vs Unholy, max damage)",
+            "level8": "Mana Recycling (regain MP when removing afflictions), Life From Death (temp HP on Holy kill)",
+            "level9": "Additional Action (5 total), Attribute Increase/Distinction, Purify (Purge affects all, ignore Fatigue)",
+            "level10": "Avatar of Divine (+5 Willpower, immunities, aura damage/healing), Symbiotic Healer (regain HP when healing, copy buffs)"
         }
     },
     "occultist": {
         "name": "Occultist",
+        "category": "Magickal Exploiter",
         "hitDie": "d6",
         "combatSkillBonus": "spellcraft",
         "hasSpellcasting": true,
         "spellcasting": {
             "attribute": "intellect",
-            "magickTypes": ["Arcane", "Illusion", "Divination"],
-            "damageDie": "1d8",
-            "healingDie": "1d6",
-            "damageTypes": ["Psychic", "Force"]
-        },
-        "bloodiedEffect": {
-            "name": "Desperate Ritual",
-            "trigger": "When Bloodied",
-            "description": "Pain fuels your dark magic.",
-            "mechanics": "Your spell damage dice gain +2 to all rolls. Each spell cast while Bloodied costs 1 additional MP.",
-            "duration": "Until no longer Bloodied"
-        },
-        "features": {
-            "level1": "Arcane Study, Ritual Casting"
-        }
-    },
-    "elementalist": {
-        "name": "Elementalist",
-        "hitDie": "d8",
-        "combatSkillBonus": "spellcraft",
-        "hasSpellcasting": true,
-        "spellcasting": {
-            "attribute": "intellect",
-            "magickTypes": ["Elemental", "Nature", "Weather"],
+            "magickTypes": ["Unholy", "Darkness", "Curse"],
             "damageDie": "1d10",
             "healingDie": "1d6",
-            "damageTypes": ["Fire", "Ice", "Lightning", "Acid"]
+            "damageTypes": ["Shadow"]
         },
+        "weaponTraining": ["Two types of Melee", "One type of Ranged", "Three types of Spellcraft"],
+        "armorTraining": ["Light"],
         "bloodiedEffect": {
-            "name": "Elemental Fury",
-            "trigger": "When Bloodied",
-            "description": "The elements respond to your pain.",
-            "mechanics": "Choose one damage type. Your elemental spells of that type deal maximum damage instead of rolling until no longer Bloodied.",
-            "duration": "Until no longer Bloodied"
+            "name": "Blood Curse",
+            "trigger": "When Bloodied for first time in encounter or start encounter Bloodied",
+            "description": "Curse creatures equal to Intellect + level. Cursed have Disadvantage vs you, can reflect damage as Reaction.",
+            "duration": "One minute, until 0 HP, or no longer Bloodied"
         },
         "features": {
-            "level1": "Elemental Affinity, Shapeshift Element"
+            "level1": "Shadow Step (teleport in darkness with Advantage), Darksight (see in darkness), Spellcasting (Intellect), Magick Recovery",
+            "level2": "Magick Purge (remove buffs/curses for damage), Raise Minion (create undead servants)",
+            "level3": "Additional Action (3 total), Attribute Increase/Distinction, Shadowy Informant (bonus to Deceive/Study), Lifestealer Curse (curse for damage + temp HP on death)",
+            "level4": "Occult Extension (Concentrate as Action/Minor), Grip of Darkness (extra damage in dim light)",
+            "level5": "Attribute Increase/Distinction, Homing Hex (Advantage vs Cursed)",
+            "level6": "Additional Action (4 total), Misdirection Curse (redirect missed attacks)",
+            "level7": "Attribute Increase/Distinction, Mighty Minions (spend extra MP for stronger minions)",
+            "level8": "Exorcism (Magick Purge makes Vulnerable), Life Eater (temp HP on kill/dismiss)",
+            "level9": "Additional Action (5 total), Attribute Increase/Distinction, Virulent Curse (spread on death, reduce Defenses)",
+            "level10": "Reaving Spells (extra damage to healthy targets), Necromancer (temp HP from Exorcism, auto-raise on kill)"
         }
     },
-    "warrior": {
-        "name": "Warrior",
-        "hitDie": "d12",
-        "combatSkillBonus": "melee",
-        "hasSpellcasting": false,
-        "bloodiedEffect": {
-            "name": "Battle Rage",
-            "trigger": "When Bloodied",
-            "description": "Injury only makes you fight harder.",
-            "mechanics": "Gain +2 to all melee attack rolls and damage. You cannot use the Dodge action while in Battle Rage.",
-            "duration": "Until no longer Bloodied"
-        },
-        "features": {
-            "level1": "Weapon Mastery, Second Wind"
-        }
-    },
-    "ranger": {
-        "name": "Ranger",
-        "hitDie": "d10",
-        "combatSkillBonus": "ranged",
-        "hasSpellcasting": false,
-        "bloodiedEffect": {
-            "name": "Predator's Focus",
-            "trigger": "When Bloodied",
-            "description": "Desperation sharpens your aim.",
-            "mechanics": "Your ranged attacks ignore half cover and three-quarters cover. You have advantage on ranged attacks against creatures within 30 feet.",
-            "duration": "Until no longer Bloodied"
-        },
-        "features": {
-            "level1": "Hunter's Mark, Favored Terrain"
-        }
-    },
-    "rogue": {
-        "name": "Rogue",
-        "hitDie": "d8",
-        "combatSkillBonus": "ranged",
-        "hasSpellcasting": false,
-        "bloodiedEffect": {
-            "name": "Cornered Animal",
-            "trigger": "When Bloodied",
-            "description": "A wounded creature is most dangerous.",
-            "mechanics": "You can take the Disengage or Hide action as a bonus action. Your Sneak attack damage increases by 1d6.",
-            "duration": "Until no longer Bloodied"
-        },
-        "features": {
-            "level1": "Sneak Attack, Expertise"
-        }
-    },
-    "bard": {
-        "name": "Bard",
-        "hitDie": "d8",
+    "sage": {
+        "name": "Sage",
+        "category": "Magickal Enabler",
+        "hitDie": "d6",
         "combatSkillBonus": "spellcraft",
         "hasSpellcasting": true,
         "spellcasting": {
             "attribute": "willpower",
-            "magickTypes": ["Enchantment", "Illusion", "Sound"],
+            "magickTypes": ["Wind", "Earth", "Water", "Plant"],
             "damageDie": "1d8",
             "healingDie": "1d8",
-            "damageTypes": ["Psychic", "Thunder"]
+            "damageTypes": ["Slash", "Stab", "Strike", "Poison"]
         },
+        "weaponTraining": ["Two types of Melee", "Two types of Ranged", "Two types of Spellcraft"],
+        "armorTraining": ["Light", "Shields"],
         "bloodiedEffect": {
-            "name": "Swan Song",
+            "name": "Spring Eternal",
             "trigger": "When Bloodied",
-            "description": "Your performance becomes legendary in desperation.",
-            "mechanics": "Your Bardic Inspiration die increases by one size (d6→d8, d8→d10, etc.). Allies within 30 feet gain +1 to all saving throws.",
-            "duration": "Until no longer Bloodied"
+            "description": "Ground within 2 Squares becomes difficult terrain. Creatures starting turn in area recover 1 HP or take 1d4 Poison (your choice). Reducing to 0 HP Charms them instead.",
+            "duration": "While Bloodied"
         },
         "features": {
-            "level1": "Bardic Inspiration, Jack of All Trades"
+            "level1": "Green Thumb (grow plants instantly), Language of Nature (speak with animals/plants), Spellcasting (Willpower), Magick Recovery",
+            "level2": "Nature's Protection (reaction vines to Immobilize/Stagger), Natural Attunement (choose Wind/Water/Stone/Plant for benefits)",
+            "level3": "Additional Action (3 total), Attribute Increase/Distinction, Askance of Nature (bonus to Maneuver/Sneak), Terrain Manipulation (create/destroy terrain)",
+            "level4": "Wildstrider (+1 Speed, ignore difficult/hazardous terrain), Sage Forms (transform into elemental form)",
+            "level5": "Attribute Increase/Distinction, Destructive Nature (Willpower to aligned spell damage)",
+            "level6": "Additional Action (4 total), Wrathful Protection (halve damage, deal damage with vines)",
+            "level7": "Attribute Increase/Distinction, Advanced Attunement (change on Rest, extra benefits per element)",
+            "level8": "Grasping Vines (target extra creatures), Twin Attunement (choose two elements)",
+            "level9": "Additional Action (5 total), Attribute Increase/Distinction, Will of the Land (create hazardous/obscuring terrain, permanent)",
+            "level10": "Worldspeaker (Advantage with nature creatures, they avoid combat), Master of Four Forms (four uses, activate two at once)"
         }
     },
-    "paladin": {
-        "name": "Paladin",
-        "hitDie": "d10",
-        "combatSkillBonus": "melee",
+    "magician": {
+        "name": "Magician",
+        "category": "Magickal Enabler",
+        "hitDie": "d6",
+        "combatSkillBonus": "spellcraft",
+        "hasSpellcasting": true,
+        "spellcasting": {
+            "attribute": "intellect",
+            "magickTypes": ["Illusion", "Arkane", "Transposition"],
+            "damageDie": "1d10",
+            "healingDie": "1d6",
+            "damageTypes": ["Arkane"]
+        },
+        "weaponTraining": ["Two types of Melee", "One type of Ranged", "Three types of Spellcraft"],
+        "armorTraining": ["Light"],
+        "bloodiedEffect": {
+            "name": "Is this a Dream, or a Nightmare?",
+            "trigger": "When Bloodied for first time in encounter or start encounter Bloodied",
+            "description": "Charm or Frighten creatures within 4 Squares until end of next turn or damage. Concentrate to extend. Take damage/Slow when ends.",
+            "duration": "Concentration"
+        },
+        "features": {
+            "level1": "Simple Manipulation (move objects at distance), Handheld Illusion (create illusory objects), Spellcasting (Intellect), Magick Recovery",
+            "level2": "Illusion Specialist (choose who sees through illusions), Hidden Step (turn invisible)",
+            "level3": "Additional Action (3 total), Attribute Increase/Distinction, Magickal Guile (bonus to Sneak/Deceive), Scapegoat (teleport leaving illusion)",
+            "level4": "Psychic Illusions (personalized perception), Trick Door (create portal storage)",
+            "level5": "Attribute Increase/Distinction, Complex Manipulation (two hands, heavier objects, attack)",
+            "level6": "Additional Action (4 total), From the Fold (bonus damage after Hidden Step/Scapegoat)",
+            "level7": "Attribute Increase/Distinction, Doppelganger (create duplicate, swap places, attack from)",
+            "level8": "Magickal Displacement (Arkane DR, resist forced movement, teleport on Channel), Unstable Duplicates (damage when duplicate destroyed)",
+            "level9": "Additional Action (5 total), Attribute Increase/Distinction, Escape Hatch (Trick Door for travel)",
+            "level10": "Altered Reality (make illusions real), Emergency Escape (Doppelganger with Scapegoat)"
+        }
+    },
+    "conjuror": {
+        "name": "Conjuror",
+        "category": "Magickal Exploiter",
+        "hitDie": "d6",
+        "combatSkillBonus": "spellcraft",
         "hasSpellcasting": true,
         "spellcasting": {
             "attribute": "willpower",
-            "magickTypes": ["Divine", "Protection", "Light"],
+            "magickTypes": ["Summoning", "Creation", "Rune"],
             "damageDie": "1d8",
             "healingDie": "1d8",
-            "damageTypes": ["Holy", "Radiant"]
+            "damageTypes": ["Poison", "Acid"]
         },
+        "weaponTraining": ["Two types of Melee", "One type of Ranged", "Two types of Spellcraft"],
+        "armorTraining": ["Light", "Medium", "Shields"],
         "bloodiedEffect": {
-            "name": "Righteous Defiance",
-            "trigger": "When Bloodied",
-            "description": "Your divine oath sustains you.",
-            "mechanics": "Gain resistance to all damage types. Your Lay on Hands healing pool increases by your level × 2.",
-            "duration": "Until no longer Bloodied"
+            "name": "Runic Minefield",
+            "trigger": "When Bloodied for first time in encounter or start encounter Bloodied",
+            "description": "Create runic traps in spaces within 6 Squares. While Bloodied, can create traps up to 6 Squares away.",
+            "duration": "While Bloodied"
         },
         "features": {
-            "level1": "Divine Smite, Lay on Hands"
+            "level1": "Runic Trap (create damage traps), Adaptable Tools (create magickal tools), Spellcasting (Willpower), Magick Recovery",
+            "level2": "Conjured Weapon (create weapon using Spellcraft), Conjure Familiar (summon tiny creature)",
+            "level3": "Additional Action (3 total), Attribute Increase/Distinction, Right Tool for Job (bonus with Adaptable Tools), Magick Armor (create armor set)",
+            "level4": "Sorcerous Strike (1d8 extra damage), Explosive Traps (area effect, remote activation)",
+            "level5": "Attribute Increase/Distinction, Conjure Incarnate (summon powerful champion)",
+            "level6": "Additional Action (4 total), Familiar Evolution (stronger familiar, change form)",
+            "level7": "Attribute Increase/Distinction, Concentrated Runes (spend MP for extra damage + effects)",
+            "level8": "Kinetic Reversal (trap immunity, armor interacts with traps), Expanded Arsenal (two weapons or weapon + shield)",
+            "level9": "Additional Action (5 total), Attribute Increase/Distinction, Twin Summons (two familiars, -1 Action)",
+            "level10": "Master of Conjurations (temp HP on summon, Incarnate indefinite, regain MP), Supreme Runes (create anywhere, larger area)"
         }
     },
-    "druid": {
-        "name": "Druid",
-        "hitDie": "d8",
-        "combatSkillBonus": "spellcraft",
-        "hasSpellcasting": true,
-        "spellcasting": {
-            "attribute": "willpower",
-            "magickTypes": ["Nature", "Primal", "Beast"],
-            "damageDie": "1d8",
-            "healingDie": "1d10",
-            "damageTypes": ["Poison", "Acid", "Piercing"]
-        },
-        "bloodiedEffect": {
-            "name": "Primal Instinct",
-            "trigger": "When Bloodied",
-            "description": "Nature's raw power flows through you.",
-            "mechanics": "You can Wild Shape as a bonus action. While Wild Shaped and Bloodied, your natural attacks deal an additional 1d6 damage.",
-            "duration": "Until no longer Bloodied"
-        },
-        "features": {
-            "level1": "Wild Shape, Natural Recovery"
-        }
-    },
-    "monk": {
-        "name": "Monk",
-        "hitDie": "d8",
-        "combatSkillBonus": "melee",
-        "hasSpellcasting": false,
-        "bloodiedEffect": {
-            "name": "Inner Flame",
-            "trigger": "When Bloodied",
-            "description": "Pain is but another illusion.",
-            "mechanics": "Regain Ki points equal to your Wisdom modifier (minimum 1). Your unarmed strikes deal maximum damage instead of rolling.",
-            "duration": "Until no longer Bloodied"
-        },
-        "features": {
-            "level1": "Martial Arts, Ki Points"
-        }
-    },
-    "barbarian": {
-        "name": "Barbarian",
-        "hitDie": "d12",
-        "combatSkillBonus": "melee",
-        "hasSpellcasting": false,
-        "bloodiedEffect": {
-            "name": "Unstoppable Fury",
-            "trigger": "When Bloodied",
-            "description": "You refuse to fall.",
-            "mechanics": "Gain temporary HP equal to twice your level. Your critical hit range increases (critical on 19-20 instead of 20).",
-            "duration": "Until no longer Bloodied or reduced to 0 HP"
-        },
-        "features": {
-            "level1": "Rage, Unarmored Defense"
-        }
-    },
-    "artificer": {
-        "name": "Artificer",
-        "hitDie": "d8",
-        "combatSkillBonus": "ranged",
-        "hasSpellcasting": true,
-        "spellcasting": {
-            "attribute": "intellect",
-            "magickTypes": ["Artifice", "Technology", "Construct"],
-            "damageDie": "1d8",
-            "healingDie": "1d6",
-            "damageTypes": ["Fire", "Lightning", "Force"]
-        },
-        "bloodiedEffect": {
-            "name": "Emergency Protocols",
-            "trigger": "When Bloodied",
-            "description": "Your inventions activate failsafe measures.",
-            "mechanics": "Your artificer infusions gain +1 bonus. You can activate one infusion as a bonus action. Your constructed servant gains temporary HP equal to your level.",
-            "duration": "Until no longer Bloodied"
-        },
-        "features": {
-            "level1": "Magical Tinkering, Infuse Item"
-        }
-    },
-    "warlock": {
-        "name": "Warlock",
-        "hitDie": "d8",
-        "combatSkillBonus": "spellcraft",
-        "hasSpellcasting": true,
-        "spellcasting": {
-            "attribute": "willpower",
-            "magickTypes": ["Eldritch", "Shadow", "Pact"],
-            "damageDie": "1d10",
-            "healingDie": "1d6",
-            "damageTypes": ["Necrotic", "Force", "Psychic"]
-        },
-        "bloodiedEffect": {
-            "name": "Dark Bargain",
-            "trigger": "When Bloodied",
-            "description": "Your patron demands payment in blood.",
-            "mechanics": "Your Eldritch Blast gains one additional beam. Once per encounter while Bloodied, you can cast a spell without expending MP (costs 1d6 HP instead).",
-            "duration": "Until no longer Bloodied"
-        },
-        "features": {
-            "level1": "Eldritch Blast, Pact Magic"
-        }
-    },
-    "sorcerer": {
-        "name": "Sorcerer",
-        "hitDie": "d6",
-        "combatSkillBonus": "spellcraft",
-        "hasSpellcasting": true,
-        "spellcasting": {
-            "attribute": "willpower",
-            "magickTypes": ["Sorcery", "Wild Magic", "Bloodline"],
-            "damageDie": "1d10",
-            "healingDie": "1d6",
-            "damageTypes": ["Fire", "Lightning", "Force", "Psychic"]
-        },
-        "bloodiedEffect": {
-            "name": "Wild Surge",
-            "trigger": "When Bloodied",
-            "description": "Your raw magic becomes unstable.",
-            "mechanics": "You can use Metamagic without spending sorcery points. All your spells deal +1d6 damage of the spell's type, but roll on Wild Magic table after each spell.",
-            "duration": "Until no longer Bloodied"
-        },
-        "features": {
-            "level1": "Metamagic, Sorcerous Origin"
-        }
-    },
-    "cleric": {
-        "name": "Cleric",
-        "hitDie": "d8",
-        "combatSkillBonus": "spellcraft",
-        "hasSpellcasting": true,
-        "spellcasting": {
-            "attribute": "willpower",
-            "magickTypes": ["Divine", "Healing", "Protection"],
-            "damageDie": "1d8",
-            "healingDie": "1d10",
-            "damageTypes": ["Radiant", "Necrotic"]
-        },
-        "bloodiedEffect": {
-            "name": "Divine Intervention",
-            "trigger": "When Bloodied",
-            "description": "Your deity shields you in your hour of need.",
-            "mechanics": "Gain +2 AC. Your Channel Divinity recharges immediately. Healing spells you cast heal for maximum amount.",
-            "duration": "Until no longer Bloodied"
-        },
-        "features": {
-            "level1": "Channel Divinity, Divine Domain"
-        }
-    },
-    "wizard": {
-        "name": "Wizard",
+    "esper": {
+        "name": "Esper",
+        "category": "Magickal Exploiter",
         "hitDie": "d6",
         "combatSkillBonus": "spellcraft",
         "hasSpellcasting": true,
         "spellcasting": {
             "attribute": "intellect",
-            "magickTypes": ["Arcane", "Evocation", "Transmutation"],
-            "damageDie": "1d8",
+            "magickTypes": ["Psychic", "Spirit", "Divination"],
+            "damageDie": "1d10",
             "healingDie": "1d6",
-            "damageTypes": ["Fire", "Ice", "Lightning", "Force"]
+            "damageTypes": ["Psychic"]
         },
+        "weaponTraining": ["Two types of Melee", "One type of Ranged", "Three types of Spellcraft"],
+        "armorTraining": ["Light"],
         "bloodiedEffect": {
-            "name": "Arcane Desperation",
-            "trigger": "When Bloodied",
-            "description": "Fear unlocks forbidden knowledge.",
-            "mechanics": "You can cast one spell you haven't prepared (must be in your spellbook). Your spell save DC increases by 2.",
-            "duration": "Until no longer Bloodied"
+            "name": "Specter of Winter",
+            "trigger": "At start of each turn while Bloodied",
+            "description": "Designate one creature: either Slowed + 1d10 Ice damage, or gains 1d6 temp HP.",
+            "duration": "While Bloodied"
         },
         "features": {
-            "level1": "Spellbook, Arcane Recovery"
+            "level1": "Sixth Sense (detect supernatural within 10 Squares), Ghostly Whispers (telepathy within 3 Squares), Spellcasting (Intellect), Magick Recovery",
+            "level2": "Ghost Sight (see Invisible, read motives), Premonition (no Surprise, Advantage Initiative)",
+            "level3": "Additional Action (3 total), Attribute Increase/Distinction, Past Lives (bonus to Sneak/Craft), Fade (reaction to become Intangible)",
+            "level4": "Extract Thoughts (read/influence thoughts), Séance (pull spirits into visibility, restrict movement)",
+            "level5": "Attribute Increase/Distinction, Fate Meddling (spend MP to manipulate dice)",
+            "level6": "Additional Action (4 total), Phantom Walk (become Intangible, move through objects)",
+            "level7": "Attribute Increase/Distinction, Mind Reader (Advantage when reading thoughts)",
+            "level8": "Ghost Warrior (extended Intangible, ignore DR), Possession (control creatures at 0 HP)",
+            "level9": "Additional Action (5 total), Attribute Increase/Distinction, Circles of Protection (magick circles with Séance)",
+            "level10": "Incorporeal Champion (temp HP when Intangible), Death Gaze (Advantage on single target, spend MP for crit, possess on kill)"
         }
     }
 };
