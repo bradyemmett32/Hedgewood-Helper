@@ -691,10 +691,26 @@ const CROSS_CLASS_FEATURES = {
         "level3": "Lancing Shadows: When you use your Shadow Step feature, you can make the first Melee Attack you make a Lunging Attack if you teleported in a direct line towards the target of your Attack. If the Attack hits, you deal additional Shadow damage equal to twice the number of Squares you moved (2 Shadow damage for every 5 feet).",
         "level8": "TBD"
     },
-    "duelist-sage": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "duelist-magician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "conjuror-duelist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "duelist-esper": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "duelist-sage": {
+        "name": "Thorn",
+        "level3": "Rite of Thorns: When you use your En Garde feature on a creature, you can invoke the Rite of Thorns, treating their Reflexes Defense as a secondary target. If your Attack hits their Reflexes Defense (even if it fails against their Willpower Defense), the creature's limbs are tangled in a mess of sharp thorns. Until the end of the creature's next turn, each time they make an Attack, they take 1d4 Stab damage. You can spend 1 additional MP when you activate this feature to make the thorns ignore damage reduction from armor.",
+        "level8": "TBD"
+    },
+    "duelist-magician": {
+        "name": "Savant",
+        "level3": "Illusory Armaments: As an Action you can spend 1 MP to summon an illusory copy of one weapon you are holding, which hovers around you. When you would use a reaction to make an Attack (such as with an opportunity attack or your Riposte feature), you can cause the illusory weapon to do so without using a reaction. You can make a Spellcraft Attack instead of a Melee Attack, and If your Attack hits, it deals Arkane damage instead of the damage that weapon would normally do. Hit or miss, the illusory weapon disappears. You can only have one illusory armament at a time.",
+        "level8": "TBD"
+    },
+    "conjuror-duelist": {
+        "name": "Bonded Myrmidon",
+        "level3": "Familiar Response: When you use your Riposte feature, your Familiar can also make an Attack against that same creature. When a creature Attacks your Familiar, you can use a Reaction to move up to your Speed and make a Melee Attack against them. You have Advantage on the Attack if your Familiar took damage from the Attack, and your Attack deals extra damage equal to your level if your Familiar was killed.",
+        "level8": "TBD"
+    },
+    "duelist-esper": {
+        "name": "Soulblade",
+        "level3": "Mind Spike: While you are using your Ghost Sight feature, you have Advantage on Attacks targeting Intellect or Willpower Defense against creatures within its area of effect, and if you succeed on such an Attack, you can deal additional Psychic damage equal to your Intellect modifier.",
+        "level8": "TBD"
+    },
 
     // Brawler combinations (12 remaining)
     "brawler-thief": {
