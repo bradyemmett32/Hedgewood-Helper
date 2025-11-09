@@ -726,11 +726,31 @@ const CROSS_CLASS_FEATURES = {
     },
 
     // Priest combinations (5 remaining)
-    "occultist-priest": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "priest-sage": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "magician-priest": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "conjuror-priest": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "esper-priest": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "occultist-priest": {
+        "name": "Corruptor",
+        "level3": "Corrupted Divinity: When you use your Purge Unholy feature, instead of damaging each Unholy creature within 3 Squares (15 feet) of you, you can strengthen them for a brief instant, while damaging all non-Unholy creatures in that area. Each Unholy creature gains temporary HP equal to your level, and each non-Unholy creature other than yourself takes Shadow damage equal to your level.",
+        "level8": "TBD"
+    },
+    "priest-sage": {
+        "name": "Ritualist",
+        "level3": "Blessed Aloe: When a creature you can see within 6 Squares (30 feet) of you takes damage, you can expend a use of your Nature's Protection feature to heal them and punish their wrongdoer as a reaction. The creature that damaged them is subject to your Nature's Protection so long as they are within 6 Squares (30 feet) feet of you, while the creature you protect can use their reaction to take the Recover action (if they have not used it yet this encounter, as normal), benefiting from your Blessed Renewal feature if they do.",
+        "level8": "TBD"
+    },
+    "magician-priest": {
+        "name": "Enchanter",
+        "level3": "High Enchantment: When you Cast a Spell and choose an Effect Spell (Aura, Pillar, or Zone), you can activate your Aspect of Divinity or Handheld Illusion features any number of times while you remain in the area of the spell, no action required.",
+        "level8": "TBD"
+    },
+    "conjuror-priest": {
+        "name": "Oathsworn",
+        "level3": "Binding Oath: When your Familiar would be killed by taking damage, you can expend one of your Hit Dice to keep the Familiar alive (no action required), rolling the die and raising the Familiar's HP to the number rolled, potentially rolling and adding one of the Familiar's Hit Dice as well. As part of this feature, you can teleport the Familiar into an unoccupied space within 1 Square (5 feet) of you. After being healed by this feature, your Familiar benefits from your Warrior's Blessing feature. Additionally, when you use your Purge Unholy feature, you create a burst of energy around you and your Familiar. A creature within 3 Squares (15 feet) of both you and your Familiar takes Holy damage equal to your level plus twice your Willpower modifier.",
+        "level8": "TBD"
+    },
+    "esper-priest": {
+        "name": "Diviner",
+        "level3": "Divine Abnegation: Your Purge Unholy feature deals Holy damage to any Otherworldly or Spirit creature of your choice in its area as well. If your Ghost Sight feature is active when you use your Purge Unholy feature, you deal extra Psychic damage to any Otherworldly, Unholy, or Spirit creature of your choice within 3 Squares (15 feet) of you equal to twice your Intellect modifier.",
+        "level8": "TBD"
+    },
 
     // Occultist combinations (4 remaining)
     "occultist-sage": {
