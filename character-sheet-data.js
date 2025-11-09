@@ -744,8 +744,16 @@ const CROSS_CLASS_FEATURES = {
     "esper-sage": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
 
     // Magician combinations (2 remaining)
-    "conjuror-magician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "esper-magician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "conjuror-magician": {
+        "name": "Realist",
+        "level3": "Illusory Runes: When a creature is damaged by one of your Runic Traps, you can spend 1 MP to make the creature Charmed or Frightened of you until the end of its turn. A Charmed creature must spend the rest of its movement attempting to reach you by the shortest route, while a Frightened creature will spend the rest of its movement attempting to move as far away from you as possible. A Charmed or Frightened creature will not pass through obviously dangerous terrain, but will be unable to see through any of your illusions or spot your Runic Traps, regardless of its Intellect or Willpower Defenses.",
+        "level8": "TBD"
+    },
+    "esper-magician": {
+        "name": "Poltergeist",
+        "level3": "Telekinetic Assault: When you Cast a Spell and choose an Attack Spell (Ranged Spellstrike), you can launch an object that is not being worn or carried as part of the attack, instead of using a Ranged Weapon. To do so, you must be able to use Simple Manipulation on the object. If you hit a creature with an Attack using this feature or your Complex Manipulation feature, you can choose to add one of the following effects: The creature takes additional Arkane damage equal to your level. The creature takes additional Psychic damage equal to your level. The creature is pushed back 1 Square (5 feet). The creature is pulled towards you 1 Square (5 feet). The creature is knocked Prone.",
+        "level8": "TBD"
+    },
 
     // Conjuror combinations (1 remaining)
     "conjuror-esper": {
