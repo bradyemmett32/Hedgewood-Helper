@@ -737,7 +737,11 @@ const CROSS_CLASS_FEATURES = {
         "level3": "Low Blow: When you use your Tumble feature to Disengage, you can apply your Hamstring feature to one enemy adjacent to you. Additionally, you gain an additional 2 Squares (10 feet) of movement on any turn you use the Disengage action.",
         "level8": "TBD"
     },
-    "tactician-thief": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "tactician-thief": {
+        "name": "Mastermind",
+        "level3": "Self Guided Motivation: When you gain temporary HP from any of your Tactician features, roll 1d4 and save the result. Instead of 1d4, you can expend a Hit Die, rolling that die and saving the result instead. When you make a Skill check or are the target of an Attack, you can choose to add the result of the d4 to your Skill check roll, or to your AC and one of your Attribute Defenses against the Attack. Afterwards, you can reroll the d4 (or expend and roll another Hit Die) and save the result again if you still have temporary HP remaining.",
+        "level8": "TBD"
+    },
     "minstrel-thief": {
         "name": "Performer",
         "level3": "Leap and Twist: When you make a Maneuver check to Escape Grapple, you can add your Willpower modifier to the check. Additionally, when you use the Disengage action you gain an additional 2 Squares (10 feet) of movement for the rest of your turn.",
@@ -758,10 +762,26 @@ const CROSS_CLASS_FEATURES = {
         "level3": "Siphon Shadows: When you successfully hit a creature with your Magick Purge feature, you can spend 1 MP to regain HP equal to half the Shadow damage the creature takes, rounded up. If the healing would cause you to exceed your HP Maximum, you gain the excess as temporary HP.",
         "level8": "TBD"
     },
-    "sage-thief": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "magician-thief": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "conjuror-thief": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "esper-thief": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "sage-thief": {
+        "name": "Wanderer",
+        "level3": "Thru Wander: As an Action, you can expend 1 MP to shift into the Wander, a peaceful mirror dimension, where you can move up to your Speed before shifting back to the mundane world. When you reappear, you can cause an effect based on the type of terrain you moved through in the Wander. If you moved through multiple types of terrain, choose which single effect you want. If you moved through an area of normal terrain, you can Hide or use your Tumble or Pickpocket feature as part of the same action. If you moved through an area of difficult terrain, you can knock each creature of your choice within 2 Squares (10 feet) of you Prone or knock one creature of your choice within 6 Squares (30 feet) of you Prone. If you moved through an area of hazardous terrain, you can deal 1d8 Slash, Stab, Strike, or Poison damage to each creature of your choice within 2 Squares (10 feet) of you or one creature of your choice within 6 Squares (30 feet) of you. If you moved through an area of obscuring terrain, you can make each creature of your choice within 2 Squares (10 feet) of you or one creature of your choice within 6 Squares (30 feet) of you Blinded until the start of your next turn. When you use your Terrain Manipulation feature, you can use Thru Wander as part of the same action by expending 1 MP.",
+        "level8": "TBD"
+    },
+    "magician-thief": {
+        "name": "Arkane Trickster",
+        "level3": "Trickster's Hand: Your Simple Manipulation feature can be used to enable your Pickpocket feature. You can use a Spellcraft check instead of a Maneuver or Sneak check to pick a creature's pocket or place something in their pocket.",
+        "level8": "TBD"
+    },
+    "conjuror-thief": {
+        "name": "Smokebinder",
+        "level3": "Smoke Summoning: You can create a new kind of Runic Trap and you have a new option for Conjure Familiar. Smokebind Trap: When the trap is activated, it detonates, producing a fully opaque, black smoke cloud in the space above the trap. That space becomes obscuring terrain for one minute or until a strong wind blows the smoke away. If a creature triggered the trap by stepping on its space, the creature is also Immobilized by smoke-chains within the cloud. A creature Immobilized by smoke-chains can escape from the chains by using a Minor Action on their turn to break free. The smoke-chains also disappear when the smoke cloud disappears. When you gain the Explosive Traps feature, the smoke cloud fills the entire area within 1 Square (5 feet) of the trap, and each creature of your choice within the smoke cloud is Immobilized by smoke-chains. Smokebind Slug (Familiar): Slime, Speed 3 (climbing). Deals no damage, but a successful Attack will make a creature Blinded until the end of your next turn. When killed, it explodes into a smoke cloud similar to the Smokebind Trap.",
+        "level8": "TBD"
+    },
+    "esper-thief": {
+        "name": "Dreamweaver",
+        "level3": "Dream Seeing: When you use your Ghost Sight feature, you can see a visual representation of the dreams of any creature within 3 Squares (15 feet) of you. Using your Ghostly Whispers feature, you are able to communicate with a dreaming creature without waking them up, and are able to influence their dreams as such.",
+        "level8": "TBD"
+    },
 
     // Hunter combinations (10 remaining)
     "assassin-hunter": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
