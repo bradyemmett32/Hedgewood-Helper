@@ -263,6 +263,9 @@ function handleAction(e) {
         case 'close-modal':
             closeModal();
             break;
+        case 'export-pdf':
+            exportToPDF();
+            break;
     }
 }
 
@@ -1187,6 +1190,31 @@ function exportCharacter() {
 
     URL.revokeObjectURL(url);
     showNotification('Character exported!', 'success');
+}
+
+async function exportToPDF() {
+    try {
+        // Check if CharacterSheetPDF is available
+        if (!window.CharacterSheetPDF) {
+            showNotification('PDF export module not loaded', 'error');
+            return;
+        }
+
+        // Create PDF exporter instance
+        const pdfExporter = new CharacterSheetPDF();
+
+        // Show loading notification
+        showNotification('Generating PDF...', 'info');
+
+        // Export to PDF
+        await pdfExporter.exportToPDF(currentCharacter);
+
+        // Show success notification
+        showNotification('PDF exported successfully!', 'success');
+    } catch (error) {
+        console.error('Error exporting to PDF:', error);
+        showNotification(`Error exporting to PDF: ${error.message}`, 'error');
+    }
 }
 
 function showImportDialog() {

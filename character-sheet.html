@@ -33,6 +33,7 @@
                 <button class="btn-new" data-action="new-character">New Character</button>
                 <button class="btn-import" data-action="import-character">Import</button>
                 <button class="btn-export" data-action="export-character">Export</button>
+                <button class="btn-pdf" data-action="export-pdf">Export to PDF</button>
             </div>
         </div>
 
@@ -653,7 +654,9 @@
     <!-- Notification Container -->
     <div class="notification-container" id="notificationContainer"></div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="character-sheet-data.js"></script>
+    <script src="character-sheet-pdf.js"></script>
     <script src="character-sheet.js"></script>
 
     <footer class="version-footer">

@@ -41,7 +41,7 @@
     gap: var(--spacing-sm);
 }
 
-.btn-new, .btn-import, .btn-export {
+.btn-new, .btn-import, .btn-export, .btn-pdf {
     padding: var(--spacing-xs) var(--spacing-md);
     border: 2px solid white;
     background: rgba(255, 255, 255, 0.2);
@@ -52,7 +52,7 @@
     transition: var(--transition);
 }
 
-.btn-new:hover, .btn-import:hover, .btn-export:hover {
+.btn-new:hover, .btn-import:hover, .btn-export:hover, .btn-pdf:hover {
     background: white;
     color: var(--color-primary);
 }
