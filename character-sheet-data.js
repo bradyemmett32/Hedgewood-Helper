@@ -829,7 +829,11 @@ const CROSS_CLASS_FEATURES = {
         "level3": "Modified Weapons: Each time you use your Conjured Weapon feature, you can spend 1 MP to add a magickal modification to your weapon. Your weapon does not require ammunition to attack with, producing its own standard ammunition with each attack. Additionally, choose one of the following: Runic Munitions: When you hit a creature with a Ranged Attack using the Conjured Weapon, you can place one Runic Trap in an unoccupied space within 2 Squares (10 feet) of the target. Shot Splitter: When you make a Ranged Attack using the Conjured Weapon, you can target two creatures within the weapon's range if they are in the same direction from you. If your attack is successful against both targets, the attack deals half as much Physical damage (rounded up) to both creatures. Springloaded: When you use your Action to create the weapon, you can make one Attack using the weapon as part of the same Action. The Attack has Advantage.",
         "level8": "TBD"
     },
-    "esper-hunter": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "esper-hunter": {
+        "name": "Phantom",
+        "level3": "Motionless, Formless: If you use your Steadied Aim feature to reduce your movement, you become Intangible until the start of your next turn. If you reduce your movement speed to 0 using this feature, you become Invisible for the same duration. While Intangible, your Ranged Attacks can pass through solid objects, ignoring cover and any benefits a creature gains from using a shield.",
+        "level8": "TBD"
+    },
 
     // Assassin combinations (9 remaining)
     "assassin-tactician": {
