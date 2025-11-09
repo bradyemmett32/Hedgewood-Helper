@@ -340,56 +340,53 @@
                 </div>
             </div>
             <h3>Combat Skills</h3>
-            <div class="skills-grid">
-                <div class="skill-card">
-                    <h4>Melee</h4>
-                    <div class="skill-inputs">
-                        <div class="skill-field">
-                            <label for="meleeRank">Rank</label>
-                            <input type="number" id="meleeRank" value="0" min="0" data-field="combat.combatSkills.melee.rank">
-                        </div>
-                        <div class="skill-field readonly">
-                            <label>Toughness</label>
-                            <div class="skill-value" id="meleeToughness">+0</div>
-                        </div>
-                        <div class="skill-field readonly">
-                            <label>Reflexes</label>
-                            <div class="skill-value" id="meleeReflexes">+0</div>
-                        </div>
+            <div class="skills-table">
+                <div class="skills-table-header">
+                    <div class="skill-name-col">Skill</div>
+                    <div class="skill-rank-col">Rank</div>
+                    <div class="skill-score-col">Attr 1</div>
+                    <div class="skill-score-col">Attr 2</div>
+                </div>
+                <div class="skill-row">
+                    <div class="skill-name-col">Melee</div>
+                    <div class="skill-rank-col">
+                        <input type="number" id="meleeRank" value="0" min="0" data-field="combat.combatSkills.melee.rank">
+                    </div>
+                    <div class="skill-score-col">
+                        <span class="attr-label">Toughness</span>
+                        <div class="skill-value" id="meleeToughness">+0</div>
+                    </div>
+                    <div class="skill-score-col">
+                        <span class="attr-label">Reflexes</span>
+                        <div class="skill-value" id="meleeReflexes">+0</div>
                     </div>
                 </div>
-                <div class="skill-card">
-                    <h4>Ranged</h4>
-                    <div class="skill-inputs">
-                        <div class="skill-field">
-                            <label for="rangedRank">Rank</label>
-                            <input type="number" id="rangedRank" value="0" min="0" data-field="combat.combatSkills.ranged.rank">
-                        </div>
-                        <div class="skill-field readonly">
-                            <label>Toughness</label>
-                            <div class="skill-value" id="rangedToughness">+0</div>
-                        </div>
-                        <div class="skill-field readonly">
-                            <label>Reflexes</label>
-                            <div class="skill-value" id="rangedReflexes">+0</div>
-                        </div>
+                <div class="skill-row">
+                    <div class="skill-name-col">Ranged</div>
+                    <div class="skill-rank-col">
+                        <input type="number" id="rangedRank" value="0" min="0" data-field="combat.combatSkills.ranged.rank">
+                    </div>
+                    <div class="skill-score-col">
+                        <span class="attr-label">Toughness</span>
+                        <div class="skill-value" id="rangedToughness">+0</div>
+                    </div>
+                    <div class="skill-score-col">
+                        <span class="attr-label">Reflexes</span>
+                        <div class="skill-value" id="rangedReflexes">+0</div>
                     </div>
                 </div>
-                <div class="skill-card">
-                    <h4>Spellcraft</h4>
-                    <div class="skill-inputs">
-                        <div class="skill-field">
-                            <label for="spellcraftRank">Rank</label>
-                            <input type="number" id="spellcraftRank" value="0" min="0" data-field="combat.combatSkills.spellcraft.rank">
-                        </div>
-                        <div class="skill-field readonly">
-                            <label>Intellect</label>
-                            <div class="skill-value" id="spellcraftIntellect">+0</div>
-                        </div>
-                        <div class="skill-field readonly">
-                            <label>Willpower</label>
-                            <div class="skill-value" id="spellcraftWillpower">+0</div>
-                        </div>
+                <div class="skill-row">
+                    <div class="skill-name-col">Spellcraft</div>
+                    <div class="skill-rank-col">
+                        <input type="number" id="spellcraftRank" value="0" min="0" data-field="combat.combatSkills.spellcraft.rank">
+                    </div>
+                    <div class="skill-score-col">
+                        <span class="attr-label">Intellect</span>
+                        <div class="skill-value" id="spellcraftIntellect">+0</div>
+                    </div>
+                    <div class="skill-score-col">
+                        <span class="attr-label">Willpower</span>
+                        <div class="skill-value" id="spellcraftWillpower">+0</div>
                     </div>
                 </div>
             </div>
@@ -398,152 +395,131 @@
         <!-- General Skills Section -->
         <div class="character-section skills-section">
             <h2>General Skills</h2>
-            <div class="general-skills-grid">
-                <div class="skill-card">
-                    <h4>Maneuver</h4>
-                    <div class="skill-inputs">
-                        <div class="skill-field">
-                            <label for="maneuverRank">Rank</label>
-                            <input type="number" id="maneuverRank" value="0" min="0" data-field="generalSkills.maneuver.rank">
-                        </div>
-                        <div class="skill-field">
-                            <label for="maneuverBonus">Bonus</label>
-                            <input type="number" id="maneuverBonus" value="0" data-field="generalSkills.maneuver.bonus">
-                        </div>
-                        <div class="skill-field readonly">
-                            <label>Toughness</label>
-                            <div class="skill-value" id="maneuverToughness">+0</div>
-                        </div>
-                        <div class="skill-field readonly">
-                            <label>Reflexes</label>
-                            <div class="skill-value" id="maneuverReflexes">+0</div>
-                        </div>
+            <div class="skills-table">
+                <div class="skills-table-header">
+                    <div class="skill-name-col">Skill</div>
+                    <div class="skill-rank-col">Rank</div>
+                    <div class="skill-bonus-col">Bonus</div>
+                    <div class="skill-score-col">Attr 1</div>
+                    <div class="skill-score-col">Attr 2</div>
+                </div>
+                <div class="skill-row">
+                    <div class="skill-name-col">Maneuver</div>
+                    <div class="skill-rank-col">
+                        <input type="number" id="maneuverRank" value="0" min="0" data-field="generalSkills.maneuver.rank">
+                    </div>
+                    <div class="skill-bonus-col">
+                        <input type="number" id="maneuverBonus" value="0" data-field="generalSkills.maneuver.bonus">
+                    </div>
+                    <div class="skill-score-col">
+                        <span class="attr-label">Toughness</span>
+                        <div class="skill-value" id="maneuverToughness">+0</div>
+                    </div>
+                    <div class="skill-score-col">
+                        <span class="attr-label">Reflexes</span>
+                        <div class="skill-value" id="maneuverReflexes">+0</div>
                     </div>
                 </div>
-                <div class="skill-card">
-                    <h4>Sneak</h4>
-                    <div class="skill-inputs">
-                        <div class="skill-field">
-                            <label for="sneakRank">Rank</label>
-                            <input type="number" id="sneakRank" value="0" min="0" data-field="generalSkills.sneak.rank">
-                        </div>
-                        <div class="skill-field">
-                            <label for="sneakBonus">Bonus</label>
-                            <input type="number" id="sneakBonus" value="0" data-field="generalSkills.sneak.bonus">
-                        </div>
-                        <div class="skill-field readonly">
-                            <label>Reflexes</label>
-                            <div class="skill-value" id="sneakReflexes">+0</div>
-                        </div>
-                        <div class="skill-field readonly">
-                            <label>Intellect</label>
-                            <div class="skill-value" id="sneakIntellect">+0</div>
-                        </div>
+                <div class="skill-row">
+                    <div class="skill-name-col">Sneak</div>
+                    <div class="skill-rank-col">
+                        <input type="number" id="sneakRank" value="0" min="0" data-field="generalSkills.sneak.rank">
+                    </div>
+                    <div class="skill-bonus-col">
+                        <input type="number" id="sneakBonus" value="0" data-field="generalSkills.sneak.bonus">
+                    </div>
+                    <div class="skill-score-col">
+                        <span class="attr-label">Reflexes</span>
+                        <div class="skill-value" id="sneakReflexes">+0</div>
+                    </div>
+                    <div class="skill-score-col">
+                        <span class="attr-label">Intellect</span>
+                        <div class="skill-value" id="sneakIntellect">+0</div>
                     </div>
                 </div>
-                <div class="skill-card">
-                    <h4>Study</h4>
-                    <div class="skill-inputs">
-                        <div class="skill-field">
-                            <label for="studyRank">Rank</label>
-                            <input type="number" id="studyRank" value="0" min="0" data-field="generalSkills.study.rank">
-                        </div>
-                        <div class="skill-field">
-                            <label for="studyBonus">Bonus</label>
-                            <input type="number" id="studyBonus" value="0" data-field="generalSkills.study.bonus">
-                        </div>
-                        <div class="skill-field readonly">
-                            <label>Intellect</label>
-                            <div class="skill-value" id="studyIntellect">+0</div>
-                        </div>
-                        <div class="skill-field readonly">
-                            <label>Willpower</label>
-                            <div class="skill-value" id="studyWillpower">+0</div>
-                        </div>
+                <div class="skill-row">
+                    <div class="skill-name-col">Study</div>
+                    <div class="skill-rank-col">
+                        <input type="number" id="studyRank" value="0" min="0" data-field="generalSkills.study.rank">
+                    </div>
+                    <div class="skill-bonus-col">
+                        <input type="number" id="studyBonus" value="0" data-field="generalSkills.study.bonus">
+                    </div>
+                    <div class="skill-score-col">
+                        <span class="attr-label">Intellect</span>
+                        <div class="skill-value" id="studyIntellect">+0</div>
+                    </div>
+                    <div class="skill-score-col">
+                        <span class="attr-label">Willpower</span>
+                        <div class="skill-value" id="studyWillpower">+0</div>
                     </div>
                 </div>
-                <div class="skill-card">
-                    <h4>Craft</h4>
-                    <div class="skill-inputs">
-                        <div class="skill-field">
-                            <label for="craftRank">Rank</label>
-                            <input type="number" id="craftRank" value="0" min="0" data-field="generalSkills.craft.rank">
-                        </div>
-                        <div class="skill-field">
-                            <label for="craftBonus">Bonus</label>
-                            <input type="number" id="craftBonus" value="0" data-field="generalSkills.craft.bonus">
-                        </div>
-                        <div class="skill-field readonly">
-                            <label>Toughness</label>
-                            <div class="skill-value" id="craftToughness">+0</div>
-                        </div>
-                        <div class="skill-field readonly">
-                            <label>Intellect</label>
-                            <div class="skill-value" id="craftIntellect">+0</div>
-                        </div>
+                <div class="skill-row">
+                    <div class="skill-name-col">Craft</div>
+                    <div class="skill-rank-col">
+                        <input type="number" id="craftRank" value="0" min="0" data-field="generalSkills.craft.rank">
+                    </div>
+                    <div class="skill-bonus-col">
+                        <input type="number" id="craftBonus" value="0" data-field="generalSkills.craft.bonus">
+                    </div>
+                    <div class="skill-score-col">
+                        <span class="attr-label">Toughness</span>
+                        <div class="skill-value" id="craftToughness">+0</div>
+                    </div>
+                    <div class="skill-score-col">
+                        <span class="attr-label">Intellect</span>
+                        <div class="skill-value" id="craftIntellect">+0</div>
                     </div>
                 </div>
-                <div class="skill-card">
-                    <h4>Barter</h4>
-                    <div class="skill-inputs">
-                        <div class="skill-field">
-                            <label for="barterRank">Rank</label>
-                            <input type="number" id="barterRank" value="0" min="0" data-field="generalSkills.barter.rank">
-                        </div>
-                        <div class="skill-field">
-                            <label for="barterBonus">Bonus</label>
-                            <input type="number" id="barterBonus" value="0" data-field="generalSkills.barter.bonus">
-                        </div>
-                        <div class="skill-field readonly">
-                            <label>Intellect</label>
-                            <div class="skill-value" id="barterIntellect">+0</div>
-                        </div>
-                        <div class="skill-field readonly">
-                            <label>Willpower</label>
-                            <div class="skill-value" id="barterWillpower">+0</div>
-                        </div>
+                <div class="skill-row">
+                    <div class="skill-name-col">Barter</div>
+                    <div class="skill-rank-col">
+                        <input type="number" id="barterRank" value="0" min="0" data-field="generalSkills.barter.rank">
+                    </div>
+                    <div class="skill-bonus-col">
+                        <input type="number" id="barterBonus" value="0" data-field="generalSkills.barter.bonus">
+                    </div>
+                    <div class="skill-score-col">
+                        <span class="attr-label">Intellect</span>
+                        <div class="skill-value" id="barterIntellect">+0</div>
+                    </div>
+                    <div class="skill-score-col">
+                        <span class="attr-label">Willpower</span>
+                        <div class="skill-value" id="barterWillpower">+0</div>
                     </div>
                 </div>
-                <div class="skill-card">
-                    <h4>Endure</h4>
-                    <div class="skill-inputs">
-                        <div class="skill-field">
-                            <label for="endureRank">Rank</label>
-                            <input type="number" id="endureRank" value="0" min="0" data-field="generalSkills.endure.rank">
-                        </div>
-                        <div class="skill-field">
-                            <label for="endureBonus">Bonus</label>
-                            <input type="number" id="endureBonus" value="0" data-field="generalSkills.endure.bonus">
-                        </div>
-                        <div class="skill-field readonly">
-                            <label>Toughness</label>
-                            <div class="skill-value" id="endureToughness">+0</div>
-                        </div>
-                        <div class="skill-field readonly">
-                            <label>Willpower</label>
-                            <div class="skill-value" id="endureWillpower">+0</div>
-                        </div>
+                <div class="skill-row">
+                    <div class="skill-name-col">Endure</div>
+                    <div class="skill-rank-col">
+                        <input type="number" id="endureRank" value="0" min="0" data-field="generalSkills.endure.rank">
+                    </div>
+                    <div class="skill-bonus-col">
+                        <input type="number" id="endureBonus" value="0" data-field="generalSkills.endure.bonus">
+                    </div>
+                    <div class="skill-score-col">
+                        <span class="attr-label">Toughness</span>
+                        <div class="skill-value" id="endureToughness">+0</div>
+                    </div>
+                    <div class="skill-score-col">
+                        <span class="attr-label">Willpower</span>
+                        <div class="skill-value" id="endureWillpower">+0</div>
                     </div>
                 </div>
-                <div class="skill-card">
-                    <h4>Deceive</h4>
-                    <div class="skill-inputs">
-                        <div class="skill-field">
-                            <label for="deceiveRank">Rank</label>
-                            <input type="number" id="deceiveRank" value="0" min="0" data-field="generalSkills.deceive.rank">
-                        </div>
-                        <div class="skill-field">
-                            <label for="deceiveBonus">Bonus</label>
-                            <input type="number" id="deceiveBonus" value="0" data-field="generalSkills.deceive.bonus">
-                        </div>
-                        <div class="skill-field readonly">
-                            <label>Reflexes</label>
-                            <div class="skill-value" id="deceiveReflexes">+0</div>
-                        </div>
-                        <div class="skill-field readonly">
-                            <label>Willpower</label>
-                            <div class="skill-value" id="deceiveWillpower">+0</div>
-                        </div>
+                <div class="skill-row">
+                    <div class="skill-name-col">Deceive</div>
+                    <div class="skill-rank-col">
+                        <input type="number" id="deceiveRank" value="0" min="0" data-field="generalSkills.deceive.rank">
+                    </div>
+                    <div class="skill-bonus-col">
+                        <input type="number" id="deceiveBonus" value="0" data-field="generalSkills.deceive.bonus">
+                    </div>
+                    <div class="skill-score-col">
+                        <span class="attr-label">Reflexes</span>
+                        <div class="skill-value" id="deceiveReflexes">+0</div>
+                    </div>
+                    <div class="skill-score-col">
+                        <span class="attr-label">Willpower</span>
+                        <div class="skill-value" id="deceiveWillpower">+0</div>
                     </div>
                 </div>
             </div>
