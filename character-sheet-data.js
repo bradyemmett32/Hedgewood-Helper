@@ -646,12 +646,36 @@ const CROSS_CLASS_FEATURES = {
     },
 
     // Duelist combinations (13 remaining - excluding duelist-knight and berserker-duelist)
-    "brawler-duelist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "duelist-thief": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "duelist-hunter": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "assassin-duelist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "duelist-tactician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "duelist-minstrel": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "brawler-duelist": {
+        "name": "Martial Artist",
+        "level3": "Patient Strike: When you take the Dodge action, you enhance your deadliness. Until the start of your next turn, whenever you make an Attack that uses a Reaction, you deal extra damage to the target equal to your level. When you use your Butterfly Float feature, if the triggering attack misses you, you can make one Melee Attack as part of the same reaction.",
+        "level8": "Meridian Points: You can end any number of applicable negative conditions on a creature when you use your Painful Mercy feature. For each negative condition that you end, you can either deal 1d6 additional damage or gain 1 Flow. When you use your Rapid Recovery feature, for each Flow you spend, you can end one of the following conditions on yourself or another creature you can touch within 1 Square (5 feet) of you: Blinded, Charmed, Dazed, Deafened, Frightened, Sickened, Silenced, Slowed, Staggered, Taunted, Vulnerable, or Weakened."
+    },
+    "duelist-thief": {
+        "name": "Swashbuckler",
+        "level3": "Flamboyant Fighter: You can use your Lunging Strike feature after you use Tumble to Dash or Disengage. Additionally, you can use your Disarming Attack feature when you Attack a creature with Riposte.",
+        "level8": "Deadly Shift: Whenever you Shift, you can move up to 2 Squares (10 feet) instead of only 1 Square (5 feet). After using Shift, you gain Advantage on the next Attack you make before the end of your next turn. You can use Retreating Strike on all of your Attacks that use a Reaction."
+    },
+    "duelist-hunter": {
+        "name": "Marksman",
+        "level3": "Returning Fire: When an enemy that you can see misses you with an Attack from at least 2 Squares (10 feet) away, you can make a single Ranged Attack against that creature with a thrown or ranged weapon you are holding. They must be within the range of your weapon to do so. Additionally, when an enemy you can see misses you with an Attack within 1 Square (5 feet) of you, you can use your Retreating Shot feature as a Reaction to Shift and make a Ranged Attack against the creature.",
+        "level8": "Versatile Response: When a creature you can see within 1 Square (5 feet) of you hits you with an Attack, you can use your Point Blank feature to make a Heavy Attack against them with a Ranged Weapon. Additionally, when you miss a creature with a Ranged Attack, you gain an additional Reaction that you can use once before the start of your next turn. You can only have one additional Reaction from this feature at a time."
+    },
+    "assassin-duelist": {
+        "name": "Scoundrel",
+        "level3": "Mortal Draw: When you use a Reaction to use either your Parry or Riposte features you can draw a stowed/sheathed weapon as part of your Reaction, executing a Mortal Draw. You cannot stow/sheath your weapon until the start of your next turn. When you use a Mortal Draw on a Parry, you gain an additional +2 bonus to AC against that Attack. When you use a Mortal Draw on a Riposte attack, you gain Advantage on the Attack and can apply your Twist the Knife feature if it hits.",
+        "level8": "TBD"
+    },
+    "duelist-tactician": {
+        "name": "Battlemaster",
+        "level3": "Resolute Leader: When you use Tactical Assist to give a creature Advantage on an Attack, that creature can expend one of their Hit Dice and add the number rolled to both the Attack roll and damage roll of the Attack. When you use your Parry feature, you can expend a Hit Die and add the number rolled to your AC and one Attribute Defense of your choice. These increases last until the start of your next turn.",
+        "level8": "TBD"
+    },
+    "duelist-minstrel": {
+        "name": "Bladedancer",
+        "level3": "Ballad of Battle: You can use an Action and expend one MP to start a magickal ballad, which lasts for one minute or until you are reduced to 0 HP. While your ballad is active, you gain a bonus to your AC equal to your Willpower modifier (minimum of one), your Speed increases by 2, and you gain Advantage on Maneuver checks.",
+        "level8": "TBD"
+    },
     "duelist-elementalist": {
         "name": "Spellsword",
         "level3": "Magick Fencing: When a creature deals damage to your Magickal Ward but no damage to your HP, you can make a Melee Attack against them as a Reaction. Additionally, once per turn when you hit a creature with a Melee Attack, you can expend your wisps as though you made a Spellcraft Attack.",
