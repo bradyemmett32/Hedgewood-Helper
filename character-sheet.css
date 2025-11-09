@@ -968,40 +968,516 @@
 
 /* Print Styles */
 @media print {
+    /* Base print setup */
     body {
         background: white;
         padding: 0;
+        font-size: 11px;
+        line-height: 1.3;
     }
 
     .container {
         max-width: 100%;
         box-shadow: none;
-        padding: 20px;
+        padding: 0.15in;
     }
 
+    h1 {
+        font-size: 18px;
+        margin: 0 0 8px 0;
+        text-align: center;
+    }
+
+    .subtitle {
+        display: none;
+    }
+
+    /* Hide interactive and decorative elements */
     .main-nav,
     .character-management,
     .add-item-btn,
     .remove-item-btn,
-    .version-footer {
+    .version-footer,
+    .hp-btn,
+    .mp-btn,
+    .dice-adjust-btn,
+    .use-dice-btn,
+    .hp-bar-container,
+    .bloodied-alert {
         display: none !important;
     }
 
+    /* Reduce all section spacing */
     .character-section {
         page-break-inside: avoid;
         box-shadow: none;
-        border: 1px solid #ddd;
+        border: 1px solid #ccc;
+        padding: 8px;
+        margin-bottom: 6px;
+        background: white !important;
     }
 
-    .hp-btn,
-    .mp-btn,
-    .use-dice-btn {
-        display: none;
+    .character-section h2 {
+        font-size: 13px;
+        margin: 0 0 6px 0;
+        padding-bottom: 3px;
+        border-bottom: 2px solid #333;
+        color: #000 !important;
     }
 
+    .character-section h3 {
+        font-size: 11px;
+        margin: 4px 0 3px 0;
+        color: #000 !important;
+    }
+
+    /* Identity Section - Compact 3-column layout */
+    .identity-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+        font-size: 10px;
+    }
+
+    .identity-grid .form-group {
+        gap: 2px;
+    }
+
+    .identity-grid label {
+        font-size: 9px;
+        font-weight: bold;
+    }
+
+    .identity-grid input,
+    .identity-grid select {
+        padding: 3px;
+        font-size: 10px;
+        border: 1px solid #666;
+    }
+
+    .xp-group {
+        grid-column: span 1;
+    }
+
+    .xp-display {
+        gap: 4px;
+    }
+
+    .xp-separator,
+    .xp-next {
+        font-size: 10px;
+    }
+
+    /* Attributes - More compact cards */
+    .attributes-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+    }
+
+    .attribute-card {
+        padding: 6px;
+        border: 1px solid #666;
+        background: white !important;
+    }
+
+    .attribute-card h3 {
+        font-size: 10px;
+        margin-bottom: 4px;
+    }
+
+    .attribute-inputs {
+        gap: 4px;
+    }
+
+    .attr-field label {
+        font-size: 8px;
+    }
+
+    .attr-field input {
+        padding: 2px;
+        font-size: 10px;
+        border: 1px solid #666;
+    }
+
+    .attr-value {
+        padding: 2px;
+        font-size: 10px;
+        background: #333 !important;
+        color: white !important;
+    }
+
+    /* Skills Container - Keep two-column but tighter */
+    .skills-container {
+        gap: 6px;
+        margin-bottom: 6px;
+    }
+
+    .combat-grid {
+        gap: 6px;
+        margin-bottom: 8px;
+    }
+
+    .combat-stat label {
+        font-size: 9px;
+    }
+
+    .combat-stat input {
+        padding: 3px;
+        font-size: 10px;
+        border: 1px solid #666;
+    }
+
+    /* Skills Table - More compact */
+    .skills-table {
+        border: 1px solid #666;
+        font-size: 9px;
+    }
+
+    .skills-table-header {
+        padding: 3px;
+        background: #333 !important;
+        color: white !important;
+        font-size: 8px;
+    }
+
+    .skill-row {
+        padding: 3px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .skill-name-col {
+        font-size: 9px;
+        padding: 0 4px;
+        color: #000 !important;
+    }
+
+    .skill-rank-col input,
+    .skill-bonus-col input {
+        width: 40px;
+        padding: 2px;
+        font-size: 9px;
+        border: 1px solid #666;
+    }
+
+    .attr-label {
+        font-size: 7px;
+    }
+
+    .skill-value {
+        padding: 2px 6px;
+        min-width: 30px;
+        font-size: 9px;
+        background: #333 !important;
+        color: white !important;
+    }
+
+    /* HP/Hit Dice/MP - Ultra compact single row */
+    .hp-section,
+    .hit-dice-section,
+    .mp-section {
+        padding: 6px;
+        page-break-inside: avoid;
+    }
+
+    .hp-container {
+        gap: 6px;
+    }
+
+    .hp-tracker {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+    }
+
+    .hp-field {
+        gap: 2px;
+    }
+
+    .hp-field label {
+        font-size: 8px;
+    }
+
+    .hp-field input {
+        padding: 3px;
+        font-size: 10px;
+        border: 1px solid #666;
+    }
+
+    .threshold-value {
+        padding: 3px;
+        font-size: 10px;
+        background: #666 !important;
+        color: white !important;
+    }
+
+    /* Hit Dice - Compact layout */
+    .hit-dice-unified {
+        gap: 6px;
+    }
+
+    .hit-dice-info {
+        gap: 6px;
+    }
+
+    .hit-dice-class-info {
+        padding: 6px;
+        gap: 4px;
+        background: white !important;
+        border: 1px solid #666;
+    }
+
+    .hit-dice-class-info h3 {
+        font-size: 10px;
+        margin: 0;
+    }
+
+    .dice-type-row,
+    .dice-count-row {
+        gap: 4px;
+        font-size: 9px;
+    }
+
+    .die-type-label,
+    .dice-count-label {
+        font-size: 8px;
+    }
+
+    .die-type-display {
+        padding: 2px 8px;
+        font-size: 10px;
+        background: #333 !important;
+        color: white !important;
+    }
+
+    .dice-value {
+        font-size: 11px;
+        min-width: 20px;
+    }
+
+    .dice-total {
+        font-size: 10px;
+    }
+
+    .hit-dice-summary {
+        padding: 6px;
+        gap: 4px;
+        background: white !important;
+        border: 1px solid #666;
+    }
+
+    .total-hit-dice {
+        gap: 4px;
+        font-size: 10px;
+    }
+
+    .total-value {
+        font-size: 12px;
+    }
+
+    .recovery-info {
+        font-size: 8px;
+    }
+
+    /* Magick Points - Compact */
+    .mp-grid {
+        gap: 6px;
+    }
+
+    .mp-tracker {
+        padding: 6px;
+        background: #666 !important;
+        color: white !important;
+    }
+
+    .mp-tracker h3 {
+        margin-bottom: 4px;
+        font-size: 10px;
+    }
+
+    .mp-info {
+        gap: 4px;
+        margin-bottom: 4px;
+    }
+
+    .mp-stat {
+        gap: 2px;
+    }
+
+    .mp-stat label {
+        font-size: 8px;
+    }
+
+    .mp-control {
+        gap: 4px;
+        padding: 3px;
+        font-size: 9px;
+    }
+
+    .mp-control input {
+        width: 35px;
+        padding: 2px;
+        font-size: 9px;
+    }
+
+    .mp-control span {
+        font-size: 9px;
+    }
+
+    .spell-info {
+        padding: 4px;
+        font-size: 8px;
+        line-height: 1.4;
+    }
+
+    .mp-recovery {
+        margin-top: 4px;
+        padding: 4px;
+        font-size: 8px;
+    }
+
+    /* Equipment Section - Tight layout */
+    .equipment-subsection {
+        margin-bottom: 8px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .equipment-subsection h3 {
+        font-size: 10px;
+        margin: 0 0 4px 0;
+    }
+
+    .weapons-list,
+    .armor-list,
+    .effects-list,
+    .inventory-list {
+        gap: 4px;
+    }
+
+    .equipment-item {
+        padding: 6px;
+        border: 1px solid #666;
+        background: white !important;
+    }
+
+    .equipment-item-grid {
+        gap: 4px;
+        font-size: 9px;
+    }
+
+    .equipment-item input,
+    .equipment-item select {
+        padding: 2px;
+        font-size: 9px;
+        border: 1px solid #666;
+    }
+
+    .carry-capacity {
+        padding: 4px;
+        font-size: 9px;
+        background: #eee !important;
+        margin-bottom: 4px;
+    }
+
+    .currency-control {
+        gap: 4px;
+        font-size: 9px;
+    }
+
+    .currency-control label {
+        font-size: 9px;
+    }
+
+    .currency-control input {
+        padding: 3px;
+        font-size: 10px;
+        max-width: 100px;
+        border: 1px solid #666;
+    }
+
+    /* Features Section - Compact */
+    .feature-subsection {
+        margin-bottom: 8px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .feature-subsection h3 {
+        font-size: 10px;
+        margin: 0 0 4px 0;
+    }
+
+    .feature-content textarea {
+        padding: 4px;
+        font-size: 9px;
+        line-height: 1.4;
+        border: 1px solid #666;
+        min-height: 60px;
+    }
+
+    .bloodied-feature {
+        padding: 6px;
+        background: #ddd !important;
+        color: #000 !important;
+        border: 1px solid #666;
+    }
+
+    .bloodied-feature h3 {
+        color: #000 !important;
+        border-bottom: 1px solid #666;
+        padding-bottom: 3px;
+        margin-bottom: 4px;
+    }
+
+    .bloodied-effects {
+        gap: 4px;
+        margin-bottom: 4px;
+    }
+
+    .bloodied-effect-card {
+        padding: 4px;
+        background: white !important;
+    }
+
+    .bloodied-effect-card h4 {
+        font-size: 9px;
+        margin-bottom: 2px;
+        color: #000 !important;
+    }
+
+    .bloodied-effect-card p {
+        font-size: 8px;
+        line-height: 1.3;
+        margin: 2px 0;
+    }
+
+    .bloodied-choice {
+        padding: 4px;
+        gap: 4px;
+        font-size: 9px;
+        background: #ccc !important;
+    }
+
+    .bloodied-choice select {
+        padding: 2px;
+        font-size: 9px;
+    }
+
+    /* Page layout */
     @page {
         size: letter;
         margin: 0.5in;
+    }
+
+    /* Force equipment section to potentially break to page 2 */
+    .equipment-section {
+        page-break-before: auto;
+    }
+
+    /* Keep features together if possible */
+    .features-section {
+        page-break-inside: avoid;
     }
 }
 
