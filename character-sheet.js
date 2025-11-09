@@ -369,6 +369,7 @@ function updateAllCalculations() {
 function updateAttributeModifier(attribute) {
     const scoreInput = document.getElementById(`${attribute}Score`);
     const modifierDisplay = document.getElementById(`${attribute}Modifier`);
+    const defenseInput = document.getElementById(`${attribute}Defense`);
 
     if (!scoreInput || !modifierDisplay) return;
 
@@ -377,6 +378,12 @@ function updateAttributeModifier(attribute) {
 
     currentCharacter.attributes[attribute].score = score;
     currentCharacter.attributes[attribute].modifier = modifier;
+
+    // Update defense to match score by default
+    currentCharacter.attributes[attribute].defense = score;
+    if (defenseInput) {
+        defenseInput.value = score;
+    }
 
     modifierDisplay.textContent = modifier >= 0 ? `+${modifier}` : modifier;
 }
