@@ -733,10 +733,26 @@ const CROSS_CLASS_FEATURES = {
     "esper-priest": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
 
     // Occultist combinations (4 remaining)
-    "occultist-sage": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "magician-occultist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "conjuror-occultist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "esper-occultist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "occultist-sage": {
+        "name": "Witch Doctor",
+        "level3": "Parasitic Land: When you use your Terrain Manipulation feature, you can also make the area cursed terrain, in addition to its other terrain type. When an enemy creature starts their turn in your cursed terrain, they become Cursed until the start of their next turn if they are no longer within the cursed terrain. When a Cursed creature is hit by an Attack, the creature who attacked them gains 1 temporary HP, which can stack on top of any other temporary HP they have. Alternatively, the attacking creature can transfer one condition they are suffering to the Cursed target, which lasts until the creature is no longer Cursed. The condition must be one of the following: Blinded, Deafened, Sickened, Silenced, or Weakened.",
+        "level8": "TBD"
+    },
+    "magician-occultist": {
+        "name": "Eldritch",
+        "level3": "Terrifying Servants: When you use your Scapegoat feature, you can teleport one of your Minions into the space you teleport away from. The enemy who triggered your Scapegoat feature is Frightened of all of your Minions until the end of your next turn. When one of your Minions dies, you can teleport one of your other Minions into the space your previous Minion died as a Reaction, and the enemy who killed your Minion is Frightened of all of your Minions until the end of your next turn. Finally, when you use your Hidden Step feature, you can use your Shadow Step feature as part of the same Action.",
+        "level8": "TBD"
+    },
+    "conjuror-occultist": {
+        "name": "Heretic",
+        "level3": "Deadly Summons: You can create a new kind of Runic Trap and you have a new option for Conjure Familiar. Death Trap: When the rune detonates, it deals 1d10 Shadow damage to the creature who activated it. If your Minion or Familiar activates the trap, or would take damage from the trap, it is briefly powered up instead. The next time that Minion or Familiar hits a creature with an Attack, the target takes 1d10 additional Shadow damage and is Weakened until the end of its turn. Death Snail (Familiar): Unholy, Speed 3 (climbing), Shadow damage. Deals double damage on a melee attack hit. Every allied Unholy creature within 4 Squares (20 feet) gains a +2 to their AC and Attribute Defenses.",
+        "level8": "TBD"
+    },
+    "esper-occultist": {
+        "name": "Shade",
+        "level3": "Lingering Shadow: When you make a Spellcraft Attack that deals Shadow damage, you can spend 1 MP to become Intangible until the end of your turn. When you use Shadow Step while Intangible, the space on the ground between the point you teleport from and the place you teleport to is covered in shadowy energy until the start of your next turn. Any creature that starts its turn in or enters one of those spaces takes either 1d10 Shadow or Psychic damage, your choice. If a creature takes Shadow damage, it cannot gain temporary HP until the end of its turn, and if the creature takes Psychic damage, it cannot use the Concentrate or Channel Magick Actions until the end of its turn.",
+        "level8": "TBD"
+    },
 
     // Sage combinations (3 remaining)
     "magician-sage": {
