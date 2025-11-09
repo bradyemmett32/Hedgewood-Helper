@@ -814,9 +814,21 @@ const CROSS_CLASS_FEATURES = {
         "level3": "Grim Concentration: When you use your Harrying Mark feature, you can spend 1 MP to mark the same creature with Grim Concentration. While a creature is marked with Grim Concentration, your Harrying Mark deals Shadow damage instead of its normal damage type, and any Curse you place on the creature lasts until the Grim Concentration ends instead of its normal duration. While you have a creature marked with Grim Concentration, you cannot place Curses or Harrying Mark on any other creature. Grim Concentration ends only if you or the creature are reduced to 0 HP, or if you end it before then as an Action.",
         "level8": "TBD"
     },
-    "hunter-sage": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "hunter-magician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "conjuror-hunter": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "hunter-sage": {
+        "name": "Ranger",
+        "level3": "Entangling Ammunition: When you hit a creature within 6 Squares (30 feet) of you with a Ranged Attack, you can cause vines to erupt out of the projectile, expending one use of your Nature's Protection feature to cause the creature hit to be Immobilised by the feature.",
+        "level8": "TBD"
+    },
+    "hunter-magician": {
+        "name": "Mirror Soul",
+        "level3": "Retreating Reflection: When you use your Retreating Shot feature, you can spend 1 MP to leave behind a Reflection of yourself in the space that you Shift away from. You can only have one Reflection active at a time. Your Reflection has HP equal to your level, and Speed, AC, and Attribute Defenses equal to your own. If your Reflection is ever more than 6 Squares (30 feet) from you at the end of its turn, it is destroyed. It can use its movement and take one Action on each of its turns, which are immediately after yours in the turn order. Your Reflection can take following Actions: Normal Attack, using the weapon you used to make your Retreating Shot. Everytime your Reflection attacks it loses 1 HP. Disengage. Dodge.",
+        "level8": "TBD"
+    },
+    "conjuror-hunter": {
+        "name": "Gadgeteer",
+        "level3": "Modified Weapons: Each time you use your Conjured Weapon feature, you can spend 1 MP to add a magickal modification to your weapon. Your weapon does not require ammunition to attack with, producing its own standard ammunition with each attack. Additionally, choose one of the following: Runic Munitions: When you hit a creature with a Ranged Attack using the Conjured Weapon, you can place one Runic Trap in an unoccupied space within 2 Squares (10 feet) of the target. Shot Splitter: When you make a Ranged Attack using the Conjured Weapon, you can target two creatures within the weapon's range if they are in the same direction from you. If your attack is successful against both targets, the attack deals half as much Physical damage (rounded up) to both creatures. Springloaded: When you use your Action to create the weapon, you can make one Attack using the weapon as part of the same Action. The Attack has Advantage.",
+        "level8": "TBD"
+    },
     "esper-hunter": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
 
     // Assassin combinations (9 remaining)
