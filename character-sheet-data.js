@@ -701,17 +701,41 @@ const CROSS_CLASS_FEATURES = {
     "esper-tactician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
 
     // Minstrel combinations (7 remaining)
-    "elementalist-minstrel": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "minstrel-priest": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "minstrel-occultist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "minstrel-sage": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "magician-minstrel": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "elementalist-minstrel": {
+        "name": "Virtuoso",
+        "level3": "Virtuosity: You can choose Sound as your Elementary Connection and as the element of your Wisps, instead of Fire, Ice, or Lightning. Sound Wisps deal 1d8 damage instead of 1d12 when expended, but your Magickal Ward regains HP equal to the number rolled on your 1d8, plus 1 for each remaining Sound Wisp.",
+        "level8": "TBD"
+    },
+    "minstrel-priest": {
+        "name": "Choirist",
+        "level3": "Song of Respite: Over ten minutes, you can perform a divinely inspired song that raises the spirits and restores stamina. You and each creature of your choice that can hear you can reduce their Fatigue by one and gain the benefits of a one-hour Partial Rest, including regaining one Expended Hit Die (if possible) and optionally expending a Hit Die to regain missing HP. If a creature decides to expend a Hit Die to regain missing HP, they can gain the benefit of your Blessed Renewal feature as well. After you have used this feature, you cannot use it again until you finish a Full Rest.",
+        "level8": "TBD"
+    },
+    "minstrel-occultist": {
+        "name": "Necrodancer",
+        "level3": "Backup Dancers: Your Minions can take the Dance Action, gaining the benefits of both the Dodge and Disengage Actions. If at least one Minion takes the Dance Action on your turn, choose one of the following options: For each Minion you command to Dance, you can gain a +1 bonus to both Sound and Shadow damage rolls. For each Minion you command to Dance, you gain a +2 bonus to Sound or Shadow damage rolls. Whichever bonus you pick lasts until the end of your current turn.",
+        "level8": "TBD"
+    },
+    "minstrel-sage": {
+        "name": "Muse",
+        "level3": "Musikal Mote: You can spend 2 MP as an Action to create a magickal mote of natural force in an unoccupied space within 4 Squares (20 feet). The mote releases soothing noises of nature, such as the bubbling of a stream, the low rumble of the earth, a soft breeze, or the rustling of leaves. All creatures within 4 Squares (20 feet) of mote are immune to the Deafened and Silenced conditions, and the area cannot be affected by magickal silence. The mote remains for one minute, until you summon another mote as an Action, or until you dismiss the mote (no action required). When you use either the Fortune or Misfortune Action, you can target any creature within 4 Squares (20 feet) of the mote or within the same distance as yourself, as normal. Each creature within 4 Squares (20 feet) of the mote that has one of your Fortunes shares the effect of your current Natural Attunement, and each creature in that area that has one of your Misfortunes gets one of the following penalties, based on your Natural Attunement. The penalty remains in effect until the end of the turn their Misfortune is expended. Wind: Attacks targeting their Toughness Defense have Advantage, and the creature is moved twice as far if they are moved against their will. Water: The creature gains Lightning Vulnerability 5, and cannot take the same action more than once on their turn. Stone: The creature is Slowed and Dazed. Plant: The creature gains Fire Vulnerability 5, and cannot regain HP if they have taken Fire damage since their last turn.",
+        "level8": "TBD"
+    },
+    "magician-minstrel": {
+        "name": "Troubadour",
+        "level3": "Troubadour's March: When you use your Fast Tempo feature after you Cast a Spell, each friendly creature of your choice and each creature of your choice that is Charmed by you moves the same direction you do during your next 2 Squares (10 feet) of movement. For example, if you move two spaces South, all your chosen creatures will also move two spaces South. Their movement does not provoke Opportunity Attacks, and they will not move into an obviously harmful space.",
+        "level8": "TBD"
+    },
     "conjuror-minstrel": {
         "name": "Wordsmith",
         "level3": "When you use your Adaptable Tools, Conjured Weapon, or Magick Armor feature, you can enchant the item you create with one of your Fortunes. If you do, this takes up your active use of Fortune while the item exists, or one use of your Fortune/Misfortune uses once you have your Dueling Fates feature. An enchanted item grants the following effects: A creature using the enchanted Adaptable Tool adds your Fortune die to each Skill check they make using the item. A creature using the enchanted Conjured Weapon adds your Fortune die to each Attack they make using the weapon. A creature wearing your enchanted Magick Armor can use a Reaction to roll the Fortune die and reduce the damage they take from an Attack by the number rolled.",
         "level8": "TBD"
     },
-    "esper-minstrel": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "esper-minstrel": {
+        "name": "Silent Singer",
+        "level3": "Word of the Voiceless: The area of effect of your Ghostly Whispers feature increases to 6 Squares (30 feet). Spells and features you use that require a creature to hear you ignore the Deafened and Silenced conditions and can take affect through solid objects that would block noise (such as dense walls or thick windows) if you are targeting a creature you are aware of within the area of effect of your Ghostly Whispers feature, although creatures within an area of magickal silence are still immune to Sound damage. Finally, you are still able to cast spells while Silenced.",
+        "level8": "TBD"
+    },
 
     // Elementalist combinations (6 remaining)
     "elementalist-priest": {
