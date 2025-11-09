@@ -681,8 +681,16 @@ const CROSS_CLASS_FEATURES = {
         "level3": "Magick Fencing: When a creature deals damage to your Magickal Ward but no damage to your HP, you can make a Melee Attack against them as a Reaction. Additionally, once per turn when you hit a creature with a Melee Attack, you can expend your wisps as though you made a Spellcraft Attack.",
         "level8": "TBD"
     },
-    "duelist-priest": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "duelist-occultist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "duelist-priest": {
+        "name": "Sword Saint",
+        "level3": "Divine Counter: When you use your Riposte feature, you can spend 1 MP to use your Purge Unholy feature as part of the same reaction. The target of your Riposte is also damaged by your Purge Unholy feature, even if they are not an Unholy creature.",
+        "level8": "TBD"
+    },
+    "duelist-occultist": {
+        "name": "Darkblade",
+        "level3": "Lancing Shadows: When you use your Shadow Step feature, you can make the first Melee Attack you make a Lunging Attack if you teleported in a direct line towards the target of your Attack. If the Attack hits, you deal additional Shadow damage equal to twice the number of Squares you moved (2 Shadow damage for every 5 feet).",
+        "level8": "TBD"
+    },
     "duelist-sage": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
     "duelist-magician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
     "conjuror-duelist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
