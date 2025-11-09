@@ -604,9 +604,21 @@ const CROSS_CLASS_FEATURES = {
         "level3": "Rallying Rage: When you use your Berserking feature, you can expend any number of your Hit Dice and use your Rally feature on that many allies as well, adding one roll of an expended Hit Die to each creature's temporary HP. Any creature that you Rally has Advantage on the next Attack they make before the end of their next turn. While you continue Berserking, when you use your Reckless Assault feature, one creature of your choice that can see or hear you may also add your Reckless Assault die to their Attacks on their next turn, but creatures that target them with Attacks may also add the Reckless Assault die to their Attacks.",
         "level8": "Radiating Hatred: While you are Berserking, each friendly creature within the range of your Positive Influence feature gains a bonus to the damage of their weapon Attacks equal to your Ranks in the Melee Skill. When you use your Battle Cry feature, double this bonus until the start of your next turn."
     },
-    "berserker-minstrel": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "berserker-elementalist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "berserker-priest": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "berserker-minstrel": {
+        "name": "Bardbarian",
+        "level3": "Raging Vocals: When you use your Berserking feature, you can spend one MP to fill the area around you with loud, harmful screams, which last until your Berserk ends. At the start of each of your following turns, each creature of your choice within 4 Squares (20 feet) of you takes Sound damage equal to your Willpower modifier (minimum of one damage), plus one roll of your Misfortune die if they have one (it is not expended). A creature can use a Reaction to cover their ears as long as they have at least one hand free, taking half as much damage (rounded up) from this feature if they use one hand, and no damage if they use both hands.",
+        "level8": "Resonant Destruction: When you deal Sound damage to a creature, they are marked with Resonant Destruction. The next time that creature takes Physical (Slash, Stab, or Strike) damage from a successful Attack, they take 1d8 additional damage and their Resonant Destruction is ended."
+    },
+    "berserker-elementalist": {
+        "name": "Rage Mage",
+        "level3": "Magickal Rage: Each time you use your Berserking feature, you can increase your Intellect by your Ranks in the Spellcraft Skill, instead of increasing your Toughness by your Ranks in the Melee Skill. If you do, you can use your Elemental Wisp feature as part of the same Action, and you can use your Reckless Assault feature whenever you Cast a Spell. If you use your Berserking feature normally (increasing your Toughness by your Ranks in the Melee Skill), you can use Toughness instead of Intellect or Willpower when you make a Spellcraft Attack, and you can expend Wisps on any Attack type (Melee, Ranged, or Spellcraft).",
+        "level8": "Supreme Fury: When you use your Berserking feature, you benefit from both features from Magickal Rage (increasing both your Toughness and your Intellect). Additionally, when you would use your Adrenaline Rush feature, instead of taking an additional Action, you can use your Ward Refresh feature without expending MP."
+    },
+    "berserker-priest": {
+        "name": "Zealot",
+        "level3": "Reckless Renewal: When you cause at least one creature to regain HP through a Spell or Priest feature while in a combat encounter, you can use your Reckless Assault feature to increase the HP each creature regains by one roll of the Reckless Assault die. You and creatures targeting you can also add the die to their Attack rolls until the start of your next turn (as though you used Reckless Assault normally). Zeal: You have a pool of righteous anger called Zeal. Once per turn in a combat encounter, you gain 1 Zeal whenever you hit a creature with an Attack or when you are hit by an Attack. You gain 1 additional Zeal if the Attack was a Heavy Attack or a Critical Hit, or 2 if both. The maximum amount of Zeal you can have is equal to your level. Your Zeal resets to zero when you finish a Rest. When you Cast a Spell while Berserking, you can spend three Zeal to add an additional Component Module to the Spell.",
+        "level8": "Pure Hate: Once per turn, when you reduce a creature to 0 HP or when a friendly creature is reduced to 0 HP, you gain 1 Zeal. When you are reduced to 0 HP, you can expend 1 Zeal to gain 1 Fatigue drop to 1 HP instead. Desperate Power: You deal additional Holy damage on every successful Attack equal to twice the number of Fatigue you have."
+    },
     "berserker-occultist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
     "berserker-sage": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
     "berserker-magician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
