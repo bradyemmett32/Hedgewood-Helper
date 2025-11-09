@@ -676,19 +676,51 @@ const CROSS_CLASS_FEATURES = {
     "esper-hunter": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
 
     // Assassin combinations (9 remaining)
-    "assassin-tactician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "assassin-tactician": {
+        "name": "Professional",
+        "level3": "Absolute Focus: When you expend a Hit Die to use a Tactician feature or use the Recover Action, you can enter Absolute Focus. The number you roll on your Hit Die is also the number of Focus points you have. You can expend Focus points when you make an Attack roll or a Skill check to give yourself Advantage on the roll for each Focus point expended. After you have entered Absolute Focus, you cannot do so again until you finish a Rest. Professional's Standards: While you are using a Banner, you generate additional Focus points equal to your level whenever you use your Absolute Focus feature.",
+        "level8": "TBD"
+    },
     "assassin-minstrel": {
         "name": "Jester",
         "level3": "Fool Around: When you expend a use of your Misfortune feature on a hostile creature, you can make a single Melee or Ranged Attack against that creature as a reaction. On a hit, the creature takes additional damage equal to the number rolled on the Misfortune die, and if you use your Twist the Knife feature, the damage of Twist the Knife is multiplied by the number you rolled on the Misfortune die if it is higher than the number of d20s you rolled for your Attack.",
         "level8": "TBD"
     },
-    "assassin-elementalist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "assassin-priest": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "assassin-occultist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "assassin-sage": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "assassin-magician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "assassin-conjuror": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "assassin-esper": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "assassin-elementalist": {
+        "name": "Mage Slayer",
+        "level3": "Warded Weapons: When you make an Attack using a Light Weapon that was one of your Hidden Weapons, you can expend your Magickal Ward's HP to deal additional damage to one target of your Attack. The target takes damage equal to twice the HP your Ward loses (to a maximum of 10 damage at 5 HP lost), the same type of damage as your current Elementary Connection.",
+        "level8": "TBD"
+    },
+    "assassin-priest": {
+        "name": "Arrogate",
+        "level3": "Redemption: When you use your Twist the Knife feature, you can spend 1 MP to convert some of the additional damage you would deal into healing for yourself or another creature of your choice within 4 Squares (20 feet) of you or within 4 Squares (20 feet) of the target of your Attack. The creature you choose regains HP equal to the number of d20s you rolled when you Attacked. You can use a Reaction to use your Blessed Renewal feature on them as well, allowing them to regain 1d10 additional HP.",
+        "level8": "TBD"
+    },
+    "assassin-occultist": {
+        "name": "Reaper",
+        "level3": "Harvest: When you make an Attack that benefits from at least two different Advantages (like from both Seize the Moment and Shadow Step), one target of your Attack is Weakened until the end of your next turn. You can remove the Weakened condition from a creature with Magick Purge to deal damage.",
+        "level8": "TBD"
+    },
+    "assassin-sage": {
+        "name": "Wyld Avenger",
+        "level3": "Killer Plant: As an Action, you can spend 1 MP to create a Medium-sized Killer Plant in an unoccupied space on the ground within 4 Squares (20 feet) of you. The Killer Plant can immediately make one Attack at Advantage. The Killer Plant has HP, AC and Ability Defenses equal to your own, has Fire Vulnerability 5, and can use your highest Attack Skill for its own Attacks. When you take the Attack Action on your turn, you can cause your Killer Plant Attack instead. Once per turn, when your Killer Plant hits a creature with an Attack, it can benefit from your Twist the Knife feature, dealing additional Piercing damage to one creature it hits with the Attack. You can have only one Killer Plant active at a time. Choose either of the following each time you use this feature: Thorns: The Killer Plant can make Ranged Attacks at two different targets up to 6 Squares (30 feet) away from it, dealing 1d8 Piercing damage on a successful Attack. Venom: The Killer Plant can make Melee Attacks at targets up to 2 Squares (10 feet) away, dealing 1d8 Piercing damage and 1d8 Poison damage on a successful Attack. It can also make Opportunity Attacks, using your Reaction.",
+        "level8": "Murderous Verdure: When you use your Killer Plant feature, you can spend 1 MP to summon a stronger version of your Killer Plant. The stronger version gains a new feature, a +1 bonus to its AC and each of its Attribute Defenses, and temporary HP equal to your level. Thorns: When the Killer Plant first emerges, it can target each creature of your choice within 6 Squares (30 feet) of it with its Attack. Each creature it hits takes 2d8 piercing damage, plus any additional damage from your Twist the Knife feature. Venom: When the Killer Plant first emerges, if it hits a creature with its initial Attack, it can swallow the creature if the creature is Medium or smaller sized. The swallowed creature is Blinded and Immobilised, and takes 2d8 Acid damage at the start of each of its turns. While your Killer Plant has a creature swallowed, it can only chew, dealing 1d8 piercing damage to the creature, or it can spit out the creature. If it spits out the creature, it can spit the creature out into an unoccupied space within 2 Squares (10 feet) of it, or at another creature within 2 Squares (10 feet) of it. Make an Attack roll against the creature you are spitting at. If you hit, both the creature you had swallowed and the creature you spit at take 1d8 Acid damage."
+    },
+    "assassin-magician": {
+        "name": "Mind Killer",
+        "level3": "Sharpened Thought: You can use your Handheld Illusion feature to conjure an illusory weapon in a single open hand, in the form of a Light Weapon of your choice (traits and features of the chosen form can be used). You can make Attacks using the weapons, either Melee or Ranged, but can use your Spellcraft Skill instead of the skill the weapon would use. When you Attack a creature with an illusory weapon, you can target their Intellect Defense or Willpower Defense. If you target their Intellect Defense, on a successful Attack, the creature takes 1d10 Psychic damage, and you can apply bonuses from Twist the Knife. If you target Willpower Defense, on a successful Attack, you can make the creature Charmed or Frightened until the end of your next turn. You have Advantage on Attacks with your illusory weapon against creatures that are Charmed or Frightened of you.",
+        "level8": "TBD"
+    },
+    "assassin-conjuror": {
+        "name": "Viper",
+        "level3": "Serpent Fang Strike: When you Attack a creature with Conjured Weapon or a Hidden Weapon, you can spend 1 MP to apply a special poison to your Attack. You can treat a creature's Toughness Defense as a secondary target. If your Attack hits their Toughness Defense (even if it fails against their primary defense or AC), they are Sickened until the start of your next turn, and they take Poison damage equal to 1d8 plus your level.",
+        "level8": "TBD"
+    },
+    "assassin-esper": {
+        "name": "Mistwalker",
+        "level3": "Reach into the Realm of Mists: As an Action, you can spend 1 MP to reach into the Realm of Mists and draw from its deep, mysterious power. You create a 4 Square (20 feet) radius sphere of heavy mist which acts as obscuring terrain for one minute or until a strong wind blows the mist away. The mist must include the space you are occupying when you use this feature. While in the area of the mist you gain the following benefits: You can see into, out of, and through the obscuring terrain using your Ghost Sight feature. Your walking speed increases by 2 Squares (10 feet). Your Twist the Knife damage changes to Psychic damage. You become Intangible. While Intangible, your movement does not provoke Opportunity Attacks.",
+        "level8": "TBD"
+    },
 
     // Tactician combinations (8 remaining)
     "minstrel-tactician": {
