@@ -799,8 +799,16 @@ const CROSS_CLASS_FEATURES = {
         "level3": "Rhythmic Shots: When you hit a creature with a Ranged Attack, you gain one point of Rhythm. You can have a maximum number of Rhythm points equal to your Willpower modifier. Your Rhythm ends early if you are incapacitated or if your turn ends and you haven't damaged a hostile creature since your last turn. Your first point of Rhythm increases your Speed by 2. A second point of Rhythm gives you a +1 bonus to Skill checks. A third point of Rhythm gives you a +1 bonus to Attacks. A fourth point of Rhythm gives you a +1 bonus to your Attribute Defenses. A fifth point of Rhythm gives you +1 to your AC.",
         "level8": "TBD"
     },
-    "elementalist-hunter": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "hunter-priest": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "elementalist-hunter": {
+        "name": "Spellsniper",
+        "level3": "Elemental Salvo: When you make a Ranged Attack, your Wisps launch elemental energies at the target of your Harrying Mark, unless they are behind Full Cover or further than 6 Squares (30 feet) away from you. The marked creature does not have to be the target of your Ranged Attack. That creature takes 1 damage from each Wisp, or 2 damage if the Wisp shares an element with your chosen Elementary Connection. The damage type matches the Wisp's damage type.",
+        "level8": "TBD"
+    },
+    "hunter-priest": {
+        "name": "Templar",
+        "level3": "Sworn Enemy: Choose one of the following creature types: Spirit, Otherworldly, Unholy, Primordial, or Slime. You gain the chosen creature type as an additional Favored Prey. Additionally, when you roll for the damage of your Harrying Mark feature, if the targeted creature was one of your Favored Prey, Harrying Mark can deal Holy damage instead of its normal damage type.",
+        "level8": "TBD"
+    },
     "hunter-occultist": {
         "name": "Deadeye",
         "level3": "Grim Concentration: When you use your Harrying Mark feature, you can spend 1 MP to mark the same creature with Grim Concentration. While a creature is marked with Grim Concentration, your Harrying Mark deals Shadow damage instead of its normal damage type, and any Curse you place on the creature lasts until the Grim Concentration ends instead of its normal duration. While you have a creature marked with Grim Concentration, you cannot place Curses or Harrying Mark on any other creature. Grim Concentration ends only if you or the creature are reduced to 0 HP, or if you end it before then as an Action.",
