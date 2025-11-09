@@ -784,9 +784,21 @@ const CROSS_CLASS_FEATURES = {
     },
 
     // Hunter combinations (10 remaining)
-    "assassin-hunter": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "hunter-tactician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "hunter-minstrel": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "assassin-hunter": {
+        "name": "Sniper",
+        "level3": "Deadly Ambush: At the start of your first turn of each combat, your Speed increases by 2, which lasts until the end of that turn. If you take the Attack action on that turn, you can sacrifice as much of your movement as you like to benefit from the Steady Aim feature multiple times. For every 2 Squares (10 feet) of movement you give up, all of your Attacks on this turn gain Advantage.",
+        "level8": "TBD"
+    },
+    "hunter-tactician": {
+        "name": "Strategian",
+        "level3": "Spotter's Mark: When you use your Harrying Mark feature, you can choose to make it a Spotter's Mark instead. For the next minute, the first time on a turn that one of your allies hits the creature with an Attack, that ally rolls the Harrying Mark die and adds it to their damage roll.",
+        "level8": "TBD"
+    },
+    "hunter-minstrel": {
+        "name": "Songbow",
+        "level3": "Rhythmic Shots: When you hit a creature with a Ranged Attack, you gain one point of Rhythm. You can have a maximum number of Rhythm points equal to your Willpower modifier. Your Rhythm ends early if you are incapacitated or if your turn ends and you haven't damaged a hostile creature since your last turn. Your first point of Rhythm increases your Speed by 2. A second point of Rhythm gives you a +1 bonus to Skill checks. A third point of Rhythm gives you a +1 bonus to Attacks. A fourth point of Rhythm gives you a +1 bonus to your Attribute Defenses. A fifth point of Rhythm gives you +1 to your AC.",
+        "level8": "TBD"
+    },
     "elementalist-hunter": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
     "hunter-priest": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
     "hunter-occultist": {
