@@ -669,7 +669,11 @@ const CROSS_CLASS_FEATURES = {
 
     // Assassin combinations (9 remaining)
     "assassin-tactician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "assassin-minstrel": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "assassin-minstrel": {
+        "name": "Jester",
+        "level3": "Fool Around: When you expend a use of your Misfortune feature on a hostile creature, you can make a single Melee or Ranged Attack against that creature as a reaction. On a hit, the creature takes additional damage equal to the number rolled on the Misfortune die, and if you use your Twist the Knife feature, the damage of Twist the Knife is multiplied by the number you rolled on the Misfortune die if it is higher than the number of d20s you rolled for your Attack.",
+        "level8": "TBD"
+    },
     "assassin-elementalist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
     "assassin-priest": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
     "assassin-occultist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
