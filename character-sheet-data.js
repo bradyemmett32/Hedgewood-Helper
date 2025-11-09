@@ -748,7 +748,11 @@ const CROSS_CLASS_FEATURES = {
     "esper-magician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
 
     // Conjuror combinations (1 remaining)
-    "conjuror-esper": { "name": "TBD", "level3": "TBD", "level8": "TBD" }
+    "conjuror-esper": {
+        "name": "Kirigamist",
+        "level3": "Paper Trail: As an Action, you can expend 1 MP to create a magickal trail of paper 1 Square (5 feet) wide and up to 6 Squares (30 feet) long on the ground. At least one space of the paper trail must be within 4 Squares (20 feet) of you when you use this Action. The paper trail lasts for 1 minute, or if you end it early as a Minor Action. If any part of the paper trail takes Fire damage, each creature standing on the paper trail takes 5 Fire damage and the trail is destroyed. While your Ghost Sight feature is active, your paper trail acts as an extension of your feature, allowing you to see Invisible creatures while they are standing on the trail. Choose one of the following each time you create a paper trail: Flying Birds: The paper trail is an area of difficult terrain for your enemies, and an area of hastened terrain for your allies. Creatures spend half as much movement when moving through an area of hastened terrain (they can move 2 Squares (10 feet) for every 1 Square (5 feet) of movement they expend). Jumping Frogs: When an enemy creature starts its turn on the trail or moves onto the trail for the first time, they take 1d8 Poison damage. If the creature attempts to Jump over the trail, they take 2d8 Poison damage instead. Allies on the trail can Jump twice as high and three times as far. Swimming Fish: You can place the paper trail over a surface of water. Allied creatures can walk along the paper trail, over the top of the water. Enemy creatures that touch the trail or try to swim through the water the trail covers take 1d8 Acid damage, unless they swim deeper than 1 Square (5 feet) under the trail. Gliding Kites: Allies that are standing on the paper trail have their AC and each of their Attribute Defenses increased by 1. Enemies that start their turn on the trail or move onto the trail for the first time are Deafened and Silenced until the end of their turn.",
+        "level8": "TBD"
+    }
 };
 
 const SPECIES = {
