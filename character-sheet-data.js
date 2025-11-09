@@ -691,14 +691,46 @@ const CROSS_CLASS_FEATURES = {
     "assassin-esper": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
 
     // Tactician combinations (8 remaining)
-    "minstrel-tactician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "elementalist-tactician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "priest-tactician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "occultist-tactician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "sage-tactician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "magician-tactician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "conjuror-tactician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "esper-tactician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "minstrel-tactician": {
+        "name": "Maestro",
+        "level3": "Battlefield Composition: When you use Rally on a creature that has a Fortune, that creature can expend the Fortune die, rolling it and adding the number rolled to the temporary HP it receives. Whenever you Attack a creature that has a Misfortune and you use Weight of Leadership, the damage you deal to the creature increases by one roll of the Misfortune die.",
+        "level8": "TBD"
+    },
+    "elementalist-tactician": {
+        "name": "Warmage",
+        "level3": "War Wisps: When you use your Elemental Wisp feature, you can designate any number of the Wisps you create as War Wisps instead of choosing an element for them. When you are Attacked, you can expend a War Wisp to roll 1d4 and add the number to your AC or one Attribute Defense of your choice. When you would expend a Hit Die to use a Tactician feature, you can instead expend a War Wisp to roll 1d4 instead.",
+        "level8": "TBD"
+    },
+    "priest-tactician": {
+        "name": "Valkyrie",
+        "level3": "Gift of Wings: When you use your Blessed Renewal feature, you or the creature healed by Blessed Renewal gains a pair of spectral wings made of holy power hidden behind their back. The wings last for one minute or until you give another creature these wings. A creature with your Gift of Wings gains the following benefits/features: Ascension: When you Jump, you can cause your wings to emerge and enhance your jump, doubling the vertical and horizontal distances you cover with your Jump. Descent: You can use a Reaction when you begin falling to cause your wings to appear and cause you to descend safely to the ground. When you land, you can cause a burst of power. Each creature of your choice within 2 Squares (10 feet) of you when you land takes 1d6 Holy damage. Protection: When you take the Dodge Action, you can cause your wings to appear and surround you and one other creature of your choice within 1 Square (5 feet) of you. While protected, both you and the creature you protect gain the benefits of the Dodge Action, you both gain Physical Reduction 5. These benefits last until the start of your next turn, but they end early for the other creature if they are no longer within 1 Square (5 feet) of you before then. Wing Strike: When you take the Attack Action, you can replace any Attacks you make on that turn with a Wing Strike. Wing Strike is a Unarmed Strike that deals 1d6 Holy damage on a hit.",
+        "level8": "Ride of the Valkyries: When you use your Inspiring Speech feature, you can give each creature that benefits from your speech your Gift of Wings. These wings last for a number of hours equal to your level."
+    },
+    "occultist-tactician": {
+        "name": "Overlord",
+        "level3": "Master of the Horde: When you use your Raise Minion feature, you can create two creatures at once from two corpses within 2 Squares (10 feet) of you. When you use your Tactical Assist feature on one of your Minions and that Minion's Attack hits, they deal additional damage equal to your level. You can create two new kinds of Unholy minions, listed below. Husk Pikeman: Stab Damage. The Pikeman can make Melee Attacks against creatures 2 Squares (10 feet) away from them, but has Disadvantage on Attacks against creatures 1 Square (5 feet) away from them. Harrower Archer: Stab Damage. The Archer can make Ranged Attacks against creatures between 2 Squares (10 feet) and 8 Squares (40 feet) away from them.",
+        "level8": "TBD"
+    },
+    "sage-tactician": {
+        "name": "Weald Master",
+        "level3": "Leader of the Wilderness: When you use your Rally feature on Wild Beasts, Reptiles, Amphibians, Insects, Birds, Fish, Arachnids, Crustaceans or Intelligent Plants, they receive twice as many temporary HP. If you use Tactical Assist on one of the above creature types, they receive two Advantage instead of only one. You have Advantage on Barter checks made to convince the above types of creatures to join your party temporarily or to stop being hostile to you.",
+        "level8": "TBD"
+    },
+    "magician-tactician": {
+        "name": "Manipulator",
+        "level3": "War Illusions: When you use your Scapegoat feature, you can spend 1 MP to place a Beacon in the space your illusion disappears from. When you use your Rally feature, you can target each creature of your choice within 2 Squares (10 feet) of the Beacon instead of only a single creature. When you use your Hidden Step feature, each creature of your choice within 2 Squares (10 feet) of the Beacon also becomes invisible until the start of your next turn or until they Attack or deal damage. Your Beacon remains for one minute or until you use your Scapegoat feature again.",
+        "level8": "TBD"
+    },
+    "conjuror-tactician": {
+        "name": "Contractor",
+        "level3": "Contractual Obligation: Once per Encounter, by spending 1 MP as an Action, you can form a magickal Contract with one friendly creature within 1 Square (5 feet) of you, or with either your Familiar or (when you reach 5th level) your Incarnate, if they are within 6 Squares (30 feet) of you. The Contract designates another creature you can see as the Target. Until the Contract is ended, the creature you form the Contract with has Advantage on Attacks against the Target, Disadvantage on Attacks against every other creature, and gains 1d4 temporary HP each time it hits the Target with an Attack. If the Target dies, you and the creature you form the Contract with regain 1d8 HP and the Contract is ended.",
+        "level8": "TBD"
+    },
+    "esper-tactician": {
+        "name": "Eulogist",
+        "level3": "Eulogy of the Fallen: Each time a non-Minion creature of equal or higher level than you that you can see is reduced to 0 HP, you or another creature of your choice that can see or hear you gains 1 temporary HP, or increases their current temporary HP by 1. If the creature died and was within range of your Ghost Sight feature, increase the temporary HP gained by 1. If the creature was a Nemesis, increase the temporary HP gained by 3. This feature cannot raise a creature's temporary HP to higher than twice your level. If you are Intangible when you use this feature, and you give the temporary HP to another creature within 1 Square (5 feet) of you, that creature also becomes Intangible. They remain Intangible until you are no longer Intangible, they no longer have any temporary HP, or until they are no longer within 1 Square (5 feet) of you.",
+        "level8": "TBD"
+    },
 
     // Minstrel combinations (7 remaining)
     "elementalist-minstrel": {
