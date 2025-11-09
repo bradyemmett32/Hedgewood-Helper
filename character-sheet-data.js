@@ -645,27 +645,99 @@ const CROSS_CLASS_FEATURES = {
     "duelist-esper": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
 
     // Brawler combinations (12 remaining)
-    "brawler-thief": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "brawler-hunter": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "assassin-brawler": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "brawler-tactician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "brawler-minstrel": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "brawler-elementalist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "brawler-priest": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "brawler-occultist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "brawler-sage": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "brawler-magician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "brawler-conjuror": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "brawler-esper": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "brawler-thief": {
+        "name": "Acrobat",
+        "level3": "Pawkour: Once per turn, when you Shift or use your Tumble feature to Disengage as a Minor Action, you gain 1 Flow. Additionally, as a Reaction when you begin falling, you can reduce the damage when your fall ends by 5 times your level.",
+        "level8": "TBD"
+    },
+    "brawler-hunter": {
+        "name": "Maverick",
+        "level3": "Stinging Breeze: When you succeed a Ranged Attack against a creature, you can spend 1 Flow to add one additional damage die to the damage the Attack deals, or two damage dice if the Attack was made using a Light Ranged or Thrown weapon.",
+        "level8": "TBD"
+    },
+    "assassin-brawler": {
+        "name": "Hurricane",
+        "level3": "Hundred Forms: When you Attack a creature with a Weapon or Unarmed Strike that you have not used yet this turn, you gain Advantage on the Attack. You can forgo any number of Advantages on an Attack and let them all carry over to your next Attack you make this turn. If you ever make an Attack with four or more uncancelled Advantage, the Attack becomes a Critical Hit as long as the Attack does not miss.",
+        "level8": "TBD"
+    },
+    "brawler-tactician": {
+        "name": "Pugilist",
+        "level3": "Lead Fist: When you use your Weight of Leadership feature on an Attack using your Unarmed Strike (Punch), you can roll the Hit Die twice, keeping the higher result. If you spend 1 Flow to make the Attack a Gut Punch, the next creature other than yourself who attacks that creature before the start of your next turn has Advantage on their Attack.",
+        "level8": "TBD"
+    },
+    "brawler-minstrel": {
+        "name": "Percussionist",
+        "level3": "Misfortunate Beat Down: When you hit a creature with an Unarmed Strike, you can spend 2 Flow to give them a Misfortune. After you Cast a Spell, you can make Normal Attacks as Minor Actions targeting creatures with your Misfortunes until the end of your current turn.",
+        "level8": "TBD"
+    },
+    "brawler-elementalist": {
+        "name": "Spellstriker",
+        "level3": "Adept Spellstriking: You can use your Spellcraft Skill instead of your Melee Skill to determine the Attack roll, but not the damage roll, of your Melee Attacks using Unarmed Strikes. This allows you to use features that require a Spellcraft Attack, such as your Wisps and Spell Fusion. When you Cast a Spell, you have a new option for a Spell Base (Attack): Unarmed Spell Strike - Replace a Spellcraft Attack with a Melee Attack using an Unarmed Strike.",
+        "level8": "TBD"
+    },
+    "brawler-priest": {
+        "name": "Godfist",
+        "level3": "Divine Demesne: When you use your Purge Unholy feature, you can expend 1 MP to create an area of holy ground in the area within 3 Squares (15 feet) of you, which lasts for one minute. While inside the area, you gain the following benefits: You gain 1 Flow at the start of each of your turns. When you hit a creature with an Unarmed Strike, each creature of your choice in the area takes Holy damage equal to your Willpower modifier. An Unholy creature takes twice as much damage. When you use your Blessed Renewal feature, if you restore HP to a creature inside the area, they regain the maximum possible amount of HP from the d10, instead of rolling for it.",
+        "level8": "TBD"
+    },
+    "brawler-occultist": {
+        "name": "Hand of Death",
+        "level3": "Deathgrip: While you or one of your Minions are Grappling a Cursed creature, any Curses on that creature will not expire until the Grapple ends. Your Minions can attempt to Grapple using the same standard rules, but they make Spellcraft Attacks instead of Melee Attacks.",
+        "level8": "TBD"
+    },
+    "brawler-sage": {
+        "name": "Monk",
+        "level3": "Way of Nature's Touch: You gain the following benefits, based on your current Natural Attunement: Wind Style: When a hostile creature your size or smaller misses you with a Melee Attack, you can move them up to 1 Square (5 feet) to an unoccupied space within 1 Square (5 feet) of you. You must either use your Reaction or spend 1 Flow. Water Style: Once between each of your turns, when a hostile creature misses you with an Attack, you gain 1 Flow. Stone Style: You can spend up to 2 Flow when you push a creature at least 1 Square (5 feet) to increase the distance you push them by 1 Square (5 feet) per Flow spent. Plant Style: You have a number of d4 Hit Dice equal to half your level (rounded up).",
+        "level8": "TBD"
+    },
+    "brawler-magician": {
+        "name": "Arkane Blitzer",
+        "level3": "Blink Blitz: When you use your Scapegoat feature, you can spend 2 Flow to make one Unarmed Strike against a creature before or after you teleport as part of the same Reaction.",
+        "level8": "TBD"
+    },
+    "brawler-conjuror": {
+        "name": "Ringwielder",
+        "level3": "Rune Rings: When you use your Magick Armor feature, you can wear a set of Rune Rings, which you wear on your wrists and ankles. These Rune Rings count as Magick Armor (your choice of Light, Medium, or Heavy) and as a Conjured Weapon for your Conjuror features, but do not count as wearing armor for your Brawler features.",
+        "level8": "TBD"
+    },
+    "brawler-esper": {
+        "name": "Yokai",
+        "level3": "Spirit Sickness: When a Sickened creature within 2 Squares (10 feet) of you recovers HP, you gain an equal amount of temporary HP. When you hit a creature with an Unarmed Strike, you can choose to lose any amount of temporary HP you have to deal an equal amount of Psychic damage to one creature you hit with that attack.",
+        "level8": "TBD"
+    },
 
     // Thief combinations (11 remaining)
-    "hunter-thief": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "assassin-thief": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "hunter-thief": {
+        "name": "Trickshot",
+        "level3": "Ricocheting Shot: When you hit the target of your Harrying Mark feature with a Ranged Attack and use your Disarming Attack feature against them, you can cause the attack to ricochet to a new target. If the original attack roll would hit them as well, that target takes the same amount of damage as the first target. Alternatively, when you hit a target with a Ranged Attack, you can cause the attack to ricochet to the target of your Harrying Mark feature. If the original attack roll would hit them, that creature takes damage equal to one roll of your Harrying Mark damage die.",
+        "level8": "TBD"
+    },
+    "assassin-thief": {
+        "name": "Rogue",
+        "level3": "Low Blow: When you use your Tumble feature to Disengage, you can apply your Hamstring feature to one enemy adjacent to you. Additionally, you gain an additional 2 Squares (10 feet) of movement on any turn you use the Disengage action.",
+        "level8": "TBD"
+    },
     "tactician-thief": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "minstrel-thief": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "elementalist-thief": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "priest-thief": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "occultist-thief": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "minstrel-thief": {
+        "name": "Performer",
+        "level3": "Leap and Twist: When you make a Maneuver check to Escape Grapple, you can add your Willpower modifier to the check. Additionally, when you use the Disengage action you gain an additional 2 Squares (10 feet) of movement for the rest of your turn.",
+        "level8": "TBD"
+    },
+    "elementalist-thief": {
+        "name": "Spellstealer",
+        "level3": "Magick Siphoning: When a creature within 6 Squares (30 feet) of you attempts to Cast a Spell or Channel Magick, you can use a reaction to try to steal magick from their casting. Make a Spellcraft Attack against the creature's Intellect Defense. If you succeed, reduce the number of Components their Spell has by 1, or negate their Channel Magick action. Succeed or fail, you also gain 1 MP. Once you use this feature, you cannot use it again until you finish a Rest.",
+        "level8": "TBD"
+    },
+    "priest-thief": {
+        "name": "Inquisitor",
+        "level3": "Divine Insight: As an Action, you can spend 1 MP to focus on a creature with extreme, supernatural prejudice. For the next minute, you have Advantage on all Attacks and Study checks against the creature, and the creature has Disadvantage on all Attacks and Deceive checks against you.",
+        "level8": "TBD"
+    },
+    "occultist-thief": {
+        "name": "Shadowsnatcher",
+        "level3": "Siphon Shadows: When you successfully hit a creature with your Magick Purge feature, you can spend 1 MP to regain HP equal to half the Shadow damage the creature takes, rounded up. If the healing would cause you to exceed your HP Maximum, you gain the excess as temporary HP.",
+        "level8": "TBD"
+    },
     "sage-thief": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
     "magician-thief": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
     "conjuror-thief": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
