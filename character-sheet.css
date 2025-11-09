@@ -353,13 +353,19 @@
 }
 
 /* Hit Dice Section */
-.hit-dice-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+.hit-dice-unified {
+    display: flex;
+    flex-direction: column;
     gap: var(--spacing-md);
 }
 
-.hit-dice-tracker {
+.hit-dice-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.hit-dice-class-info {
     background: var(--gradient-light);
     padding: var(--spacing-md);
     border-radius: var(--border-radius);
@@ -368,44 +374,86 @@
     gap: var(--spacing-sm);
 }
 
-.dice-type, .dice-count {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+.hit-dice-class-info h3 {
+    margin: 0;
+    color: var(--primary-color);
+    font-size: 1.1em;
 }
 
-.dice-type label,
-.dice-count label {
+.dice-type-row {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.die-type-label {
     font-weight: bold;
     color: #555;
     font-size: 0.9em;
 }
 
 .die-type-display {
-    padding: var(--spacing-xs);
+    padding: 4px 12px;
     background: var(--gradient-primary);
     color: white;
     border-radius: var(--border-radius-sm);
-    font-size: 1.2em;
+    font-size: 1.1em;
     font-weight: bold;
     text-align: center;
 }
 
-.dice-display {
+.dice-count-row {
     display: flex;
     align-items: center;
-    gap: var(--spacing-xs);
-    font-size: 1.2em;
-    font-weight: bold;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
 }
 
-.dice-display input {
-    width: 60px;
-    padding: var(--spacing-xs);
-    border: 2px solid #ddd;
-    border-radius: var(--border-radius-sm);
-    text-align: center;
+.dice-count-label {
     font-weight: bold;
+    color: #555;
+    font-size: 0.9em;
+}
+
+.dice-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dice-adjust-btn {
+    background: var(--gradient-blue);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dice-adjust-btn:hover {
+    background: var(--gradient-primary);
+    transform: scale(1.1);
+}
+
+.dice-value {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: var(--primary-color);
+    min-width: 24px;
+    text-align: center;
+}
+
+.dice-total {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #666;
 }
 
 .use-dice-btn {
@@ -417,6 +465,7 @@
     font-weight: bold;
     cursor: pointer;
     transition: var(--transition);
+    margin-top: auto;
 }
 
 .use-dice-btn:hover:not(:disabled) {
@@ -427,6 +476,38 @@
 .use-dice-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+.hit-dice-summary {
+    background: var(--gradient-light);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.total-hit-dice {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: 1.1em;
+}
+
+.total-label {
+    font-weight: bold;
+    color: #555;
+}
+
+.total-value {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.recovery-info {
+    color: #666;
+    font-size: 0.9em;
 }
 
 /* Magick Points Section */
@@ -961,7 +1042,7 @@
         grid-template-columns: 1fr;
     }
 
-    .hit-dice-grid,
+    .hit-dice-info,
     .mp-grid {
         grid-template-columns: 1fr;
     }
