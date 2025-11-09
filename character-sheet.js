@@ -106,6 +106,15 @@ let currentCharacter = {
 
 let currentSlot = 1;
 
+// Helper function to get cross-class feature key
+// Returns alphabetically sorted key for looking up cross-class features
+// e.g., getCrossClassKey("knight", "berserker") returns "berserker-knight"
+function getCrossClassKey(class1, class2) {
+    if (!class1 || !class2 || class1 === class2) return null;
+    const classes = [class1.toLowerCase(), class2.toLowerCase()].sort();
+    return `${classes[0]}-${classes[1]}`;
+}
+
 // Initialize app
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Character Sheet App Initialized');
@@ -656,7 +665,16 @@ function updateMultiClassName() {
     if (class1Id && class2Id && class1Id !== class2Id) {
         const class1Name = CLASSES[class1Id]?.name || "";
         const class2Name = CLASSES[class2Id]?.name || "";
-        multiClassName = `${class1Name}/${class2Name}`;
+
+        // Check for cross-class name
+        const crossClassKey = getCrossClassKey(class1Id, class2Id);
+        const crossClassData = crossClassKey && CROSS_CLASS_FEATURES ? CROSS_CLASS_FEATURES[crossClassKey] : null;
+
+        if (crossClassData && crossClassData.name !== 'TBD') {
+            multiClassName = `${class1Name} / ${class2Name} - ${crossClassData.name}`;
+        } else {
+            multiClassName = `${class1Name}/${class2Name}`;
+        }
     } else if (class1Id) {
         multiClassName = CLASSES[class1Id]?.name || "";
     }
@@ -672,9 +690,27 @@ function updateClassFeatures(classSlot, classData) {
     const level = currentCharacter.characterInfo.level;
     let features = "";
 
+    // Get cross-class info if both classes are selected
+    const class1Id = currentCharacter.characterInfo.class1;
+    const class2Id = currentCharacter.characterInfo.class2;
+    const crossClassKey = getCrossClassKey(class1Id, class2Id);
+    const crossClassData = crossClassKey && CROSS_CLASS_FEATURES ? CROSS_CLASS_FEATURES[crossClassKey] : null;
+
     for (let i = 1; i <= level; i++) {
         if (classData.features[`level${i}`]) {
             features += `Level ${i}: ${classData.features[`level${i}`]}\n`;
+        }
+
+        // Add cross-class features at levels 3 and 8 (only show in class1 slot to avoid duplication)
+        if (classSlot === 'class1' && crossClassData && crossClassData.name !== 'TBD') {
+            if (i === 3 && crossClassData.level3 && crossClassData.level3 !== 'TBD') {
+                features += `\n--- ${crossClassData.name} Cross-Class Feature ---\n`;
+                features += `Level 3: ${crossClassData.level3}\n`;
+            }
+            if (i === 8 && crossClassData.level8 && crossClassData.level8 !== 'TBD') {
+                features += `\n--- ${crossClassData.name} Cross-Class Feature ---\n`;
+                features += `Level 8: ${crossClassData.level8}\n`;
+            }
         }
     }
 

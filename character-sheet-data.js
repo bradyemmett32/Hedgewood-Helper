@@ -492,6 +492,245 @@ const CLASSES = {
     }
 };
 
+// Cross-Class Features
+// Keys are alphabetically sorted class names (e.g., "berserker-knight" not "knight-berserker")
+// Total of 120 combinations for 16 classes
+const CROSS_CLASS_FEATURES = {
+    // Knight combinations (15 total)
+    "berserker-knight": {
+        "name": "Warlord",
+        "level3": "Dominating Presence: When you use your Berserking feature, you can use your Visibly Dangerous feature as part of the same Action, even if you have already used it in this encounter. Additionally, while Berserking, you have Advantage on Attacks against any creature that is Taunted by you.",
+        "level8": "Warlord's Menace: When a creature starts their turn Frightened by you, you can choose to make them Taunted instead, and when a creature starts their turn Taunted by you, you can choose to make them Frightened instead. If a creature starts their turn both Frightened and Taunted by you, they take Psychic damage equal to your level. You can then choose if they remain Frightened, Taunted, both, or neither."
+    },
+    "duelist-knight": {
+        "name": "Vanguard",
+        "level3": "Bringeth it On!: When you use your En Garde feature, if your Attack against Willpower Defense succeeds, the creature becomes Taunted by your Challenge feature after they make their movement and Melee Attack against you. If your Attack against Willpower Defense fails, you gain both failure benefits of En Garde and Challenge (+2 bonus movement on this turn, and an extra minor action).",
+        "level8": "Avenging Steel: While in Phalanx stance, you gain a bonus to the damage of your Melee Attacks equal to twice the number of friendly creatures within 1 Square (5 feet) of you, to a maximum bonus of 6 damage. When you use your Castling Maneuver feature or Protect feature while in Phalanx Stance, you can also make one Melee Attack against the attacking creature if they are within range of your weapon or shield. If your ally was still hit by the Attack, you have Advantage on your Attack."
+    },
+    "brawler-knight": {
+        "name": "Heavyhand",
+        "level3": "Fists of Iron: When you hit a creature with a Punch while wearing Heavy Armor, they have Disadvantage on the next Attack they make against a creature other than you before the end of their next turn. This effect can stack up to three times. If a creature receives a third stack, you Daze the creature until the end of their turn as well.",
+        "level8": "Limbs of Lead: While you are wearing Heavy Armor, your Unarmed Attacks (Punch, Kick, and Headbutt) deal additional damage equal to twice your AC bonus from Armor Training. When a creature hits you with an Attack, you gain 1 Flow."
+    },
+    "knight-thief": {
+        "name": "Errant",
+        "level3": "Sunder Grip: When a Taunted creature attacks you, you can use a Reaction to attempt to knock the weapon from their hand before their attack hits you. Make a Melee Attack against their Reflexes Defense. If you succeed, they drop the weapon they are attacking you with before they are able to make their attack. You can catch the item if you have at least one hand free. If you fail, the creature has Disadvantage on their Attack instead.",
+        "level8": "Adding Injury to Insult: When you hit a creature with an Attack using a weapon you stole from them with Pickpocket, Disarming Strike, or Sunder Grip, they take additional Psychic damage equal to your level, or twice that if you hit their Willpower Defense using Goading Attack. Once a creature has taken Psychic damage from this feature, they cannot take damage from it again until they finish a Full Rest."
+    },
+    "hunter-knight": {
+        "name": "Chevalier",
+        "level3": "Chivalrous Mark: When you place your Harrying Mark on a creature Taunted by you, you can place a Chivalrous Mark on them as well, which lasts until they no longer have a Harrying Mark. While a creature has a Chivalrous Mark on them, any time they move outside of 6 Squares (30 feet) from you, you can move up to half your Speed (rounded up) towards that creature, no Reaction required. Additionally, while that creature is within 6 Squares (30 feet) of you, they have Disadvantage on Attacks made against creatures other than you.",
+        "level8": "Delivering Justice: When you Attack a creature that has a Chivalrous Mark, you ignore the Disadvantage of your Point Blank and Long Shot features. When you hit a creature Taunted by you with a Ranged Attack, or if your Goading Attack successfully Taunts a creature, you can force that creature to move up to its speed towards you. This movement can provoke Opportunity Attacks."
+    },
+    "assassin-knight": {
+        "name": "Kingslayer",
+        "level3": "Clipped Wings: When you Attack a creature while they are Prone, they are automatically affected by your Hamstring feature, even if your attack misses. Additionally, when you successfully Shove a creature, that creature takes 1d4 Strike damage, and once per turn you can use Twist the Knife to increase the damage when you successfully Shove a creature. The damage of this feature increases as you reach higher levels: 1d6 at 6th level, and 1d8 at 9th level.",
+        "level8": "Wound Dehiscence: When a creature with at least one lasting Wound from your Lacerate feature hits you with a Melee Attack, instead of dealing damage with your Turn the Blade feature, you can increase their number of Wounds by 1, to a maximum of 5 Wounds. Whenever you use a Knight feature to make a creature Taunted, if that creature has any lasting Wounds from your Lacerate feature, they take 1d4 Slash damage."
+    },
+    "knight-tactician": {
+        "name": "Commander",
+        "level3": "Heroic Paragon: Creatures with temporary HP from any of your Tactician features also gain the benefits of your Steadfast and Vigilant Until Death features.",
+        "level8": "Offense and Defense: When you use your Rally feature while in Phalanx Stance, each friendly creature within 1 Square (5 feet) of you gains temporary HP equal to your level. Additionally, when you direct an ally within 1 Square (5 feet) of you to Attack or move using Commanding Strike, they gain either of the following benefits: If the creature Attacks and its Attack is successful, it deals additional damage equal to your level. If the creature moves, it can move up to its speed without provoking Opportunity Attacks, and it keeps the benefits of your Positive Influence and Phalanx Stance features until the end of its next turn, even if it is out of range of either or both of those features."
+    },
+    "knight-minstrel": {
+        "name": "Skald",
+        "level3": "War Herald: When you use your Challenge feature to make a creature Taunted, you can give that creature a Misfortune as part of that same Action. When you fail your Challenge feature, you can Channel Magick as a Minor Action on your turn. When you use your Protect feature, you can give the creature you protect a Fortune as part of that same Reaction. If the creature is still hit by the triggering Attack, they can expend their Fortune to roll 1d6 and reduce the damage they take from the Attack by the number rolled.",
+        "level8": "Marching Cadence: When you Channel Magick, each friendly creature of your choice within 1 Square (5 feet) of you gains the benefits of your Defense Melody feature until the start of your next turn, and when you Cast a Spell, each friendly creature within 1 Square (5 feet) of you gains the benefits of your Fast Tempo feature until the end of their next turn. You can use your Castling Maneuver feature to move up to half your movement speed towards a creature that is Attacked before swapping with them if you end your movement within 1 Square (5 feet) of them."
+    },
+    "elementalist-knight": {
+        "name": "Spellguard",
+        "level3": "Aegis of Elements: As an Action, you can spend one MP to create your Aegis of Elements, which lasts for one minute. While the Aegis is active, you have Energy Damage Reduction 5. Additionally, as a Reaction when a creature within 2 Squares (10 feet) of you takes Energy damage, or when you use your Protect feature of a creature, you can give your Aegis to them, giving them Energy Damage Reduction 5 until the start of your next turn. You lose your Energy Damage Reduction during that time.",
+        "level8": "Warding Formation: Your Aegis of Elements now provides you or any creature it is protecting Energy Damage Reduction 10. While in Phalanx Stance, each friendly creature within 1 Square (5 feet) of you gains the benefits of your Aegis, and when such a creature takes damage, you can let your Magickal Ward take the damage instead (no Reaction required)."
+    },
+    "knight-priest": {
+        "name": "Paladin",
+        "level3": "Mending Defense: When you use your Protect feature, the creature can use their Reaction to take the Recover Action, benefiting from your Blessed Renewal feature if they do. If the creature is still hit by the Attack, regardless of if they take the Recover Action, they regain HP equal to your Willpower modifier after they take the Attack's damage.",
+        "level8": "Radiant Weapons, Holy Words: Friendly creatures that are in your Radiant Aura deal 1d6 additional Holy damage when they hit a creature with an Attack. When you make a creature within the area of your Radiant Aura feature Taunted with a Knight feature, they take Holy damage equal to your Willpower modifier."
+    },
+    "knight-occultist": {
+        "name": "Dreadnaught",
+        "level3": "Overshadow: While you have at least one creature Taunted by you, you emit an aura of shadows, which moves with you. The aura turns bright light into dim light, and dim light into darkness. The size of the aura (how many Squares it extends out from you) is based on the number of creatures Taunted by you plus the number of Minions you have (to a maximum of 6 Squares (30 feet). You can use the Concentrate Action to extend the duration of your Overshadow until the end of your next turn.",
+        "level8": "Darkest Knight: While you are standing in an area of dim light or darkness, you gain the following benefits: Increase the AC and Damage Reduction of any Heavy Armor you are wearing by 1. Your Heavy Armor no longer gives you Disadvantage on Sneak checks. Your Melee Weapons can make Attacks against targets 1 Square (5 feet) further than normal. When a creature in an area of dim light or darkness within 4 Squares (20 feet) of you is Attacked, you can Shadow Step to an unoccupied space within 1 Square (5 feet) of the creature before using your Protect or Castling Maneuver feature."
+    },
+    "knight-sage": {
+        "name": "Hedgewarden",
+        "level3": "Hedge of Protection: As an Action, or when you use your Protect feature as a Reaction, you can expend a use of your Nature's Protection feature as part of the same Reaction. The creature that attacked them is subject to your Nature's Protection so long as they are within 6 Squares (30 feet) feet of you. You also form a Hedge 3 Squares (15 feet) tall, 3 Squares (15 feet) wide, 1 Square (5 feet) thick in an unoccupied space between the attacking creature and the creature you protected. If no large enough open space exists, the Hedge pushes back each creature in a suitable area of your choice, dealing 1d4 Stab damage to each creature it moves. The Hedge can provide cover and deals 1d4 Stab damage to any creature that touches it or hits it with a Melee Attack. The Hedge has an AC equal to 10 plus your Willpower modifier and HP equal to 5 times your level. It has Physical Damage Reduction 5, but Fire Damage Vulnerability 5. The Hedge lasts for 1 minute, until it is reduced to 0 HP, or until you dismiss it as an Action on your turn.",
+        "level8": "Defense Hedgemony: Your Hedge of Protection grows larger - now you can form a Hedge up to 6 Squares (30 feet) wide (the other dimensions of the Hedge remain the same), and the Hedge can incorporate up to four 90 degree corners along the ground, making it able to form open or closed boxes. Additionally, your Hedge of Protection gives the benefits of your Phalanx Stance to all friendly creatures within 1 Square (5 feet) of it, and deals additional Stab damage to creatures that hit it with Melee Attacks equal to the damage of your Turn the Blade feature."
+    },
+    "knight-magician": {
+        "name": "Arkane Guardian",
+        "level3": "Emergency Relocation: When you use your Protect feature, you can expend a use of your Scapegoat feature as part of the same Reaction, teleporting the creature you are protecting instead of yourself. After they teleport, the creature you protected gains Advantage on the next Attack they make before the end of their next turn, and if that Attack succeeds, they deal 1d10 additional Arkane damage.",
+        "level8": "Duplicate Defense: When you use your Challenge feature, any number of creatures you Taunt can be Taunted by your Doppelganger instead of you. Additionally, when a creature within 4 Squares (20 feet) of either you or your Doppelganger is Attacked, you can use a Reaction to use your Castling feature to swap either yourself or your Doppelganger with the creature, causing the Attack to target yourself or your Doppelganger instead."
+    },
+    "conjuror-knight": {
+        "name": "Rune Juggernaut",
+        "level3": "Rune-touched Armor: Instead of creating Magick Armor, you can expend 1 MP to cover the armor you are wearing with special runes when you finish a Rest, changing it into your Rune-touched Armor until you take a Rest. While you are wearing your Rune-touched Armor, you gain the benefits from your Magick Armor feature. When a creature within 2 Squares (10 feet) of you tries to move you against your will or Attacks your Toughness Defense, you can use a Reaction to push them back 2 Squares (10 feet) and deal 1d8 Acid or Poison damage to them. Whenever you create your Rune-touched Armor when you finish a Rest, also choose one of the following options: Stainless: Your armor cannot be dirtied, and its AC cannot be reduced by non-magical means. Unburdened: Your armor's Encumbrance value is reduced by 2, and its Speed Reduction is reduced by 1. Muffled: If your armor is heavy armor, your armor does not give you Disadvantage on Sneak checks. Otherwise, you have Advantage on Sneak checks while wearing your armor.",
+        "level8": "Adapting Armor: When you are within the area of a Runic Trap when it activates and you are wearing your Rune-touched Armor, you can choose which Kinetic Reversal feature you use, regardless of the type of armor you are wearing. Whenever you create your Rune-touched Armor when you finish a Rest, also choose one of the following options instead of one of the options from the Rune-touched Armor feature: Reinforced: Increase your armor's AC by 1. Shock Absorbing: Increase your armor's Damage Reduction by 1. Neutralizing: Your armor gives you Acid and Poison Damage Reduction 5."
+    },
+    "esper-knight": {
+        "name": "Clairvoyant",
+        "level3": "Chivalric Clarity: You have three Clarity. When you Attack a creature Taunted by you, or when a creature Taunted by you makes an Attack against you, you can expend one Clarity to give the Attack Advantage or Disadvantage. If this causes an Attack to miss you, or causes your Attack to hit a Taunted creature, you can end the Taunted condition and cause that creature to take 1d10 Psychic damage. You can also expend one Clarity when Initiative is rolled to give yourself or a friendly creature that can see or hear you Advantage on their Initiative roll. You regain all of your expended Clarity when you finish a Rest, and one Clarity when you use your Visibly Dangerous feature to make at least one creature Taunted.",
+        "level8": "Clear Future: You now have five Clarity. When a creature you can see makes an Attack, you can expend one Clarity to give their Attack Advantage or Disadvantage. If this causes their Attack to succeed, you can cause the creature hit by the Attack to take 1d10 Psychic damage and become Taunted by you until the end of your next turn. If this causes an Attack to miss, you can cause the creature that made the Attack to take 1d10 Psychic damage and become Taunted by you until the end of their next turn. If a creature that would take Psychic damage from this feature was already Taunted by you, they take 2d10 Psychic damage instead."
+    },
+
+    // Berserker combinations (14 remaining - excluding berserker-knight already listed)
+    "berserker-duelist": {
+        "name": "Champion",
+        "level3": "Intercept: If an enemy you can see misses you with an Attack from more than 3 Squares (15 feet) away from you, you can use a Reaction to use the Charge Action towards that creature. You can use either your Lunging Attack or Running Tackle feature as part of the same Reaction.",
+        "level8": "Champion's Rebuttal: When you use your Retaliation feature, you can make a Heavy Attack instead of a Normal Attack. If you get a Critical Hit or reduce a creature to 0 HP with an Attack that uses a Reaction, you regain that Reaction."
+    },
+    "berserker-brawler": {
+        "name": "Mauler",
+        "level3": "Pounce: When you hit a creature with your Running Tackle feature, you can spend Flow to deal additional damage to them with your Claws. For each Flow you spend, you deal Slash damage equal to one roll of your Claw Unarmed Strike damage die.\n\nBite and Hold: When you hit a creature with a Bite Attack, you can Grapple the creature as part of the same Attack, leaving your hands free by using your bite instead. While you have a creature grappled in this way, you are Silenced and cannot use your Bite Attack, the number needed to escape your Grapple is increased by your level, and as a Minor Action on your turn, you can spend 1 Flow to deal Stab damage to the creature equal to one roll of your Bite Unarmed Strike damage die.",
+        "level8": "Beastial Roar: When you use your Intimidating Shout feature, you can target any number of creatures that can see or hear you instead of only one.\n\nFeral Strikes: Whenever you deal damage using your Claw or Bite Unarmed Strikes (including when you use your Pounce or Bite and Hold features), you can use your Frightening Glare feature on one creature that can see you."
+    },
+    "berserker-thief": {
+        "name": "Raider",
+        "level3": "Hit and Run: When you Dash towards an enemy while you are Berserking, the next Attack you make against that enemy during this turn deals extra damage equal to your level if it hits. Additionally, regardless of if the Attack hits, your movement does not provoke Opportunity Attacks from that enemy for the rest of the turn.",
+        "level8": "Gold Rush: When you successfully steal an item from a creature using your Disarming Strike or Pickpocket feature, you gain the benefits of your Adrenaline Rush feature. You can only gain the benefits from this feature once on each of your turns, in addition to gaining Adrenaline Rush from scoring a Critical Hit or reducing a creature to 0 HP."
+    },
+    "berserker-hunter": {
+        "name": "Predator",
+        "level3": "Full Draw: While Berserking, you gain a bonus to Ranged Attacks and damage rolls equal to your Ranks in the Melee Skill while using Bows, Slings, and Thrown weapons against targets within half the weapon's range. Additionally, when you use your Barbaric Instinct feature to Shift away from a creature that hits you with an Attack targeting your Reflexes Defense or AC, you can then make one Ranged Attack as part of the same Reaction.",
+        "level8": "Mighty Shot: Once per turn, you can use your Heavy Handed feature to use your Point Blank, Long Shot, or Barrage feature using a single Action instead of two Actions. If you do, you ignore the Disadvantage of either your Point Blank or Long Shot feature."
+    },
+    "assassin-berserker": {
+        "name": "Ravager",
+        "level3": "Ravaging Strike: When you use your Reckless Assault feature, the next time you use Twist the Knife before the start of your next turn, you deal additional damage equal to two rolls of the Reckless Assault die.",
+        "level8": "Hemorrhage: When you hit a creature that has at least one Wound from your Lacerate feature with a Heavy Attack, they take 1d4 Slash damage for each Wound they have."
+    },
+    "berserker-tactician": {
+        "name": "Warrior Chief",
+        "level3": "Rallying Rage: When you use your Berserking feature, you can expend any number of your Hit Dice and use your Rally feature on that many allies as well, adding one roll of an expended Hit Die to each creature's temporary HP. Any creature that you Rally has Advantage on the next Attack they make before the end of their next turn. While you continue Berserking, when you use your Reckless Assault feature, one creature of your choice that can see or hear you may also add your Reckless Assault die to their Attacks on their next turn, but creatures that target them with Attacks may also add the Reckless Assault die to their Attacks.",
+        "level8": "Radiating Hatred: While you are Berserking, each friendly creature within the range of your Positive Influence feature gains a bonus to the damage of their weapon Attacks equal to your Ranks in the Melee Skill. When you use your Battle Cry feature, double this bonus until the start of your next turn."
+    },
+    "berserker-minstrel": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "berserker-elementalist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "berserker-priest": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "berserker-occultist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "berserker-sage": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "berserker-magician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "berserker-conjuror": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "berserker-esper": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+
+    // Duelist combinations (13 remaining - excluding duelist-knight and berserker-duelist)
+    "brawler-duelist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "duelist-thief": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "duelist-hunter": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "assassin-duelist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "duelist-tactician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "duelist-minstrel": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "duelist-elementalist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "duelist-priest": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "duelist-occultist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "duelist-sage": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "duelist-magician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "conjuror-duelist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "duelist-esper": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+
+    // Brawler combinations (12 remaining)
+    "brawler-thief": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "brawler-hunter": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "assassin-brawler": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "brawler-tactician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "brawler-minstrel": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "brawler-elementalist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "brawler-priest": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "brawler-occultist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "brawler-sage": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "brawler-magician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "brawler-conjuror": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "brawler-esper": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+
+    // Thief combinations (11 remaining)
+    "hunter-thief": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "assassin-thief": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "tactician-thief": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "minstrel-thief": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "elementalist-thief": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "priest-thief": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "occultist-thief": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "sage-thief": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "magician-thief": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "conjuror-thief": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "esper-thief": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+
+    // Hunter combinations (10 remaining)
+    "assassin-hunter": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "hunter-tactician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "hunter-minstrel": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "elementalist-hunter": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "hunter-priest": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "hunter-occultist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "hunter-sage": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "hunter-magician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "conjuror-hunter": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "esper-hunter": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+
+    // Assassin combinations (9 remaining)
+    "assassin-tactician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "assassin-minstrel": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "assassin-elementalist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "assassin-priest": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "assassin-occultist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "assassin-sage": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "assassin-magician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "assassin-conjuror": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "assassin-esper": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+
+    // Tactician combinations (8 remaining)
+    "minstrel-tactician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "elementalist-tactician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "priest-tactician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "occultist-tactician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "sage-tactician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "magician-tactician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "conjuror-tactician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "esper-tactician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+
+    // Minstrel combinations (7 remaining)
+    "elementalist-minstrel": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "minstrel-priest": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "minstrel-occultist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "minstrel-sage": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "magician-minstrel": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "conjuror-minstrel": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "esper-minstrel": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+
+    // Elementalist combinations (6 remaining)
+    "elementalist-priest": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "elementalist-occultist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "elementalist-sage": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "elementalist-magician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "conjuror-elementalist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "elementalist-esper": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+
+    // Priest combinations (5 remaining)
+    "occultist-priest": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "priest-sage": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "magician-priest": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "conjuror-priest": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "esper-priest": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+
+    // Occultist combinations (4 remaining)
+    "occultist-sage": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "magician-occultist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "conjuror-occultist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "esper-occultist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+
+    // Sage combinations (3 remaining)
+    "magician-sage": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "conjuror-sage": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "esper-sage": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+
+    // Magician combinations (2 remaining)
+    "conjuror-magician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "esper-magician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+
+    // Conjuror combinations (1 remaining)
+    "conjuror-esper": { "name": "TBD", "level3": "TBD", "level8": "TBD" }
+};
+
 const SPECIES = {
     "mouse": {
         "name": "Mouse",
