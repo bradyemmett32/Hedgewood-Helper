@@ -620,7 +620,11 @@ const CROSS_CLASS_FEATURES = {
     "assassin-duelist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
     "duelist-tactician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
     "duelist-minstrel": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "duelist-elementalist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "duelist-elementalist": {
+        "name": "Spellsword",
+        "level3": "Magick Fencing: When a creature deals damage to your Magickal Ward but no damage to your HP, you can make a Melee Attack against them as a Reaction. Additionally, once per turn when you hit a creature with a Melee Attack, you can expend your wisps as though you made a Spellcraft Attack.",
+        "level8": "TBD"
+    },
     "duelist-priest": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
     "duelist-occultist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
     "duelist-sage": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
