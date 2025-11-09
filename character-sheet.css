@@ -375,11 +375,14 @@
     font-size: 0.9em;
 }
 
-.dice-type select {
+.die-type-display {
     padding: var(--spacing-xs);
-    border: 2px solid #ddd;
+    background: var(--gradient-primary);
+    color: white;
     border-radius: var(--border-radius-sm);
-    font-size: 1em;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
 }
 
 .dice-display {

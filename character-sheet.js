@@ -667,6 +667,15 @@ function useHitDice(classSlot) {
     showNotification(`Used ${dieType}! Rolled ${roll} + ${toughMod} = ${healing} HP healed.`, 'success');
 }
 
+// Hit Dice Total Update
+function updateHitDiceTotal(classSlot) {
+    const level = currentCharacter.characterInfo.level;
+    currentCharacter.hitDice[classSlot].total = level;
+
+    const totalDiceInput = document.getElementById(`${classSlot}TotalDice`);
+    if (totalDiceInput) totalDiceInput.value = level;
+}
+
 // Carry Capacity
 function updateCarryCapacity() {
     const toughnessScore = currentCharacter.attributes.toughness.score;
@@ -712,7 +721,11 @@ function handleClassChange(e) {
 
     // Update hit die for this class
     currentCharacter.hitDice[classSlot].dieType = classData.hitDie;
-    document.getElementById(`${classSlot}DieType`).value = classData.hitDie;
+    const dieTypeDisplay = document.getElementById(`${classSlot}DieType`);
+    if (dieTypeDisplay) dieTypeDisplay.textContent = classData.hitDie;
+
+    // Update hit dice total based on level
+    updateHitDiceTotal(classSlot);
 
     // Update multi-class name
     updateMultiClassName();
@@ -861,11 +874,8 @@ function handleLevelChange(e) {
     currentCharacter.characterInfo.level = newLevel;
 
     // Update hit dice totals
-    currentCharacter.hitDice.class1.total = newLevel;
-    currentCharacter.hitDice.class2.total = newLevel;
-
-    document.getElementById('class1TotalDice').textContent = newLevel;
-    document.getElementById('class2TotalDice').textContent = newLevel;
+    updateHitDiceTotal('class1');
+    updateHitDiceTotal('class2');
 
     // Update XP threshold
     updateXPThreshold();

@@ -224,20 +224,15 @@
                 <div class="hit-dice-tracker">
                     <h3>Class 1 Hit Dice</h3>
                     <div class="dice-type">
-                        <label for="class1DieType">Die Type</label>
-                        <select id="class1DieType" data-field="hitDice.class1.dieType">
-                            <option value="d6">d6</option>
-                            <option value="d8">d8</option>
-                            <option value="d10">d10</option>
-                            <option value="d12">d12</option>
-                        </select>
+                        <label>Die Type</label>
+                        <div class="die-type-display" id="class1DieType">d6</div>
                     </div>
                     <div class="dice-count">
                         <label>Available / Total</label>
                         <div class="dice-display">
                             <input type="number" id="class1CurrentDice" value="1" min="0" data-field="hitDice.class1.current">
                             <span>/</span>
-                            <span id="class1TotalDice">1</span>
+                            <input type="number" id="class1TotalDice" value="1" min="0" data-field="hitDice.class1.total">
                         </div>
                     </div>
                     <button class="use-dice-btn" data-action="use-hit-dice" data-class="class1">Use Hit Die</button>
@@ -245,20 +240,15 @@
                 <div class="hit-dice-tracker">
                     <h3>Class 2 Hit Dice</h3>
                     <div class="dice-type">
-                        <label for="class2DieType">Die Type</label>
-                        <select id="class2DieType" data-field="hitDice.class2.dieType">
-                            <option value="d6">d6</option>
-                            <option value="d8">d8</option>
-                            <option value="d10">d10</option>
-                            <option value="d12">d12</option>
-                        </select>
+                        <label>Die Type</label>
+                        <div class="die-type-display" id="class2DieType">d6</div>
                     </div>
                     <div class="dice-count">
                         <label>Available / Total</label>
                         <div class="dice-display">
                             <input type="number" id="class2CurrentDice" value="1" min="0" data-field="hitDice.class2.current">
                             <span>/</span>
-                            <span id="class2TotalDice">1</span>
+                            <input type="number" id="class2TotalDice" value="1" min="0" data-field="hitDice.class2.total">
                         </div>
                     </div>
                     <button class="use-dice-btn" data-action="use-hit-dice" data-class="class2">Use Hit Die</button>
