@@ -703,7 +703,11 @@ const CROSS_CLASS_FEATURES = {
     "elementalist-sage": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
     "elementalist-magician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
     "conjuror-elementalist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "elementalist-esper": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "elementalist-esper": {
+        "name": "Will O'wisp",
+        "level3": "Psychic Wisps: When you start your turn while Intangible, you can create one Elemental Wisp as long as you are below your maximum number of wisps. Additionally, you can choose Psychic as the element of your Wisps, instead of Fire, Ice, or Lightning. Psychic Wisps deal 1d10 damage instead of 1d12 when expended, but deal an additional 1d10 damage to Otherworldly, Unholy, and Spirit creatures.",
+        "level8": "TBD"
+    },
 
     // Priest combinations (5 remaining)
     "occultist-priest": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
