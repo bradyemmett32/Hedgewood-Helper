@@ -661,7 +661,11 @@ const CROSS_CLASS_FEATURES = {
     "hunter-minstrel": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
     "elementalist-hunter": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
     "hunter-priest": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "hunter-occultist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "hunter-occultist": {
+        "name": "Deadeye",
+        "level3": "Grim Concentration: When you use your Harrying Mark feature, you can spend 1 MP to mark the same creature with Grim Concentration. While a creature is marked with Grim Concentration, your Harrying Mark deals Shadow damage instead of its normal damage type, and any Curse you place on the creature lasts until the Grim Concentration ends instead of its normal duration. While you have a creature marked with Grim Concentration, you cannot place Curses or Harrying Mark on any other creature. Grim Concentration ends only if you or the creature are reduced to 0 HP, or if you end it before then as an Action.",
+        "level8": "TBD"
+    },
     "hunter-sage": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
     "hunter-magician": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
     "conjuror-hunter": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
