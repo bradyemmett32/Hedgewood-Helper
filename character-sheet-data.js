@@ -739,9 +739,21 @@ const CROSS_CLASS_FEATURES = {
     "esper-occultist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
 
     // Sage combinations (3 remaining)
-    "magician-sage": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "conjuror-sage": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "esper-sage": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "magician-sage": {
+        "name": "Mystick",
+        "level3": "Mystick Defense: You have a combined number of uses of both your Scapegoat and Nature's Protection features equal to your Intellect modifier plus your Willpower modifier. You regain all uses of this feature when you finish a Full Rest, and one use of this feature when you finish a Partial Rest. You activate either or both features as a Reaction when a creature damages you with an Attack, expending one use for each feature you activate.",
+        "level8": "TBD"
+    },
+    "conjuror-sage": {
+        "name": "Shaman",
+        "level3": "Shamanic Shell: As an Action, you can conjure a magick shield made of nature materials, which you or another creature is wearing when you create it. Choose one of the options below: Small Shell: +1 AC, Counts as a free hand for Light Melee weapons or Two Handed Melee weapons. 1d4 Strike. Hard Shell: +2 AC, Advantage on Shove and Trip Attacks using the shield, 1d6 Strike. Greatshell: +3 AC, -1 Speed, use Action to take Full Cover from non-Melee Attacks. 1d8 Strike. If you are holding the shell, you gain an additional use of your Nature's Protection feature. If another creature is holding your shell, they gain the benefits of your current Natural Attunement. The shell lasts until you finish a Partial Rest, until it is dropped by the creature holding it, or until you dismiss the shield as a Minor Action. Like a normal shield, a creature holding the shell can let it take an Attack for them, provided the Attack was not a Critical Hit. Doing so destroys the shell early, regardless of its AC bonus.",
+        "level8": "TBD"
+    },
+    "esper-sage": {
+        "name": "Watcher",
+        "level3": "Watcher's Wrath: When you use your Nature's Protection feature, you can treat the Attacking creature's Intellect Defense as a secondary target, dealing 1d10 Psychic damage to the creature if you hit it with the Spellcraft Attack. Additionally, whenever you use Nature's protection, you can use your Fade feature as well, becoming Intangible until the start of your next turn. While Intangible, creatures within 3 Squares (15 feet) of you are Deafened and Slowed, as howling winds assail them.",
+        "level8": "TBD"
+    },
 
     // Magician combinations (2 remaining)
     "conjuror-magician": {
