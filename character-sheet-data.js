@@ -694,7 +694,11 @@ const CROSS_CLASS_FEATURES = {
     "minstrel-occultist": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
     "minstrel-sage": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
     "magician-minstrel": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
-    "conjuror-minstrel": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
+    "conjuror-minstrel": {
+        "name": "Wordsmith",
+        "level3": "When you use your Adaptable Tools, Conjured Weapon, or Magick Armor feature, you can enchant the item you create with one of your Fortunes. If you do, this takes up your active use of Fortune while the item exists, or one use of your Fortune/Misfortune uses once you have your Dueling Fates feature. An enchanted item grants the following effects: A creature using the enchanted Adaptable Tool adds your Fortune die to each Skill check they make using the item. A creature using the enchanted Conjured Weapon adds your Fortune die to each Attack they make using the weapon. A creature wearing your enchanted Magick Armor can use a Reaction to roll the Fortune die and reduce the damage they take from an Attack by the number rolled.",
+        "level8": "TBD"
+    },
     "esper-minstrel": { "name": "TBD", "level3": "TBD", "level8": "TBD" },
 
     // Elementalist combinations (6 remaining)
