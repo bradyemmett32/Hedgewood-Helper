@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'">
+    <title>Hedgewood Helper - Character Sheet</title>
+    <link rel="stylesheet" href="character-sheet.css">
+</head>
+<body>
+    <div class="container">
+        <h1>⚔️ Hedgewood Character Sheet ⚔️</h1>
+        <nav class="main-nav">
+            <a href="index.html" class="nav-link">Spell Creator</a>
+            <a href="foraging.html" class="nav-link">Foraging Guide</a>
+            <a href="character-sheet.html" class="nav-link active">Character Sheet</a>
+        </nav>
+        <p class="subtitle">Digital character management for the Hedgewood TTRPG</p>
+
+        <!-- Character Management -->
+        <div class="character-management">
+            <div class="character-selector">
+                <label for="characterSlot">Character Slot:</label>
+                <select id="characterSlot" aria-label="Character slot selector">
+                    <option value="1">Character 1</option>
+                    <option value="2">Character 2</option>
+                    <option value="3">Character 3</option>
+                    <option value="4">Character 4</option>
+                    <option value="5">Character 5</option>
+                </select>
+            </div>
+            <div class="character-actions">
+                <button class="btn-new" data-action="new-character">New Character</button>
+                <button class="btn-import" data-action="import-character">Import</button>
+                <button class="btn-export" data-action="export-character">Export</button>
+            </div>
+        </div>
+
+        <!-- Character Identity Section -->
+        <div class="character-section identity-section">
+            <h2>Character Identity</h2>
+            <div class="identity-grid">
+                <div class="form-group">
+                    <label for="characterName">Character Name</label>
+                    <input type="text" id="characterName" placeholder="Enter character name" data-field="characterInfo.characterName">
+                </div>
+                <div class="form-group">
+                    <label for="playerName">Player Name</label>
+                    <input type="text" id="playerName" placeholder="Enter player name" data-field="characterInfo.playerName">
+                </div>
+                <div class="form-group">
+                    <label for="multiClassName">Multi-class Name</label>
+                    <input type="text" id="multiClassName" placeholder="Auto-generated or custom" data-field="characterInfo.multiClassName">
+                </div>
+                <div class="form-group">
+                    <label for="species">Species</label>
+                    <select id="species" data-field="characterInfo.species">
+                        <option value="">Select Species</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="trade">Trade</label>
+                    <select id="trade" data-field="characterInfo.trade">
+                        <option value="">Select Trade</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="class1">Class 1</label>
+                    <select id="class1" data-field="characterInfo.class1">
+                        <option value="">Select Class 1</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="class2">Class 2</label>
+                    <select id="class2" data-field="characterInfo.class2">
+                        <option value="">Select Class 2</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="level">Level (1-10)</label>
+                    <input type="number" id="level" min="1" max="10" value="1" data-field="characterInfo.level">
+                </div>
+                <div class="form-group">
+                    <label for="size">Size</label>
+                    <select id="size" data-field="characterInfo.size">
+                        <option value="0">0 (Tiny)</option>
+                        <option value="0.25">¼ (Small)</option>
+                        <option value="0.5">½ (Medium-Small)</option>
+                        <option value="1" selected>1 (Medium)</option>
+                        <option value="2">2 (Large)</option>
+                        <option value="3">3 (Huge)</option>
+                        <option value="4">4 (Gargantuan)</option>
+                    </select>
+                </div>
+                <div class="form-group xp-group">
+                    <label for="currentXP">Experience Points</label>
+                    <div class="xp-display">
+                        <input type="number" id="currentXP" min="0" value="0" data-field="characterInfo.experiencePoints.current">
+                        <span class="xp-separator">/</span>
+                        <span class="xp-next" id="nextLevelXP">1000</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attributes Section -->
+        <div class="character-section attributes-section">
+            <h2>The Big Four (Attributes)</h2>
+            <div class="attributes-grid">
+                <div class="attribute-card">
+                    <h3>Toughness</h3>
+                    <div class="attribute-inputs">
+                        <div class="attr-field">
+                            <label for="toughnessScore">Score</label>
+                            <input type="number" id="toughnessScore" value="10" min="1" max="20" data-field="attributes.toughness.score">
+                        </div>
+                        <div class="attr-field readonly">
+                            <label>Modifier</label>
+                            <div class="attr-value" id="toughnessModifier">+0</div>
+                        </div>
+                        <div class="attr-field">
+                            <label for="toughnessDefense">Defense</label>
+                            <input type="number" id="toughnessDefense" value="10" min="1" data-field="attributes.toughness.defense">
+                        </div>
+                    </div>
+                </div>
+                <div class="attribute-card">
+                    <h3>Reflexes</h3>
+                    <div class="attribute-inputs">
+                        <div class="attr-field">
+                            <label for="reflexesScore">Score</label>
+                            <input type="number" id="reflexesScore" value="10" min="1" max="20" data-field="attributes.reflexes.score">
+                        </div>
+                        <div class="attr-field readonly">
+                            <label>Modifier</label>
+                            <div class="attr-value" id="reflexesModifier">+0</div>
+                        </div>
+                        <div class="attr-field">
+                            <label for="reflexesDefense">Defense</label>
+                            <input type="number" id="reflexesDefense" value="10" min="1" data-field="attributes.reflexes.defense">
+                        </div>
+                    </div>
+                </div>
+                <div class="attribute-card">
+                    <h3>Intellect</h3>
+                    <div class="attribute-inputs">
+                        <div class="attr-field">
+                            <label for="intellectScore">Score</label>
+                            <input type="number" id="intellectScore" value="10" min="1" max="20" data-field="attributes.intellect.score">
+                        </div>
+                        <div class="attr-field readonly">
+                            <label>Modifier</label>
+                            <div class="attr-value" id="intellectModifier">+0</div>
+                        </div>
+                        <div class="attr-field">
+                            <label for="intellectDefense">Defense</label>
+                            <input type="number" id="intellectDefense" value="10" min="1" data-field="attributes.intellect.defense">
+                        </div>
+                    </div>
+                </div>
+                <div class="attribute-card">
+                    <h3>Willpower</h3>
+                    <div class="attribute-inputs">
+                        <div class="attr-field">
+                            <label for="willpowerScore">Score</label>
+                            <input type="number" id="willpowerScore" value="10" min="1" max="20" data-field="attributes.willpower.score">
+                        </div>
+                        <div class="attr-field readonly">
+                            <label>Modifier</label>
+                            <div class="attr-value" id="willpowerModifier">+0</div>
+                        </div>
+                        <div class="attr-field">
+                            <label for="willpowerDefense">Defense</label>
+                            <input type="number" id="willpowerDefense" value="10" min="1" data-field="attributes.willpower.defense">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hit Points Section -->
+        <div class="character-section hp-section">
+            <h2>Hit Points</h2>
+            <div class="hp-container">
+                <div class="hp-tracker">
+                    <div class="hp-field">
+                        <label for="currentHP">Current HP</label>
+                        <div class="hp-control">
+                            <button class="hp-btn" data-action="decrease-hp">−</button>
+                            <input type="number" id="currentHP" value="10" min="0" data-field="hitPoints.current">
+                            <button class="hp-btn" data-action="increase-hp">+</button>
+                        </div>
+                    </div>
+                    <div class="hp-field">
+                        <label for="maxHP">Maximum HP</label>
+                        <input type="number" id="maxHP" value="10" min="1" data-field="hitPoints.maximum">
+                    </div>
+                    <div class="hp-field">
+                        <label for="tempHP">Temporary HP</label>
+                        <input type="number" id="tempHP" value="0" min="0" data-field="hitPoints.temporary">
+                    </div>
+                    <div class="hp-field readonly">
+                        <label>Bloodied Threshold</label>
+                        <div class="threshold-value" id="bloodiedThreshold">5</div>
+                    </div>
+                </div>
+                <div class="hp-bar-container">
+                    <div class="hp-bar">
+                        <div class="hp-fill" id="hpFill"></div>
+                        <div class="bloodied-marker"></div>
+                    </div>
+                    <div class="hp-percentage" id="hpPercentage">100%</div>
+                </div>
+                <div class="bloodied-alert" id="bloodiedAlert">
+                    ⚠️ BLOODIED - Special ability active!
+                </div>
+            </div>
+        </div>
+
+        <!-- Hit Dice Section -->
+        <div class="character-section hit-dice-section">
+            <h2>Hit Dice</h2>
+            <div class="hit-dice-grid">
+                <div class="hit-dice-tracker">
+                    <h3>Class 1 Hit Dice</h3>
+                    <div class="dice-type">
+                        <label for="class1DieType">Die Type</label>
+                        <select id="class1DieType" data-field="hitDice.class1.dieType">
+                            <option value="d6">d6</option>
+                            <option value="d8">d8</option>
+                            <option value="d10">d10</option>
+                            <option value="d12">d12</option>
+                        </select>
+                    </div>
+                    <div class="dice-count">
+                        <label>Available / Total</label>
+                        <div class="dice-display">
+                            <input type="number" id="class1CurrentDice" value="1" min="0" data-field="hitDice.class1.current">
+                            <span>/</span>
+                            <span id="class1TotalDice">1</span>
+                        </div>
+                    </div>
+                    <button class="use-dice-btn" data-action="use-hit-dice" data-class="class1">Use Hit Die</button>
+                </div>
+                <div class="hit-dice-tracker">
+                    <h3>Class 2 Hit Dice</h3>
+                    <div class="dice-type">
+                        <label for="class2DieType">Die Type</label>
+                        <select id="class2DieType" data-field="hitDice.class2.dieType">
+                            <option value="d6">d6</option>
+                            <option value="d8">d8</option>
+                            <option value="d10">d10</option>
+                            <option value="d12">d12</option>
+                        </select>
+                    </div>
+                    <div class="dice-count">
+                        <label>Available / Total</label>
+                        <div class="dice-display">
+                            <input type="number" id="class2CurrentDice" value="1" min="0" data-field="hitDice.class2.current">
+                            <span>/</span>
+                            <span id="class2TotalDice">1</span>
+                        </div>
+                    </div>
+                    <button class="use-dice-btn" data-action="use-hit-dice" data-class="class2">Use Hit Die</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Magick Points Section -->
+        <div class="character-section mp-section" id="mpSection">
+            <h2>Magick Points</h2>
+            <div class="mp-grid">
+                <div class="mp-tracker" id="class1MPTracker">
+                    <h3 id="class1MPTitle">Class 1 MP</h3>
+                    <div class="mp-info">
+                        <div class="mp-stat">
+                            <label>Spellcasting Attribute</label>
+                            <div id="class1SpellcastingAttr">-</div>
+                        </div>
+                        <div class="mp-stat">
+                            <label>Current / Maximum</label>
+                            <div class="mp-control">
+                                <button class="mp-btn" data-action="decrease-mp" data-class="class1">−</button>
+                                <input type="number" id="class1CurrentMP" value="0" min="0" data-field="magickPoints.class1.current">
+                                <span>/</span>
+                                <span id="class1MaxMP">0</span>
+                                <button class="mp-btn" data-action="increase-mp" data-class="class1">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="spell-info">
+                        <div><strong>Magick Types:</strong> <span id="class1MagickTypes">-</span></div>
+                        <div><strong>Damage Die:</strong> <span id="class1DamageDie">-</span></div>
+                        <div><strong>Healing Die:</strong> <span id="class1HealingDie">-</span></div>
+                        <div><strong>Damage Types:</strong> <span id="class1DamageTypes">-</span></div>
+                    </div>
+                </div>
+                <div class="mp-tracker" id="class2MPTracker">
+                    <h3 id="class2MPTitle">Class 2 MP</h3>
+                    <div class="mp-info">
+                        <div class="mp-stat">
+                            <label>Spellcasting Attribute</label>
+                            <div id="class2SpellcastingAttr">-</div>
+                        </div>
+                        <div class="mp-stat">
+                            <label>Current / Maximum</label>
+                            <div class="mp-control">
+                                <button class="mp-btn" data-action="decrease-mp" data-class="class2">−</button>
+                                <input type="number" id="class2CurrentMP" value="0" min="0" data-field="magickPoints.class2.current">
+                                <span>/</span>
+                                <span id="class2MaxMP">0</span>
+                                <button class="mp-btn" data-action="increase-mp" data-class="class2">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="spell-info">
+                        <div><strong>Magick Types:</strong> <span id="class2MagickTypes">-</span></div>
+                        <div><strong>Damage Die:</strong> <span id="class2DamageDie">-</span></div>
+                        <div><strong>Healing Die:</strong> <span id="class2HealingDie">-</span></div>
+                        <div><strong>Damage Types:</strong> <span id="class2DamageTypes">-</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="mp-recovery">
+                <strong>Recovery:</strong> Partial Rest (regain level amount) | Full Rest (regain all)
+            </div>
+        </div>
+
+        <!-- Combat Stats Section -->
+        <div class="character-section combat-section">
+            <h2>Combat Statistics</h2>
+            <div class="combat-grid">
+                <div class="combat-stat">
+                    <label for="armorClass">Armor Class</label>
+                    <input type="number" id="armorClass" value="10" min="0" data-field="combat.armorClass">
+                </div>
+                <div class="combat-stat">
+                    <label for="speed">Speed (Squares)</label>
+                    <input type="number" id="speed" value="6" min="0" data-field="combat.speed">
+                </div>
+            </div>
+            <h3>Combat Skills</h3>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <h4>Melee</h4>
+                    <div class="skill-inputs">
+                        <div class="skill-field">
+                            <label for="meleeRank">Rank</label>
+                            <input type="number" id="meleeRank" value="0" min="0" data-field="combat.combatSkills.melee.rank">
+                        </div>
+                        <div class="skill-field">
+                            <label for="meleeAttr">Primary Attribute</label>
+                            <select id="meleeAttr" data-field="combat.combatSkills.melee.primaryAttribute">
+                                <option value="toughness">Toughness</option>
+                                <option value="reflexes">Reflexes</option>
+                            </select>
+                        </div>
+                        <div class="skill-field readonly">
+                            <label>Bonus</label>
+                            <div class="skill-value" id="meleeBonus">+0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-card">
+                    <h4>Ranged</h4>
+                    <div class="skill-inputs">
+                        <div class="skill-field">
+                            <label for="rangedRank">Rank</label>
+                            <input type="number" id="rangedRank" value="0" min="0" data-field="combat.combatSkills.ranged.rank">
+                        </div>
+                        <div class="skill-field">
+                            <label for="rangedAttr">Primary Attribute</label>
+                            <select id="rangedAttr" data-field="combat.combatSkills.ranged.primaryAttribute">
+                                <option value="toughness">Toughness</option>
+                                <option value="reflexes">Reflexes</option>
+                            </select>
+                        </div>
+                        <div class="skill-field readonly">
+                            <label>Bonus</label>
+                            <div class="skill-value" id="rangedBonus">+0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-card">
+                    <h4>Spellcraft</h4>
+                    <div class="skill-inputs">
+                        <div class="skill-field">
+                            <label for="spellcraftRank">Rank</label>
+                            <input type="number" id="spellcraftRank" value="0" min="0" data-field="combat.combatSkills.spellcraft.rank">
+                        </div>
+                        <div class="skill-field">
+                            <label for="spellcraftAttr">Primary Attribute</label>
+                            <select id="spellcraftAttr" data-field="combat.combatSkills.spellcraft.primaryAttribute">
+                                <option value="intellect">Intellect</option>
+                                <option value="willpower">Willpower</option>
+                            </select>
+                        </div>
+                        <div class="skill-field readonly">
+                            <label>Bonus</label>
+                            <div class="skill-value" id="spellcraftBonus">+0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- General Skills Section -->
+        <div class="character-section skills-section">
+            <h2>General Skills</h2>
+            <div class="general-skills-grid">
+                <div class="skill-card">
+                    <h4>Maneuver</h4>
+                    <div class="skill-inputs">
+                        <div class="skill-field">
+                            <label for="maneuverRank">Rank</label>
+                            <input type="number" id="maneuverRank" value="0" min="0" data-field="generalSkills.maneuver.rank">
+                        </div>
+                        <div class="skill-field">
+                            <label for="maneuverAttr">Primary Attribute</label>
+                            <select id="maneuverAttr" data-field="generalSkills.maneuver.primaryAttribute">
+                                <option value="toughness">Toughness</option>
+                                <option value="reflexes">Reflexes</option>
+                            </select>
+                        </div>
+                        <div class="skill-field readonly">
+                            <label>Bonus</label>
+                            <div class="skill-value" id="maneuverBonus">+0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-card">
+                    <h4>Sneak</h4>
+                    <div class="skill-inputs">
+                        <div class="skill-field">
+                            <label for="sneakRank">Rank</label>
+                            <input type="number" id="sneakRank" value="0" min="0" data-field="generalSkills.sneak.rank">
+                        </div>
+                        <div class="skill-field">
+                            <label for="sneakAttr">Primary Attribute</label>
+                            <select id="sneakAttr" data-field="generalSkills.sneak.primaryAttribute">
+                                <option value="reflexes">Reflexes</option>
+                                <option value="intellect">Intellect</option>
+                            </select>
+                        </div>
+                        <div class="skill-field readonly">
+                            <label>Bonus</label>
+                            <div class="skill-value" id="sneakBonus">+0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-card">
+                    <h4>Study</h4>
+                    <div class="skill-inputs">
+                        <div class="skill-field">
+                            <label for="studyRank">Rank</label>
+                            <input type="number" id="studyRank" value="0" min="0" data-field="generalSkills.study.rank">
+                        </div>
+                        <div class="skill-field">
+                            <label for="studyAttr">Primary Attribute</label>
+                            <select id="studyAttr" data-field="generalSkills.study.primaryAttribute">
+                                <option value="intellect">Intellect</option>
+                                <option value="willpower">Willpower</option>
+                            </select>
+                        </div>
+                        <div class="skill-field readonly">
+                            <label>Bonus</label>
+                            <div class="skill-value" id="studyBonus">+0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-card">
+                    <h4>Craft</h4>
+                    <div class="skill-inputs">
+                        <div class="skill-field">
+                            <label for="craftRank">Rank</label>
+                            <input type="number" id="craftRank" value="0" min="0" data-field="generalSkills.craft.rank">
+                        </div>
+                        <div class="skill-field">
+                            <label for="craftAttr">Primary Attribute</label>
+                            <select id="craftAttr" data-field="generalSkills.craft.primaryAttribute">
+                                <option value="toughness">Toughness</option>
+                                <option value="intellect">Intellect</option>
+                            </select>
+                        </div>
+                        <div class="skill-field readonly">
+                            <label>Bonus</label>
+                            <div class="skill-value" id="craftBonus">+0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-card">
+                    <h4>Barter</h4>
+                    <div class="skill-inputs">
+                        <div class="skill-field">
+                            <label for="barterRank">Rank</label>
+                            <input type="number" id="barterRank" value="0" min="0" data-field="generalSkills.barter.rank">
+                        </div>
+                        <div class="skill-field">
+                            <label for="barterAttr">Primary Attribute</label>
+                            <select id="barterAttr" data-field="generalSkills.barter.primaryAttribute">
+                                <option value="intellect">Intellect</option>
+                                <option value="willpower">Willpower</option>
+                            </select>
+                        </div>
+                        <div class="skill-field readonly">
+                            <label>Bonus</label>
+                            <div class="skill-value" id="barterBonus">+0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-card">
+                    <h4>Endure</h4>
+                    <div class="skill-inputs">
+                        <div class="skill-field">
+                            <label for="endureRank">Rank</label>
+                            <input type="number" id="endureRank" value="0" min="0" data-field="generalSkills.endure.rank">
+                        </div>
+                        <div class="skill-field">
+                            <label for="endureAttr">Primary Attribute</label>
+                            <select id="endureAttr" data-field="generalSkills.endure.primaryAttribute">
+                                <option value="toughness">Toughness</option>
+                                <option value="willpower">Willpower</option>
+                            </select>
+                        </div>
+                        <div class="skill-field readonly">
+                            <label>Bonus</label>
+                            <div class="skill-value" id="endureBonus">+0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-card">
+                    <h4>Deceive</h4>
+                    <div class="skill-inputs">
+                        <div class="skill-field">
+                            <label for="deceiveRank">Rank</label>
+                            <input type="number" id="deceiveRank" value="0" min="0" data-field="generalSkills.deceive.rank">
+                        </div>
+                        <div class="skill-field">
+                            <label for="deceiveAttr">Primary Attribute</label>
+                            <select id="deceiveAttr" data-field="generalSkills.deceive.primaryAttribute">
+                                <option value="reflexes">Reflexes</option>
+                                <option value="willpower">Willpower</option>
+                            </select>
+                        </div>
+                        <div class="skill-field readonly">
+                            <label>Bonus</label>
+                            <div class="skill-value" id="deceiveBonus">+0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Equipment Section -->
+        <div class="character-section equipment-section">
+            <h2>Equipment</h2>
+
+            <div class="equipment-subsection">
+                <h3>Weapons</h3>
+                <button class="add-item-btn" data-action="add-weapon">+ Add Weapon</button>
+                <div class="weapons-list" id="weaponsList"></div>
+            </div>
+
+            <div class="equipment-subsection">
+                <h3>Armor</h3>
+                <button class="add-item-btn" data-action="add-armor">+ Add Armor</button>
+                <div class="armor-list" id="armorList"></div>
+            </div>
+
+            <div class="equipment-subsection">
+                <h3>Other Effects</h3>
+                <button class="add-item-btn" data-action="add-effect">+ Add Effect</button>
+                <div class="effects-list" id="effectsList"></div>
+            </div>
+
+            <div class="equipment-subsection">
+                <h3>Inventory</h3>
+                <div class="carry-capacity">
+                    <span>Carry Capacity:</span>
+                    <span id="currentWeight">0</span> / <span id="maxCapacity">10</span> objects
+                </div>
+                <button class="add-item-btn" data-action="add-inventory">+ Add Item</button>
+                <div class="inventory-list" id="inventoryList"></div>
+            </div>
+
+            <div class="equipment-subsection">
+                <h3>Currency</h3>
+                <div class="currency-control">
+                    <label for="shells">Shells:</label>
+                    <input type="number" id="shells" value="0" min="0" data-field="equipment.currency.shells">
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="character-section features-section">
+            <h2>Features & Abilities</h2>
+
+            <div class="feature-subsection bloodied-feature" id="bloodiedFeature">
+                <h3>⚔️ Bloodied Condition Effects</h3>
+                <div class="bloodied-effects" id="bloodiedEffects"></div>
+                <div class="bloodied-choice" id="bloodiedChoice">
+                    <label>Active Bloodied Effect:</label>
+                    <select id="activeBloodiedEffect" data-field="bloodiedStatus.activeBloodiedEffect">
+                        <option value="class1">Class 1</option>
+                        <option value="class2">Class 2</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="feature-subsection">
+                <h3>Class 1 Features</h3>
+                <div class="feature-content">
+                    <textarea id="class1Features" rows="6" placeholder="Class 1 features will appear here..." data-field="features.classFeatures.class1Features.generalFeatures"></textarea>
+                </div>
+            </div>
+
+            <div class="feature-subsection">
+                <h3>Class 2 Features</h3>
+                <div class="feature-content">
+                    <textarea id="class2Features" rows="6" placeholder="Class 2 features will appear here..." data-field="features.classFeatures.class2Features.generalFeatures"></textarea>
+                </div>
+            </div>
+
+            <div class="feature-subsection">
+                <h3>Species Features</h3>
+                <div class="feature-content">
+                    <textarea id="speciesFeatures" rows="4" placeholder="Species features will appear here..." data-field="features.speciesFeatures"></textarea>
+                </div>
+            </div>
+
+            <div class="feature-subsection">
+                <h3>Trade Features</h3>
+                <div class="feature-content">
+                    <textarea id="tradeFeatures" rows="4" placeholder="Trade features will appear here..." data-field="features.tradeFeatures"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Import/Export Modal -->
+        <div id="importExportModal" class="modal-overlay">
+            <div class="modal-content">
+                <h3 id="modalTitle">Import/Export Character</h3>
+                <div id="modalBody"></div>
+                <div class="modal-actions">
+                    <button class="btn-primary" id="modalConfirm">Confirm</button>
+                    <button class="btn-secondary" data-action="close-modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div class="notification-container" id="notificationContainer"></div>
+
+    <script src="character-sheet-data.js"></script>
+    <script src="character-sheet.js"></script>
+
+    <footer class="version-footer">
+        <p>Version 1.0.0 - Last Updated: 2025-11-08</p>
+    </footer>
+</body>
+</html>
