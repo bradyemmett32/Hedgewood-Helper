@@ -348,16 +348,13 @@
                             <label for="meleeRank">Rank</label>
                             <input type="number" id="meleeRank" value="0" min="0" data-field="combat.combatSkills.melee.rank">
                         </div>
-                        <div class="skill-field">
-                            <label for="meleeAttr">Primary Attribute</label>
-                            <select id="meleeAttr" data-field="combat.combatSkills.melee.primaryAttribute">
-                                <option value="toughness">Toughness</option>
-                                <option value="reflexes">Reflexes</option>
-                            </select>
+                        <div class="skill-field readonly">
+                            <label>Toughness</label>
+                            <div class="skill-value" id="meleeToughness">+0</div>
                         </div>
                         <div class="skill-field readonly">
-                            <label>Bonus</label>
-                            <div class="skill-value" id="meleeBonus">+0</div>
+                            <label>Reflexes</label>
+                            <div class="skill-value" id="meleeReflexes">+0</div>
                         </div>
                     </div>
                 </div>
@@ -368,16 +365,13 @@
                             <label for="rangedRank">Rank</label>
                             <input type="number" id="rangedRank" value="0" min="0" data-field="combat.combatSkills.ranged.rank">
                         </div>
-                        <div class="skill-field">
-                            <label for="rangedAttr">Primary Attribute</label>
-                            <select id="rangedAttr" data-field="combat.combatSkills.ranged.primaryAttribute">
-                                <option value="toughness">Toughness</option>
-                                <option value="reflexes">Reflexes</option>
-                            </select>
+                        <div class="skill-field readonly">
+                            <label>Toughness</label>
+                            <div class="skill-value" id="rangedToughness">+0</div>
                         </div>
                         <div class="skill-field readonly">
-                            <label>Bonus</label>
-                            <div class="skill-value" id="rangedBonus">+0</div>
+                            <label>Reflexes</label>
+                            <div class="skill-value" id="rangedReflexes">+0</div>
                         </div>
                     </div>
                 </div>
@@ -388,16 +382,13 @@
                             <label for="spellcraftRank">Rank</label>
                             <input type="number" id="spellcraftRank" value="0" min="0" data-field="combat.combatSkills.spellcraft.rank">
                         </div>
-                        <div class="skill-field">
-                            <label for="spellcraftAttr">Primary Attribute</label>
-                            <select id="spellcraftAttr" data-field="combat.combatSkills.spellcraft.primaryAttribute">
-                                <option value="intellect">Intellect</option>
-                                <option value="willpower">Willpower</option>
-                            </select>
+                        <div class="skill-field readonly">
+                            <label>Intellect</label>
+                            <div class="skill-value" id="spellcraftIntellect">+0</div>
                         </div>
                         <div class="skill-field readonly">
-                            <label>Bonus</label>
-                            <div class="skill-value" id="spellcraftBonus">+0</div>
+                            <label>Willpower</label>
+                            <div class="skill-value" id="spellcraftWillpower">+0</div>
                         </div>
                     </div>
                 </div>
@@ -416,15 +407,16 @@
                             <input type="number" id="maneuverRank" value="0" min="0" data-field="generalSkills.maneuver.rank">
                         </div>
                         <div class="skill-field">
-                            <label for="maneuverAttr">Primary Attribute</label>
-                            <select id="maneuverAttr" data-field="generalSkills.maneuver.primaryAttribute">
-                                <option value="toughness">Toughness</option>
-                                <option value="reflexes">Reflexes</option>
-                            </select>
+                            <label for="maneuverBonus">Bonus</label>
+                            <input type="number" id="maneuverBonus" value="0" data-field="generalSkills.maneuver.bonus">
                         </div>
                         <div class="skill-field readonly">
-                            <label>Bonus</label>
-                            <div class="skill-value" id="maneuverBonus">+0</div>
+                            <label>Toughness</label>
+                            <div class="skill-value" id="maneuverToughness">+0</div>
+                        </div>
+                        <div class="skill-field readonly">
+                            <label>Reflexes</label>
+                            <div class="skill-value" id="maneuverReflexes">+0</div>
                         </div>
                     </div>
                 </div>
@@ -436,15 +428,16 @@
                             <input type="number" id="sneakRank" value="0" min="0" data-field="generalSkills.sneak.rank">
                         </div>
                         <div class="skill-field">
-                            <label for="sneakAttr">Primary Attribute</label>
-                            <select id="sneakAttr" data-field="generalSkills.sneak.primaryAttribute">
-                                <option value="reflexes">Reflexes</option>
-                                <option value="intellect">Intellect</option>
-                            </select>
+                            <label for="sneakBonus">Bonus</label>
+                            <input type="number" id="sneakBonus" value="0" data-field="generalSkills.sneak.bonus">
                         </div>
                         <div class="skill-field readonly">
-                            <label>Bonus</label>
-                            <div class="skill-value" id="sneakBonus">+0</div>
+                            <label>Reflexes</label>
+                            <div class="skill-value" id="sneakReflexes">+0</div>
+                        </div>
+                        <div class="skill-field readonly">
+                            <label>Intellect</label>
+                            <div class="skill-value" id="sneakIntellect">+0</div>
                         </div>
                     </div>
                 </div>
@@ -456,15 +449,16 @@
                             <input type="number" id="studyRank" value="0" min="0" data-field="generalSkills.study.rank">
                         </div>
                         <div class="skill-field">
-                            <label for="studyAttr">Primary Attribute</label>
-                            <select id="studyAttr" data-field="generalSkills.study.primaryAttribute">
-                                <option value="intellect">Intellect</option>
-                                <option value="willpower">Willpower</option>
-                            </select>
+                            <label for="studyBonus">Bonus</label>
+                            <input type="number" id="studyBonus" value="0" data-field="generalSkills.study.bonus">
                         </div>
                         <div class="skill-field readonly">
-                            <label>Bonus</label>
-                            <div class="skill-value" id="studyBonus">+0</div>
+                            <label>Intellect</label>
+                            <div class="skill-value" id="studyIntellect">+0</div>
+                        </div>
+                        <div class="skill-field readonly">
+                            <label>Willpower</label>
+                            <div class="skill-value" id="studyWillpower">+0</div>
                         </div>
                     </div>
                 </div>
@@ -476,15 +470,16 @@
                             <input type="number" id="craftRank" value="0" min="0" data-field="generalSkills.craft.rank">
                         </div>
                         <div class="skill-field">
-                            <label for="craftAttr">Primary Attribute</label>
-                            <select id="craftAttr" data-field="generalSkills.craft.primaryAttribute">
-                                <option value="toughness">Toughness</option>
-                                <option value="intellect">Intellect</option>
-                            </select>
+                            <label for="craftBonus">Bonus</label>
+                            <input type="number" id="craftBonus" value="0" data-field="generalSkills.craft.bonus">
                         </div>
                         <div class="skill-field readonly">
-                            <label>Bonus</label>
-                            <div class="skill-value" id="craftBonus">+0</div>
+                            <label>Toughness</label>
+                            <div class="skill-value" id="craftToughness">+0</div>
+                        </div>
+                        <div class="skill-field readonly">
+                            <label>Intellect</label>
+                            <div class="skill-value" id="craftIntellect">+0</div>
                         </div>
                     </div>
                 </div>
@@ -496,15 +491,16 @@
                             <input type="number" id="barterRank" value="0" min="0" data-field="generalSkills.barter.rank">
                         </div>
                         <div class="skill-field">
-                            <label for="barterAttr">Primary Attribute</label>
-                            <select id="barterAttr" data-field="generalSkills.barter.primaryAttribute">
-                                <option value="intellect">Intellect</option>
-                                <option value="willpower">Willpower</option>
-                            </select>
+                            <label for="barterBonus">Bonus</label>
+                            <input type="number" id="barterBonus" value="0" data-field="generalSkills.barter.bonus">
                         </div>
                         <div class="skill-field readonly">
-                            <label>Bonus</label>
-                            <div class="skill-value" id="barterBonus">+0</div>
+                            <label>Intellect</label>
+                            <div class="skill-value" id="barterIntellect">+0</div>
+                        </div>
+                        <div class="skill-field readonly">
+                            <label>Willpower</label>
+                            <div class="skill-value" id="barterWillpower">+0</div>
                         </div>
                     </div>
                 </div>
@@ -516,15 +512,16 @@
                             <input type="number" id="endureRank" value="0" min="0" data-field="generalSkills.endure.rank">
                         </div>
                         <div class="skill-field">
-                            <label for="endureAttr">Primary Attribute</label>
-                            <select id="endureAttr" data-field="generalSkills.endure.primaryAttribute">
-                                <option value="toughness">Toughness</option>
-                                <option value="willpower">Willpower</option>
-                            </select>
+                            <label for="endureBonus">Bonus</label>
+                            <input type="number" id="endureBonus" value="0" data-field="generalSkills.endure.bonus">
                         </div>
                         <div class="skill-field readonly">
-                            <label>Bonus</label>
-                            <div class="skill-value" id="endureBonus">+0</div>
+                            <label>Toughness</label>
+                            <div class="skill-value" id="endureToughness">+0</div>
+                        </div>
+                        <div class="skill-field readonly">
+                            <label>Willpower</label>
+                            <div class="skill-value" id="endureWillpower">+0</div>
                         </div>
                     </div>
                 </div>
@@ -536,15 +533,16 @@
                             <input type="number" id="deceiveRank" value="0" min="0" data-field="generalSkills.deceive.rank">
                         </div>
                         <div class="skill-field">
-                            <label for="deceiveAttr">Primary Attribute</label>
-                            <select id="deceiveAttr" data-field="generalSkills.deceive.primaryAttribute">
-                                <option value="reflexes">Reflexes</option>
-                                <option value="willpower">Willpower</option>
-                            </select>
+                            <label for="deceiveBonus">Bonus</label>
+                            <input type="number" id="deceiveBonus" value="0" data-field="generalSkills.deceive.bonus">
                         </div>
                         <div class="skill-field readonly">
-                            <label>Bonus</label>
-                            <div class="skill-value" id="deceiveBonus">+0</div>
+                            <label>Reflexes</label>
+                            <div class="skill-value" id="deceiveReflexes">+0</div>
+                        </div>
+                        <div class="skill-field readonly">
+                            <label>Willpower</label>
+                            <div class="skill-value" id="deceiveWillpower">+0</div>
                         </div>
                     </div>
                 </div>
