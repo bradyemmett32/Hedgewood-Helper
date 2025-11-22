@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' https://cdnjs.cloudflare.com">
     <title>Hedgewood Helper - Character Sheet</title>
     <link rel="stylesheet" href="character-sheet.css">
 </head>
@@ -633,11 +633,13 @@
     <!-- Notification Container -->
     <div class="notification-container" id="notificationContainer"></div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="character-sheet-data.js"></script>
     <script src="character-sheet.js"></script>
+    <script src="character-sheet-pdf.js"></script>
 
     <footer class="version-footer">
-        <p>Version 1.0.0 - Last Updated: 2025-11-08</p>
+        <p>Version 1.1.0 - Last Updated: 2025-11-22 - PDF Export Feature Added</p>
     </footer>
 </body>
 </html>
