@@ -134,13 +134,13 @@ function generateCharacterSheetPDF() {
         doc.text(attrName.toUpperCase(), xPos + (attrBoxWidth / 2), yPos, { align: 'center' });
 
         const scoreY = yPos + 2;
-        drawBox(xPos, scoreY, attrBoxWidth * 0.3, 6, 'Score', attrData.score.toString(), 9);
-        drawBox(xPos + (attrBoxWidth * 0.35), scoreY, attrBoxWidth * 0.3, 6, 'Mod', formatScore(attrData.modifier), 9);
-        drawBox(xPos + (attrBoxWidth * 0.7), scoreY, attrBoxWidth * 0.28, 6, 'Def', attrData.defense.toString(), 9);
+        drawBox(xPos, scoreY, attrBoxWidth * 0.3, 8, 'Score', attrData.score.toString(), 9);
+        drawBox(xPos + (attrBoxWidth * 0.35), scoreY, attrBoxWidth * 0.3, 8, 'Mod', formatScore(attrData.modifier), 9);
+        drawBox(xPos + (attrBoxWidth * 0.7), scoreY, attrBoxWidth * 0.28, 8, 'Def', attrData.defense.toString(), 9);
 
         xPos += attrBoxWidth + 0.5;
     });
-    yPos += 10;
+    yPos += 12;
 
     // === HP AND RESOURCES ===
     doc.setFontSize(11);
@@ -175,17 +175,17 @@ function generateCharacterSheetPDF() {
     const class1Dice = charData.hitDice.class1;
     const class2Dice = charData.hitDice.class2;
 
-    drawBox(margin, yPos, 85, 7, `${class1Name} (${class1Dice.dieType})`, `${class1Dice.current} / ${class1Dice.total}`, 9);
-    drawBox(margin + 88, yPos, 85, 7, `${class2Name} (${class2Dice.dieType})`, `${class2Dice.current} / ${class2Dice.total}`, 9);
-    yPos += 9;
+    drawBox(margin, yPos, 85, 8, `${class1Name} (${class1Dice.dieType})`, `${class1Dice.current} / ${class1Dice.total}`, 9);
+    drawBox(margin + 88, yPos, 85, 8, `${class2Name} (${class2Dice.dieType})`, `${class2Dice.current} / ${class2Dice.total}`, 9);
+    yPos += 10;
 
     // === COMBAT STATS ===
     const ac = charData.combat.armorClass || 10;
     const speed = charData.combat.speed || 6;
 
-    drawBox(margin, yPos, 35, 7, 'Armor Class', ac.toString(), 10);
-    drawBox(margin + 37, yPos, 35, 7, 'Speed', speed.toString(), 10);
-    yPos += 9;
+    drawBox(margin, yPos, 35, 8, 'Armor Class', ac.toString(), 10);
+    drawBox(margin + 37, yPos, 35, 8, 'Speed', speed.toString(), 10);
+    yPos += 10;
 
     // === COMBAT SKILLS ===
     doc.setFontSize(11);
