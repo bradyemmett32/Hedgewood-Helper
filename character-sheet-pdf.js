@@ -761,8 +761,17 @@ function generateCharacterSheetPDF() {
 
 // Add export button to the UI
 function addPDFExportButton() {
+    // Check if button already exists to prevent duplicates
+    if (document.querySelector('[data-action="export-pdf"]')) {
+        console.log('PDF Export button already exists');
+        return;
+    }
+
     const exportBtn = document.querySelector('[data-action="export-character"]');
-    if (!exportBtn) return;
+    if (!exportBtn) {
+        console.error('Export character button not found - cannot add PDF export button');
+        return;
+    }
 
     const pdfBtn = document.createElement('button');
     pdfBtn.className = 'btn-export';
@@ -771,6 +780,7 @@ function addPDFExportButton() {
     pdfBtn.addEventListener('click', generateCharacterSheetPDF);
 
     exportBtn.parentNode.insertBefore(pdfBtn, exportBtn.nextSibling);
+    console.log('PDF Export button added successfully');
 }
 
 // Initialize when DOM is ready
