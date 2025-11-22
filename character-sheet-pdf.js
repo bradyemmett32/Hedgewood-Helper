@@ -164,9 +164,12 @@ function generateCharacterSheetPDF() {
     yPos += 10;
 
     // === HIT DICE (Separate for each class) ===
-    doc.setFontSize(9);
+    doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
     doc.text('HIT DICE', margin, yPos);
+    yPos += 1;
+    doc.setLineWidth(0.5);
+    doc.line(margin, yPos, margin + contentWidth, yPos);
     yPos += 4;
 
     const class1Name = charData.characterInfo.class1 && CLASSES[charData.characterInfo.class1] ? CLASSES[charData.characterInfo.class1].name : 'Class 1';
