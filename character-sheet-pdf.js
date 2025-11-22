@@ -109,7 +109,7 @@ function generateCharacterSheetPDF() {
     drawBox(margin, yPos, 95, 8, 'Class', className, 9);
     drawBox(margin + 97, yPos, 45, 8, 'Species', species, 9);
     drawBox(margin + 144, yPos, 30, 8, 'Trade', trade, 8);
-    yPos += 10;
+    yPos += 15;
 
     // === ATTRIBUTES SECTION ===
     doc.setFontSize(11);
@@ -140,7 +140,7 @@ function generateCharacterSheetPDF() {
 
         xPos += attrBoxWidth + 0.5;
     });
-    yPos += 12;
+    yPos += 15;
 
     // === HP AND RESOURCES ===
     doc.setFontSize(11);
@@ -161,7 +161,7 @@ function generateCharacterSheetPDF() {
     drawBox(margin + 37, yPos, 35, 8, 'Max HP', hpMax.toString(), 10);
     drawBox(margin + 74, yPos, 35, 8, 'Temp HP', hpTemp.toString(), 10);
     drawBox(margin + 111, yPos, 35, 8, 'Bloodied', bloodiedThreshold.toString(), 10);
-    yPos += 10;
+    yPos += 15;
 
     // === HIT DICE (Separate for each class) ===
     doc.setFontSize(11);
@@ -180,7 +180,7 @@ function generateCharacterSheetPDF() {
 
     drawBox(margin, yPos, 85, 8, `${class1Name} (${class1Dice.dieType})`, `${class1Dice.current} / ${class1Dice.total}`, 9);
     drawBox(margin + 88, yPos, 85, 8, `${class2Name} (${class2Dice.dieType})`, `${class2Dice.current} / ${class2Dice.total}`, 9);
-    yPos += 10;
+    yPos += 15;
 
     // === COMBAT STATS ===
     const ac = charData.combat.armorClass || 10;
@@ -188,7 +188,7 @@ function generateCharacterSheetPDF() {
 
     drawBox(margin, yPos, 35, 8, 'Armor Class', ac.toString(), 10);
     drawBox(margin + 37, yPos, 35, 8, 'Speed', speed.toString(), 10);
-    yPos += 10;
+    yPos += 15;
 
     // === COMBAT SKILLS ===
     doc.setFontSize(11);
@@ -222,7 +222,7 @@ function generateCharacterSheetPDF() {
 
         yPos += 5;
     });
-    yPos += 2;
+    yPos += 7;
 
     // === GENERAL SKILLS ===
     doc.setFontSize(11);
@@ -256,7 +256,7 @@ function generateCharacterSheetPDF() {
 
         yPos += 5;
     });
-    yPos += 2;
+    yPos += 7;
 
     // === MAGICK POINTS (as checkboxes) ===
     if (charData.magickPoints.class1.hasSpellcasting || charData.magickPoints.class2.hasSpellcasting) {
@@ -298,7 +298,7 @@ function generateCharacterSheetPDF() {
 
             yPos += 5;
         });
-        yPos += 2;
+        yPos += 7;
     }
 
     // === WEAPONS & ARMOR ===
@@ -328,7 +328,7 @@ function generateCharacterSheetPDF() {
         doc.setTextColor(0);
         yPos += 4;
     }
-    yPos += 2;
+    yPos += 7;
 
     doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
@@ -353,7 +353,7 @@ function generateCharacterSheetPDF() {
         doc.setTextColor(0);
         yPos += 4;
     }
-    yPos += 2;
+    yPos += 7;
 
     // === KEY FEATURES (Page 1) ===
     doc.setFontSize(11);
@@ -389,7 +389,7 @@ function generateCharacterSheetPDF() {
             yPos += 3;
         }
     });
-    yPos += 2;
+    yPos += 7;
 
     // === NOTES SECTION (Page 1) ===
     if (yPos < maxYPage1 - 15) {
