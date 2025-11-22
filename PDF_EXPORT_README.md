@@ -11,51 +11,43 @@ The Hedgewood Helper now includes a comprehensive PDF export feature that genera
 
 ## PDF Layout
 
-### Page 1: Quick Reference Stats & Equipment
+### Page 1: Quick Reference Stats & Equipment (3-Column Layout)
 
-**Character Identity**
-- Character Name, Player Name, Level
-- Class (with multi-class name), Species, Trade
+The new layout uses a D&D-style 3-column design for better organization and visual appeal:
 
-**Attributes**
-- All four attributes (Toughness, Reflexes, Intellect, Willpower)
-- Score, Modifier, and Defense values clearly displayed
+**LEFT COLUMN** (Narrow - Core Combat Stats)
+- **Armor Class**: Large, prominent AC box at top
+- **Attributes** (Stacked Vertically):
+  - Toughness (Score, Mod, Def)
+  - Reflexes (Score, Mod, Def)
+  - Intellect (Score, Mod, Def)
+  - Willpower (Score, Mod, Def)
+- **Shells**: Empty box for tracking
 
-**Hit Points & Resources**
-- Current HP, Max HP, Temporary HP, Bloodied threshold
-- Hit Dice for both classes shown separately with die type
-- Armor Class and Speed
+**MIDDLE COLUMN** (Skills & Equipment)
+- **Hit Points**: Current HP, Max HP, Temp HP, Bloodied threshold
+- **Hit Dice**: Separate trackers for Class 1 and Class 2 with die types
+- **Combat Skills**: Melee, Ranged, and Spellcraft
+  - Format: `Skill Name | Rnk: +X | Attr1: +Y | Attr2: +Z`
+- **General Skills**: All 7 skills (Maneuver, Sneak, Study, Craft, Barter, Endure, Deceive)
+  - Compact format showing ranks and both attribute scores
+- **Weapons**: Name, Range, Damage in compact format
+- **Armor**: Name, AC bonus, Speed reduction
 
-**Combat Skills**
-- Melee, Ranged, and Spellcraft
-- Format: `Skill Name +Ranks | +Score1 | +Score2`
-- Example: `Melee +3 | +5 | +4` for a character with 3 ranks in Melee, Toughness modifier +2, and Reflexes modifier +1
-- Shows which attributes apply to each skill
+**RIGHT COLUMN** (Character Info & Features)
+- **Character Identity**:
+  - Character Name
+  - Player Name
+  - Level & Speed
+- **Species & Trade**: Species and Trade info
+- **Classes**: Class 1, Class 2, Multi-class name
+- **Magick Points**: Checkbox trackers for each spellcasting class
+- **Class Features**: First 3 levels of features for quick reference
+- **Cross-Class Features**: Special abilities from class combinations
+- **Bloodied Features**: Compact listing of bloodied effects
 
-**General Skills**
-- All 7 general skills (Maneuver, Sneak, Study, Craft, Barter, Endure, Deceive)
-- Same format as combat skills: `+Ranks | +Score1 | +Score2`
-- Calculation: Ranks + Attribute Modifier + Bonus
-
-**Magick Points**
-- Displayed as checkable boxes/circles
-- Separate tracker for each spellcasting class
-- Number of boxes equals maximum Magick Points at current level
-
-**Weapons**
-- All weapons from inventory
-- Format: `Weapon Name | Range | Damage: [dice] (size) | properties`
-- Shows damage dice and other weapon details
-
-**Armor**
-- All armor from inventory
-- Shows AC bonus, speed reduction, and damage reduction
-
-**Key Features**
-- First 3 levels of features for quick reference during play
-
-**Notes Section**
-- Blank lined area for player notes
+**FULL WIDTH** (Bottom of Page)
+- **Notes Section**: Blank lined area for player notes
 
 ### Page 2: Detailed Features & Abilities
 
@@ -122,4 +114,4 @@ Potential improvements for future versions:
 For issues or feature requests, please check the character sheet web interface or consult the game master.
 
 ---
-*Version 1.1.0 - Added 2025-11-22*
+*Version 2.0.0 - Redesigned with 3-column layout - 2025-11-22*
