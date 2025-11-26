@@ -1034,15 +1034,15 @@ function renderWeapons() {
             <button class="remove-item-btn" onclick="removeWeapon(${index})">×</button>
             <div class="equipment-item-grid">
                 <input type="text" placeholder="Weapon Name" value="${weapon.name}"
-                       onchange="updateWeapon(${index}, 'name', this.value)">
+                       oninput="updateWeapon(${index}, 'name', this.value)">
                 <input type="text" placeholder="Range" value="${weapon.range}"
-                       onchange="updateWeapon(${index}, 'range', this.value)">
+                       oninput="updateWeapon(${index}, 'range', this.value)">
                 <input type="text" placeholder="Damage" value="${weapon.damage}"
-                       onchange="updateWeapon(${index}, 'damage', this.value)">
+                       oninput="updateWeapon(${index}, 'damage', this.value)">
                 <input type="text" placeholder="Size" value="${weapon.size}"
-                       onchange="updateWeapon(${index}, 'size', this.value)">
+                       oninput="updateWeapon(${index}, 'size', this.value)">
                 <input type="text" placeholder="Properties" value="${weapon.properties}"
-                       onchange="updateWeapon(${index}, 'properties', this.value)">
+                       oninput="updateWeapon(${index}, 'properties', this.value)">
             </div>
         `;
         container.appendChild(div);
@@ -1062,13 +1062,13 @@ function renderArmor() {
             <button class="remove-item-btn" onclick="removeArmor(${index})">×</button>
             <div class="equipment-item-grid">
                 <input type="text" placeholder="Armor Name" value="${armor.name}"
-                       onchange="updateArmor(${index}, 'name', this.value)">
+                       oninput="updateArmor(${index}, 'name', this.value)">
                 <input type="number" placeholder="AC Bonus" value="${armor.acBonus}"
-                       onchange="updateArmor(${index}, 'acBonus', this.value)">
+                       oninput="updateArmor(${index}, 'acBonus', this.value)">
                 <input type="number" placeholder="Speed Reduction" value="${armor.speedReduction}"
-                       onchange="updateArmor(${index}, 'speedReduction', this.value)">
+                       oninput="updateArmor(${index}, 'speedReduction', this.value)">
                 <input type="text" placeholder="Damage Reduction" value="${armor.damageReduction}"
-                       onchange="updateArmor(${index}, 'damageReduction', this.value)">
+                       oninput="updateArmor(${index}, 'damageReduction', this.value)">
             </div>
         `;
         container.appendChild(div);
@@ -1088,9 +1088,9 @@ function renderEffects() {
             <button class="remove-item-btn" onclick="removeEffect(${index})">×</button>
             <div class="equipment-item-grid">
                 <input type="text" placeholder="Effect Name" value="${effect.name}"
-                       onchange="updateEffect(${index}, 'name', this.value)">
+                       oninput="updateEffect(${index}, 'name', this.value)">
                 <input type="text" placeholder="Description" value="${effect.description}"
-                       onchange="updateEffect(${index}, 'description', this.value)">
+                       oninput="updateEffect(${index}, 'description', this.value)">
             </div>
         `;
         container.appendChild(div);
@@ -1110,11 +1110,11 @@ function renderInventory() {
             <button class="remove-item-btn" onclick="removeInventoryItem(${index})">×</button>
             <div class="equipment-item-grid">
                 <input type="text" placeholder="Item Name" value="${item.name}"
-                       onchange="updateInventoryItem(${index}, 'name', this.value)">
+                       oninput="updateInventoryItem(${index}, 'name', this.value)">
                 <input type="number" placeholder="Quantity" value="${item.quantity}"
-                       onchange="updateInventoryItem(${index}, 'quantity', this.value)">
+                       oninput="updateInventoryItem(${index}, 'quantity', this.value)">
                 <input type="number" placeholder="Weight" value="${item.weight}" step="0.1"
-                       onchange="updateInventoryItem(${index}, 'weight', this.value)">
+                       oninput="updateInventoryItem(${index}, 'weight', this.value)">
             </div>
         `;
         container.appendChild(div);
