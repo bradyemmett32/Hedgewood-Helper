@@ -1031,21 +1031,27 @@ function renderWeapons() {
         const div = document.createElement('div');
         div.className = 'equipment-item';
         div.innerHTML = `
-            <button class="remove-item-btn" onclick="removeWeapon(${index})">×</button>
+            <button class="remove-item-btn" data-index="${index}">×</button>
             <div class="equipment-item-grid">
-                <input type="text" placeholder="Weapon Name" value="${weapon.name}"
-                       onchange="updateWeapon(${index}, 'name', this.value)">
-                <input type="text" placeholder="Range" value="${weapon.range}"
-                       onchange="updateWeapon(${index}, 'range', this.value)">
-                <input type="text" placeholder="Damage" value="${weapon.damage}"
-                       onchange="updateWeapon(${index}, 'damage', this.value)">
-                <input type="text" placeholder="Size" value="${weapon.size}"
-                       onchange="updateWeapon(${index}, 'size', this.value)">
-                <input type="text" placeholder="Properties" value="${weapon.properties}"
-                       onchange="updateWeapon(${index}, 'properties', this.value)">
+                <input type="text" placeholder="Weapon Name" value="${weapon.name}" data-field="name">
+                <input type="text" placeholder="Range" value="${weapon.range}" data-field="range">
+                <input type="text" placeholder="Damage" value="${weapon.damage}" data-field="damage">
+                <input type="text" placeholder="Size" value="${weapon.size}" data-field="size">
+                <input type="text" placeholder="Properties" value="${weapon.properties}" data-field="properties">
             </div>
         `;
         container.appendChild(div);
+
+        // Attach event listeners
+        const removeBtn = div.querySelector('.remove-item-btn');
+        removeBtn.addEventListener('click', () => removeWeapon(index));
+
+        const inputs = div.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('input', (e) => {
+                updateWeapon(index, e.target.dataset.field, e.target.value);
+            });
+        });
     });
 }
 
@@ -1059,19 +1065,26 @@ function renderArmor() {
         const div = document.createElement('div');
         div.className = 'equipment-item';
         div.innerHTML = `
-            <button class="remove-item-btn" onclick="removeArmor(${index})">×</button>
+            <button class="remove-item-btn" data-index="${index}">×</button>
             <div class="equipment-item-grid">
-                <input type="text" placeholder="Armor Name" value="${armor.name}"
-                       onchange="updateArmor(${index}, 'name', this.value)">
-                <input type="number" placeholder="AC Bonus" value="${armor.acBonus}"
-                       onchange="updateArmor(${index}, 'acBonus', this.value)">
-                <input type="number" placeholder="Speed Reduction" value="${armor.speedReduction}"
-                       onchange="updateArmor(${index}, 'speedReduction', this.value)">
-                <input type="text" placeholder="Damage Reduction" value="${armor.damageReduction}"
-                       onchange="updateArmor(${index}, 'damageReduction', this.value)">
+                <input type="text" placeholder="Armor Name" value="${armor.name}" data-field="name">
+                <input type="number" placeholder="AC Bonus" value="${armor.acBonus}" data-field="acBonus">
+                <input type="number" placeholder="Speed Reduction" value="${armor.speedReduction}" data-field="speedReduction">
+                <input type="text" placeholder="Damage Reduction" value="${armor.damageReduction}" data-field="damageReduction">
             </div>
         `;
         container.appendChild(div);
+
+        // Attach event listeners
+        const removeBtn = div.querySelector('.remove-item-btn');
+        removeBtn.addEventListener('click', () => removeArmor(index));
+
+        const inputs = div.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('input', (e) => {
+                updateArmor(index, e.target.dataset.field, e.target.value);
+            });
+        });
     });
 }
 
@@ -1085,15 +1098,24 @@ function renderEffects() {
         const div = document.createElement('div');
         div.className = 'equipment-item';
         div.innerHTML = `
-            <button class="remove-item-btn" onclick="removeEffect(${index})">×</button>
+            <button class="remove-item-btn" data-index="${index}">×</button>
             <div class="equipment-item-grid">
-                <input type="text" placeholder="Effect Name" value="${effect.name}"
-                       onchange="updateEffect(${index}, 'name', this.value)">
-                <input type="text" placeholder="Description" value="${effect.description}"
-                       onchange="updateEffect(${index}, 'description', this.value)">
+                <input type="text" placeholder="Effect Name" value="${effect.name}" data-field="name">
+                <input type="text" placeholder="Description" value="${effect.description}" data-field="description">
             </div>
         `;
         container.appendChild(div);
+
+        // Attach event listeners
+        const removeBtn = div.querySelector('.remove-item-btn');
+        removeBtn.addEventListener('click', () => removeEffect(index));
+
+        const inputs = div.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('input', (e) => {
+                updateEffect(index, e.target.dataset.field, e.target.value);
+            });
+        });
     });
 }
 
@@ -1107,17 +1129,25 @@ function renderInventory() {
         const div = document.createElement('div');
         div.className = 'equipment-item';
         div.innerHTML = `
-            <button class="remove-item-btn" onclick="removeInventoryItem(${index})">×</button>
+            <button class="remove-item-btn" data-index="${index}">×</button>
             <div class="equipment-item-grid">
-                <input type="text" placeholder="Item Name" value="${item.name}"
-                       onchange="updateInventoryItem(${index}, 'name', this.value)">
-                <input type="number" placeholder="Quantity" value="${item.quantity}"
-                       onchange="updateInventoryItem(${index}, 'quantity', this.value)">
-                <input type="number" placeholder="Weight" value="${item.weight}" step="0.1"
-                       onchange="updateInventoryItem(${index}, 'weight', this.value)">
+                <input type="text" placeholder="Item Name" value="${item.name}" data-field="name">
+                <input type="number" placeholder="Quantity" value="${item.quantity}" data-field="quantity">
+                <input type="number" placeholder="Weight" value="${item.weight}" step="0.1" data-field="weight">
             </div>
         `;
         container.appendChild(div);
+
+        // Attach event listeners
+        const removeBtn = div.querySelector('.remove-item-btn');
+        removeBtn.addEventListener('click', () => removeInventoryItem(index));
+
+        const inputs = div.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('input', (e) => {
+                updateInventoryItem(index, e.target.dataset.field, e.target.value);
+            });
+        });
     });
 }
 
