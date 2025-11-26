@@ -33,7 +33,8 @@ function generateCharacterSheetPDF() {
         if (value) {
             doc.setFontSize(fontSize);
             doc.setTextColor(0);
-            doc.text(value.toString(), x + 1, y + (label ? 7 : 4));
+            // Center the value text in the box
+            doc.text(value.toString(), x + width / 2, y + (label ? 7 : 4), { align: 'center' });
         }
     }
 
@@ -213,9 +214,10 @@ function generateCharacterSheetPDF() {
     doc.line(midColX, midY, midColX + midColWidth, midY);
     midY += 4;
 
-    drawBox(midColX, midY, midColWidth, 8, `${class1Name} (${class1Dice.dieType})`, `${class1Dice.current} / ${class1Dice.total}`, 9);
-    midY += 9;
-    drawBox(midColX, midY, midColWidth, 8, `${class2Name} (${class2Dice.dieType})`, `${class2Dice.current} / ${class2Dice.total}`, 9);
+    // Draw hit dice boxes side by side
+    const hitDiceBoxW = (midColWidth - 1) / 2;
+    drawBox(midColX, midY, hitDiceBoxW, 8, `${class1Name} (${class1Dice.dieType})`, `${class1Dice.current} / ${class1Dice.total}`, 8);
+    drawBox(midColX + hitDiceBoxW + 1, midY, hitDiceBoxW, 8, `${class2Name} (${class2Dice.dieType})`, `${class2Dice.current} / ${class2Dice.total}`, 8);
     midY += 13;
 
     // === COMBAT SKILLS ===
@@ -380,9 +382,10 @@ function generateCharacterSheetPDF() {
     doc.line(rightColX, rightY, rightColX + rightColWidth, rightY);
     rightY += 4;
 
-    drawBox(rightColX, rightY, rightColWidth, 8, 'Class 1', class1Name, 9);
-    rightY += 9;
-    drawBox(rightColX, rightY, rightColWidth, 8, 'Class 2', class2Name, 9);
+    // Draw Class 1 and Class 2 boxes side by side
+    const classBoxW = (rightColWidth - 1) / 2;
+    drawBox(rightColX, rightY, classBoxW, 8, 'Class 1', class1Name, 8);
+    drawBox(rightColX + classBoxW + 1, rightY, classBoxW, 8, 'Class 2', class2Name, 8);
     rightY += 9;
     drawBox(rightColX, rightY, rightColWidth, 8, 'Multi-Class', className, 8);
     rightY += 13;
