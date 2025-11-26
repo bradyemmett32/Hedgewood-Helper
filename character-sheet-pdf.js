@@ -678,8 +678,7 @@ function generateCharacterSheetPDF() {
     }
 
     // === CROSS-CLASS FEATURES ===
-    const class1Id = charData.characterInfo.class1;
-    const class2Id = charData.characterInfo.class2;
+    // Reuse class1Id and class2Id from line 441-442
     const crossClassKey = getCrossClassKey(class1Id, class2Id);
     const crossClassData = crossClassKey && CROSS_CLASS_FEATURES ? CROSS_CLASS_FEATURES[crossClassKey] : null;
 
