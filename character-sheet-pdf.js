@@ -89,115 +89,131 @@ function generateCharacterSheetPDF() {
     doc.setFontSize(16);
     doc.setFont('helvetica', 'bold');
     doc.text('HEDGEWOOD CHARACTER SHEET', pageWidth / 2, yPos, { align: 'center' });
-    yPos += 8;
+    yPos += 10;
 
-    // Character Info Row 1
+    // Define column widths for 3-column layout
+    const leftColWidth = 50;  // Left column for AC and Attributes
+    const midColWidth = 75;   // Middle column for skills and combat
+    const rightColWidth = 70; // Right column for character info
+    const colGap = 2;         // Gap between columns
+
+    const leftColX = margin;
+    const midColX = leftColX + leftColWidth + colGap;
+    const rightColX = midColX + midColWidth + colGap;
+
+    // Store some common data
     const charName = charData.characterInfo.characterName || '_______________';
     const playerName = charData.characterInfo.playerName || '_______________';
     const level = charData.characterInfo.level || 1;
-
-    drawBox(margin, yPos, 80, 8, 'Character Name', charName, 10);
-    drawBox(margin + 82, yPos, 60, 8, 'Player Name', playerName, 9);
-    drawBox(margin + 144, yPos, 30, 8, 'Level', level.toString(), 10);
-    yPos += 10;
-
-    // Character Info Row 2
     const className = charData.characterInfo.multiClassName || '_______________';
     const species = charData.characterInfo.species ? (SPECIES[charData.characterInfo.species]?.name || charData.characterInfo.species) : '__________';
     const trade = charData.characterInfo.trade ? (TRADES[charData.characterInfo.trade]?.name || charData.characterInfo.trade) : '__________';
-
-    drawBox(margin, yPos, 95, 8, 'Class', className, 9);
-    drawBox(margin + 97, yPos, 45, 8, 'Species', species, 9);
-    drawBox(margin + 144, yPos, 30, 8, 'Trade', trade, 8);
-    yPos += 15;
-
-    // === ATTRIBUTES SECTION ===
-    doc.setFontSize(11);
-    doc.setFont('helvetica', 'bold');
-    doc.text('ATTRIBUTES', margin, yPos);
-    yPos += 1;
-    doc.setLineWidth(0.5);
-    doc.line(margin, yPos, margin + contentWidth, yPos);
-    yPos += 4;
-
-    // Attributes in a row
-    const attrBoxWidth = contentWidth / 4;
-    const attrNames = ['Toughness', 'Reflexes', 'Intellect', 'Willpower'];
-    let xPos = margin;
-
-    attrNames.forEach((attrName, index) => {
-        const attrKey = attrName.toLowerCase();
-        const attrData = charData.attributes[attrKey];
-
-        doc.setFontSize(9);
-        doc.setFont('helvetica', 'bold');
-        doc.text(attrName.toUpperCase(), xPos + (attrBoxWidth / 2), yPos, { align: 'center' });
-
-        const scoreY = yPos + 2;
-        drawBox(xPos, scoreY, attrBoxWidth * 0.3, 8, 'Score', attrData.score.toString(), 9);
-        drawBox(xPos + (attrBoxWidth * 0.35), scoreY, attrBoxWidth * 0.3, 8, 'Mod', formatScore(attrData.modifier), 9);
-        drawBox(xPos + (attrBoxWidth * 0.7), scoreY, attrBoxWidth * 0.28, 8, 'Def', attrData.defense.toString(), 9);
-
-        xPos += attrBoxWidth + 0.5;
-    });
-    yPos += 15;
-
-    // === HP AND RESOURCES ===
-    doc.setFontSize(11);
-    doc.setFont('helvetica', 'bold');
-    doc.text('HIT POINTS & RESOURCES', margin, yPos);
-    yPos += 1;
-    doc.setLineWidth(0.5);
-    doc.line(margin, yPos, margin + contentWidth, yPos);
-    yPos += 4;
-
-    // HP Bar
+    const ac = charData.combat.armorClass || 10;
+    const speed = charData.combat.speed || 6;
+    const class1Name = charData.characterInfo.class1 && CLASSES[charData.characterInfo.class1] ? CLASSES[charData.characterInfo.class1].name : 'Class 1';
+    const class2Name = charData.characterInfo.class2 && CLASSES[charData.characterInfo.class2] ? CLASSES[charData.characterInfo.class2].name : 'Class 2';
+    const class1Dice = charData.hitDice.class1;
+    const class2Dice = charData.hitDice.class2;
     const hpCurrent = charData.hitPoints.current;
     const hpMax = charData.hitPoints.maximum;
     const hpTemp = charData.hitPoints.temporary || 0;
     const bloodiedThreshold = charData.hitPoints.bloodiedThreshold;
+    const class1Bloodied = charData.features.classFeatures.class1Features.bloodiedEffect;
+    const class2Bloodied = charData.features.classFeatures.class2Features.bloodiedEffect;
 
-    drawBox(margin, yPos, 35, 8, 'Current HP', hpCurrent.toString(), 10);
-    drawBox(margin + 37, yPos, 35, 8, 'Max HP', hpMax.toString(), 10);
-    drawBox(margin + 74, yPos, 35, 8, 'Temp HP', hpTemp.toString(), 10);
-    drawBox(margin + 111, yPos, 35, 8, 'Bloodied', bloodiedThreshold.toString(), 10);
-    yPos += 15;
+    // ==================== LEFT COLUMN ====================
+    let leftY = yPos;
 
-    // === HIT DICE (Separate for each class) ===
-    doc.setFontSize(11);
+    // === ARMOR CLASS BOX ===
+    drawBox(leftColX, leftY, leftColWidth, 12, 'ARMOR CLASS (AC)', ac.toString(), 14);
+    leftY += 15;
+
+    // === ATTRIBUTES SECTION (Stacked Vertically) ===
+    doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
-    doc.text('HIT DICE', margin, yPos);
-    yPos += 1;
+    doc.text('ATTRIBUTES', leftColX + leftColWidth / 2, leftY, { align: 'center' });
+    leftY += 1;
     doc.setLineWidth(0.5);
-    doc.line(margin, yPos, margin + contentWidth, yPos);
-    yPos += 4;
+    doc.line(leftColX, leftY, leftColX + leftColWidth, leftY);
+    leftY += 5;
 
-    const class1Name = charData.characterInfo.class1 && CLASSES[charData.characterInfo.class1] ? CLASSES[charData.characterInfo.class1].name : 'Class 1';
-    const class2Name = charData.characterInfo.class2 && CLASSES[charData.characterInfo.class2] ? CLASSES[charData.characterInfo.class2].name : 'Class 2';
+    const attrNames = ['Toughness', 'Reflexes', 'Intellect', 'Willpower'];
+    attrNames.forEach((attrName) => {
+        const attrKey = attrName.toLowerCase();
+        const attrData = charData.attributes[attrKey];
 
-    const class1Dice = charData.hitDice.class1;
-    const class2Dice = charData.hitDice.class2;
+        // Attribute name
+        doc.setFontSize(9);
+        doc.setFont('helvetica', 'bold');
+        doc.text(attrName.toUpperCase(), leftColX + leftColWidth / 2, leftY, { align: 'center' });
+        leftY += 4;
 
-    drawBox(margin, yPos, 85, 8, `${class1Name} (${class1Dice.dieType})`, `${class1Dice.current} / ${class1Dice.total}`, 9);
-    drawBox(margin + 88, yPos, 85, 8, `${class2Name} (${class2Dice.dieType})`, `${class2Dice.current} / ${class2Dice.total}`, 9);
-    yPos += 15;
+        // Score, Mod, Def boxes stacked horizontally
+        const attrBoxW = leftColWidth / 3;
+        drawBox(leftColX, leftY, attrBoxW - 1, 8, 'Score', attrData.score.toString(), 9);
+        drawBox(leftColX + attrBoxW, leftY, attrBoxW - 1, 8, 'Mod', formatScore(attrData.modifier), 9);
+        drawBox(leftColX + attrBoxW * 2, leftY, attrBoxW, 8, 'Def', attrData.defense.toString(), 9);
+        leftY += 11;
+    });
 
-    // === COMBAT STATS ===
-    const ac = charData.combat.armorClass || 10;
-    const speed = charData.combat.speed || 6;
+    // === SHELLS SECTION ===
+    leftY += 5;
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.text('SHELLS', leftColX, leftY);
+    leftY += 1;
+    doc.setLineWidth(0.3);
+    doc.line(leftColX, leftY, leftColX + leftColWidth, leftY);
+    leftY += 4;
 
-    drawBox(margin, yPos, 35, 8, 'Armor Class', ac.toString(), 10);
-    drawBox(margin + 37, yPos, 35, 8, 'Speed', speed.toString(), 10);
-    yPos += 15;
+    // Draw empty shells box for player to fill in
+    doc.setDrawColor(0);
+    doc.setLineWidth(0.3);
+    doc.rect(leftColX, leftY, leftColWidth, 20);
+    leftY += 22;
+
+    // ==================== MIDDLE COLUMN ====================
+    let midY = yPos;
+
+    // === HP AND RESOURCES ===
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text('HIT POINTS', midColX, midY);
+    midY += 1;
+    doc.setLineWidth(0.5);
+    doc.line(midColX, midY, midColX + midColWidth, midY);
+    midY += 4;
+
+    const hpBoxW = midColWidth / 2;
+    drawBox(midColX, midY, hpBoxW - 1, 8, 'Current HP', hpCurrent.toString(), 10);
+    drawBox(midColX + hpBoxW, midY, hpBoxW, 8, 'Max HP', hpMax.toString(), 10);
+    midY += 10;
+    drawBox(midColX, midY, hpBoxW - 1, 8, 'Temp HP', hpTemp.toString(), 10);
+    drawBox(midColX + hpBoxW, midY, hpBoxW, 8, 'Bloodied', bloodiedThreshold.toString(), 10);
+    midY += 13;
+
+    // === HIT DICE ===
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text('HIT DICE', midColX, midY);
+    midY += 1;
+    doc.setLineWidth(0.5);
+    doc.line(midColX, midY, midColX + midColWidth, midY);
+    midY += 4;
+
+    drawBox(midColX, midY, midColWidth, 8, `${class1Name} (${class1Dice.dieType})`, `${class1Dice.current} / ${class1Dice.total}`, 9);
+    midY += 9;
+    drawBox(midColX, midY, midColWidth, 8, `${class2Name} (${class2Dice.dieType})`, `${class2Dice.current} / ${class2Dice.total}`, 9);
+    midY += 13;
 
     // === COMBAT SKILLS ===
-    doc.setFontSize(11);
+    doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
-    doc.text('COMBAT SKILLS', margin, yPos);
-    yPos += 1;
+    doc.text('COMBAT SKILLS', midColX, midY);
+    midY += 1;
     doc.setLineWidth(0.5);
-    doc.line(margin, yPos, margin + contentWidth, yPos);
-    yPos += 4;
+    doc.line(midColX, midY, midColX + midColWidth, midY);
+    midY += 4;
 
     doc.setFontSize(8);
     doc.setFont('helvetica', 'normal');
@@ -208,32 +224,27 @@ function generateCharacterSheetPDF() {
         const skillLabel = skillName.charAt(0).toUpperCase() + skillName.slice(1);
 
         doc.setFont('helvetica', 'bold');
-        doc.text(skillLabel, margin + 2, yPos + 3);
+        doc.text(skillLabel, midColX + 2, midY + 3);
 
         doc.setFont('helvetica', 'normal');
-        const skillText = `${formatScore(scores.rank)} | ${formatScore(scores.score1)} | ${formatScore(scores.score2)}`;
-        doc.text(skillText, margin + 35, yPos + 3);
+        const skillText = `Rnk: ${formatScore(scores.rank)} | ${scores.attr1.substring(0, 3)}: ${formatScore(scores.score1)} | ${scores.attr2.substring(0, 3)}: ${formatScore(scores.score2)}`;
+        doc.text(skillText, midColX + 20, midY + 3);
 
-        doc.setFontSize(7);
-        doc.setTextColor(100);
-        doc.text(`(${scores.attr1.substring(0, 4)}/${scores.attr2.substring(0, 4)})`, margin + 75, yPos + 3);
-        doc.setFontSize(8);
-        doc.setTextColor(0);
-
-        yPos += 5;
+        midY += 5;
     });
-    yPos += 7;
+    doc.setTextColor(0);
+    midY += 5;
 
     // === GENERAL SKILLS ===
-    doc.setFontSize(11);
+    doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
-    doc.text('GENERAL SKILLS', margin, yPos);
-    yPos += 1;
+    doc.text('GENERAL SKILLS', midColX, midY);
+    midY += 1;
     doc.setLineWidth(0.5);
-    doc.line(margin, yPos, margin + contentWidth, yPos);
-    yPos += 4;
+    doc.line(midColX, midY, midColX + midColWidth, midY);
+    midY += 4;
 
-    doc.setFontSize(8);
+    doc.setFontSize(7);
     doc.setFont('helvetica', 'normal');
 
     const generalSkills = ['maneuver', 'sneak', 'study', 'craft', 'barter', 'endure', 'deceive'];
@@ -242,31 +253,121 @@ function generateCharacterSheetPDF() {
         const skillLabel = skillName.charAt(0).toUpperCase() + skillName.slice(1);
 
         doc.setFont('helvetica', 'bold');
-        doc.text(skillLabel, margin + 2, yPos + 3);
+        doc.text(skillLabel, midColX + 2, midY + 3);
 
         doc.setFont('helvetica', 'normal');
         const skillText = `${formatScore(scores.rank)} | ${formatScore(scores.score1)} | ${formatScore(scores.score2)}`;
-        doc.text(skillText, margin + 35, yPos + 3);
+        doc.text(skillText, midColX + 20, midY + 3);
 
-        doc.setFontSize(7);
-        doc.setTextColor(100);
-        doc.text(`(${scores.attr1.substring(0, 4)}/${scores.attr2.substring(0, 4)})`, margin + 75, yPos + 3);
-        doc.setFontSize(8);
-        doc.setTextColor(0);
-
-        yPos += 5;
+        midY += 4;
     });
-    yPos += 7;
+    doc.setTextColor(0);
+    midY += 5;
 
-    // === MAGICK POINTS (as checkboxes) ===
+    // === WEAPONS ===
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text('WEAPONS', midColX, midY);
+    midY += 1;
+    doc.setLineWidth(0.5);
+    doc.line(midColX, midY, midColX + midColWidth, midY);
+    midY += 4;
+
+    doc.setFontSize(7);
+    doc.setFont('helvetica', 'normal');
+
+    if (charData.equipment.weapons.length > 0) {
+        charData.equipment.weapons.forEach(weapon => {
+            const weaponText = `${weapon.name} | ${weapon.range} | Dmg: ${weapon.damage}`;
+            doc.text(weaponText, midColX + 2, midY + 2);
+            midY += 4;
+        });
+    } else {
+        doc.setTextColor(150);
+        doc.text('No weapons equipped', midColX + 2, midY + 2);
+        doc.setTextColor(0);
+        midY += 4;
+    }
+    midY += 3;
+
+    // === ARMOR ===
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text('ARMOR', midColX, midY);
+    midY += 1;
+    doc.setLineWidth(0.5);
+    doc.line(midColX, midY, midColX + midColWidth, midY);
+    midY += 4;
+
+    doc.setFontSize(7);
+    doc.setFont('helvetica', 'normal');
+
+    if (charData.equipment.armor.length > 0) {
+        charData.equipment.armor.forEach(armor => {
+            const armorText = `${armor.name} | AC +${armor.acBonus} | Spd -${armor.speedReduction}`;
+            doc.text(armorText, midColX + 2, midY + 2);
+            midY += 4;
+        });
+    } else {
+        doc.setTextColor(150);
+        doc.text('No armor equipped', midColX + 2, midY + 2);
+        doc.setTextColor(0);
+        midY += 4;
+    }
+    midY += 3;
+
+    // ==================== RIGHT COLUMN ====================
+    let rightY = yPos;
+    const maxYPage1 = pageHeight - 20;  // Max Y position for page 1
+
+    // === CHARACTER INFO ===
+    drawBox(rightColX, rightY, rightColWidth, 8, 'Character Name', charName, 9);
+    rightY += 9;
+    drawBox(rightColX, rightY, rightColWidth, 8, 'Player Name', playerName, 9);
+    rightY += 9;
+    drawBox(rightColX, rightY, rightColWidth / 2 - 1, 8, 'Level', level.toString(), 9);
+    drawBox(rightColX + rightColWidth / 2, rightY, rightColWidth / 2, 8, 'Speed', speed.toString(), 9);
+    rightY += 13;
+
+    // === SPECIES & TRADE ===
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text('SPECIES & TRADE', rightColX, rightY);
+    rightY += 1;
+    doc.setLineWidth(0.5);
+    doc.line(rightColX, rightY, rightColX + rightColWidth, rightY);
+    rightY += 4;
+
+    drawBox(rightColX, rightY, rightColWidth, 8, 'Species', species, 9);
+    rightY += 9;
+    drawBox(rightColX, rightY, rightColWidth, 8, 'Trade', trade, 9);
+    rightY += 13;
+
+    // === CLASSES ===
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text('CLASSES', rightColX, rightY);
+    rightY += 1;
+    doc.setLineWidth(0.5);
+    doc.line(rightColX, rightY, rightColX + rightColWidth, rightY);
+    rightY += 4;
+
+    drawBox(rightColX, rightY, rightColWidth, 8, 'Class 1', class1Name, 9);
+    rightY += 9;
+    drawBox(rightColX, rightY, rightColWidth, 8, 'Class 2', class2Name, 9);
+    rightY += 9;
+    drawBox(rightColX, rightY, rightColWidth, 8, 'Multi-Class', className, 8);
+    rightY += 13;
+
+    // === MAGICK POINTS ===
     if (charData.magickPoints.class1.hasSpellcasting || charData.magickPoints.class2.hasSpellcasting) {
-        doc.setFontSize(11);
+        doc.setFontSize(10);
         doc.setFont('helvetica', 'bold');
-        doc.text('MAGICK POINTS', margin, yPos);
-        yPos += 1;
+        doc.text('MAGICK POINTS', rightColX, rightY);
+        rightY += 1;
         doc.setLineWidth(0.5);
-        doc.line(margin, yPos, margin + contentWidth, yPos);
-        yPos += 4;
+        doc.line(rightColX, rightY, rightColX + rightColWidth, rightY);
+        rightY += 4;
 
         doc.setFontSize(8);
 
@@ -279,119 +380,142 @@ function generateCharacterSheetPDF() {
             const currentMP = mpData.current || 0;
 
             doc.setFont('helvetica', 'bold');
-            doc.text(`${className}:`, margin + 2, yPos + 3);
+            doc.text(`${className}:`, rightColX, rightY + 3);
+            rightY += 5;
             doc.setFont('helvetica', 'normal');
 
             // Draw checkboxes
-            let boxX = margin + 30;
-            const boxY = yPos;
+            let boxX = rightColX;
+            const boxY = rightY;
+            const boxesPerRow = Math.floor(rightColWidth / 4);
             for (let i = 0; i < maxMP; i++) {
                 drawCheckbox(boxX, boxY, 3, i < (maxMP - currentMP));
                 boxX += 4;
 
                 // Wrap to next line if needed
-                if (boxX > margin + contentWidth - 5 && i < maxMP - 1) {
-                    boxX = margin + 30;
-                    yPos += 4;
+                if ((i + 1) % boxesPerRow === 0 && i < maxMP - 1) {
+                    boxX = rightColX;
+                    rightY += 4;
                 }
             }
 
-            yPos += 5;
+            rightY += 6;
         });
-        yPos += 7;
+        rightY += 3;
     }
 
-    // === WEAPONS & ARMOR ===
-    doc.setFontSize(11);
+    // === CLASS FEATURES (Compact) ===
+    doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
-    doc.text('WEAPONS', margin, yPos);
-    yPos += 1;
+    doc.text('CLASS FEATURES', rightColX, rightY);
+    rightY += 1;
     doc.setLineWidth(0.5);
-    doc.line(margin, yPos, margin + contentWidth, yPos);
-    yPos += 4;
-
-    doc.setFontSize(8);
-    doc.setFont('helvetica', 'normal');
-
-    if (charData.equipment.weapons.length > 0) {
-        charData.equipment.weapons.forEach(weapon => {
-            const weaponText = `${weapon.name} | ${weapon.range} | Damage: ${weapon.damage}${weapon.size ? ' (' + weapon.size + ')' : ''}${weapon.properties ? ' | ' + weapon.properties : ''}`;
-            const wrapped = wrapText(weaponText, contentWidth - 4);
-            wrapped.forEach(line => {
-                doc.text(line, margin + 2, yPos + 2);
-                yPos += 3.5;
-            });
-        });
-    } else {
-        doc.setTextColor(150);
-        doc.text('No weapons equipped', margin + 2, yPos + 2);
-        doc.setTextColor(0);
-        yPos += 4;
-    }
-    yPos += 7;
-
-    doc.setFontSize(11);
-    doc.setFont('helvetica', 'bold');
-    doc.text('ARMOR', margin, yPos);
-    yPos += 1;
-    doc.setLineWidth(0.5);
-    doc.line(margin, yPos, margin + contentWidth, yPos);
-    yPos += 4;
-
-    doc.setFontSize(8);
-    doc.setFont('helvetica', 'normal');
-
-    if (charData.equipment.armor.length > 0) {
-        charData.equipment.armor.forEach(armor => {
-            const armorText = `${armor.name} | AC +${armor.acBonus} | Speed -${armor.speedReduction} | DR: ${armor.damageReduction || 'None'}`;
-            doc.text(armorText, margin + 2, yPos + 2);
-            yPos += 4;
-        });
-    } else {
-        doc.setTextColor(150);
-        doc.text('No armor equipped', margin + 2, yPos + 2);
-        doc.setTextColor(0);
-        yPos += 4;
-    }
-    yPos += 7;
-
-    // === KEY FEATURES (Page 1) ===
-    doc.setFontSize(11);
-    doc.setFont('helvetica', 'bold');
-    doc.text('KEY FEATURES', margin, yPos);
-    yPos += 1;
-    doc.setLineWidth(0.5);
-    doc.line(margin, yPos, margin + contentWidth, yPos);
-    yPos += 4;
+    doc.line(rightColX, rightY, rightColX + rightColWidth, rightY);
+    rightY += 4;
 
     doc.setFontSize(7);
     doc.setFont('helvetica', 'normal');
 
     // Extract first 3 levels of features from each class as "key features"
-    const maxYPage1 = pageHeight - 20;
-    let featuresText = '';
-
     if (charData.characterInfo.class1 && CLASSES[charData.characterInfo.class1]) {
         const classData = CLASSES[charData.characterInfo.class1];
-        featuresText += `${classData.name}: `;
+        doc.setFont('helvetica', 'bold');
+        doc.text(`${classData.name}:`, rightColX, rightY + 2);
+        rightY += 4;
+        doc.setFont('helvetica', 'normal');
+
         for (let i = 1; i <= Math.min(3, charData.characterInfo.level); i++) {
             if (classData.features[`level${i}`]) {
-                featuresText += classData.features[`level${i}`] + ' ';
+                const featureText = `Lvl ${i}: ${classData.features[`level${i}`]}`;
+                const wrapped = wrapText(featureText, rightColWidth - 2);
+                wrapped.forEach(line => {
+                    if (rightY < maxYPage1) {
+                        doc.text(line, rightColX + 2, rightY + 2);
+                        rightY += 3;
+                    }
+                });
             }
         }
-        featuresText += '\n';
+        rightY += 2;
     }
 
-    const wrappedFeatures = wrapText(featuresText, contentWidth - 4);
-    wrappedFeatures.forEach(line => {
-        if (yPos < maxYPage1) {
-            doc.text(line, margin + 2, yPos + 2);
-            yPos += 3;
-        }
-    });
-    yPos += 7;
+    // === CROSS-CLASS FEATURES (Compact) ===
+    const class1Id = charData.characterInfo.class1;
+    const class2Id = charData.characterInfo.class2;
+    const crossClassKey = getCrossClassKey(class1Id, class2Id);
+    const crossClassData = crossClassKey && CROSS_CLASS_FEATURES ? CROSS_CLASS_FEATURES[crossClassKey] : null;
 
-    // === NOTES SECTION (Page 1) ===
+    if (crossClassData && crossClassData.name !== 'TBD' && rightY < maxYPage1 - 15) {
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'bold');
+        doc.text('CROSS-CLASS', rightColX, rightY);
+        rightY += 1;
+        doc.setLineWidth(0.5);
+        doc.line(rightColX, rightY, rightColX + rightColWidth, rightY);
+        rightY += 4;
+
+        doc.setFontSize(7);
+        doc.setFont('helvetica', 'bold');
+        doc.text(`${crossClassData.name}`, rightColX, rightY + 2);
+        rightY += 4;
+        doc.setFont('helvetica', 'normal');
+
+        if (charData.characterInfo.level >= 3 && crossClassData.level3 && crossClassData.level3 !== 'TBD') {
+            const wrapped = wrapText(`Lvl 3: ${crossClassData.level3}`, rightColWidth - 2);
+            wrapped.forEach(line => {
+                if (rightY < maxYPage1) {
+                    doc.text(line, rightColX + 2, rightY + 2);
+                    rightY += 3;
+                }
+            });
+        }
+
+        if (charData.characterInfo.level >= 8 && crossClassData.level8 && crossClassData.level8 !== 'TBD') {
+            const wrapped = wrapText(`Lvl 8: ${crossClassData.level8}`, rightColWidth - 2);
+            wrapped.forEach(line => {
+                if (rightY < maxYPage1) {
+                    doc.text(line, rightColX + 2, rightY + 2);
+                    rightY += 3;
+                }
+            });
+        }
+        rightY += 2;
+    }
+
+    // === BLOODIED FEATURES (Compact) ===
+    if (rightY < maxYPage1 - 15) {
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'bold');
+        doc.text('BLOODIED FEATURES', rightColX, rightY);
+        rightY += 1;
+        doc.setLineWidth(0.5);
+        doc.line(rightColX, rightY, rightColX + rightColWidth, rightY);
+        rightY += 4;
+
+        doc.setFontSize(7);
+
+        // Use class1Bloodied from line 121
+        if (class1Bloodied && class1Bloodied.name) {
+            doc.setFont('helvetica', 'bold');
+            doc.text(`${class1Name}:`, rightColX, rightY + 2);
+            rightY += 4;
+            doc.setFont('helvetica', 'normal');
+
+            const bloodiedText = `${class1Bloodied.name}`;
+            const wrapped = wrapText(bloodiedText, rightColWidth - 2);
+            wrapped.forEach(line => {
+                if (rightY < maxYPage1) {
+                    doc.text(line, rightColX + 2, rightY + 2);
+                    rightY += 3;
+                }
+            });
+        }
+    }
+
+    // Reset yPos for any remaining single-column content
+    yPos = Math.max(leftY, midY, rightY) + 5;
+
+    // === NOTES SECTION (Full Width at Bottom of Page 1) ===
     if (yPos < maxYPage1 - 15) {
         doc.setFontSize(11);
         doc.setFont('helvetica', 'bold');
@@ -521,8 +645,7 @@ function generateCharacterSheetPDF() {
 
     doc.setFontSize(8);
 
-    // Class 1 Bloodied
-    const class1Bloodied = charData.features.classFeatures.class1Features.bloodiedEffect;
+    // Class 1 Bloodied (using variable from line 121)
     if (class1Bloodied && class1Bloodied.name) {
         doc.setFont('helvetica', 'bold');
         doc.text(`${class1Name} - ${class1Bloodied.name}:`, margin + 2, yPos + 2);
@@ -538,8 +661,7 @@ function generateCharacterSheetPDF() {
         yPos += 2;
     }
 
-    // Class 2 Bloodied
-    const class2Bloodied = charData.features.classFeatures.class2Features.bloodiedEffect;
+    // Class 2 Bloodied (using variable from line 122)
     if (class2Bloodied && class2Bloodied.name) {
         doc.setFont('helvetica', 'bold');
         doc.text(`${class2Name} - ${class2Bloodied.name}:`, margin + 2, yPos + 2);
@@ -556,10 +678,7 @@ function generateCharacterSheetPDF() {
     }
 
     // === CROSS-CLASS FEATURES ===
-    const class1Id = charData.characterInfo.class1;
-    const class2Id = charData.characterInfo.class2;
-    const crossClassKey = getCrossClassKey(class1Id, class2Id);
-    const crossClassData = crossClassKey && CROSS_CLASS_FEATURES ? CROSS_CLASS_FEATURES[crossClassKey] : null;
+    // Reuse crossClassKey and crossClassData from lines 443-444
 
     if (crossClassData && crossClassData.name !== 'TBD') {
         doc.setFontSize(11);
@@ -639,8 +758,17 @@ function generateCharacterSheetPDF() {
 
 // Add export button to the UI
 function addPDFExportButton() {
+    // Check if button already exists to prevent duplicates
+    if (document.querySelector('[data-action="export-pdf"]')) {
+        console.log('PDF Export button already exists');
+        return;
+    }
+
     const exportBtn = document.querySelector('[data-action="export-character"]');
-    if (!exportBtn) return;
+    if (!exportBtn) {
+        console.error('Export character button not found - cannot add PDF export button');
+        return;
+    }
 
     const pdfBtn = document.createElement('button');
     pdfBtn.className = 'btn-export';
@@ -649,6 +777,7 @@ function addPDFExportButton() {
     pdfBtn.addEventListener('click', generateCharacterSheetPDF);
 
     exportBtn.parentNode.insertBefore(pdfBtn, exportBtn.nextSibling);
+    console.log('PDF Export button added successfully');
 }
 
 // Initialize when DOM is ready
