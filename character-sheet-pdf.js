@@ -118,6 +118,8 @@ function generateCharacterSheetPDF() {
     const hpMax = charData.hitPoints.maximum;
     const hpTemp = charData.hitPoints.temporary || 0;
     const bloodiedThreshold = charData.hitPoints.bloodiedThreshold;
+    const class1Bloodied = charData.features.classFeatures.class1Features.bloodiedEffect;
+    const class2Bloodied = charData.features.classFeatures.class2Features.bloodiedEffect;
 
     // ==================== LEFT COLUMN ====================
     let leftY = yPos;
@@ -492,7 +494,7 @@ function generateCharacterSheetPDF() {
 
         doc.setFontSize(7);
 
-        const class1Bloodied = charData.features.classFeatures.class1Features.bloodiedEffect;
+        // Use class1Bloodied from line 121
         if (class1Bloodied && class1Bloodied.name) {
             doc.setFont('helvetica', 'bold');
             doc.text(`${class1Name}:`, rightColX, rightY + 2);
@@ -643,8 +645,7 @@ function generateCharacterSheetPDF() {
 
     doc.setFontSize(8);
 
-    // Class 1 Bloodied
-    const class1Bloodied = charData.features.classFeatures.class1Features.bloodiedEffect;
+    // Class 1 Bloodied (using variable from line 121)
     if (class1Bloodied && class1Bloodied.name) {
         doc.setFont('helvetica', 'bold');
         doc.text(`${class1Name} - ${class1Bloodied.name}:`, margin + 2, yPos + 2);
@@ -660,8 +661,7 @@ function generateCharacterSheetPDF() {
         yPos += 2;
     }
 
-    // Class 2 Bloodied
-    const class2Bloodied = charData.features.classFeatures.class2Features.bloodiedEffect;
+    // Class 2 Bloodied (using variable from line 122)
     if (class2Bloodied && class2Bloodied.name) {
         doc.setFont('helvetica', 'bold');
         doc.text(`${class2Name} - ${class2Bloodied.name}:`, margin + 2, yPos + 2);
