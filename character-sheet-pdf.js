@@ -228,17 +228,17 @@ function generateCharacterSheetPDF() {
     midY += 4;
 
     doc.setFontSize(8);
-    doc.setFont('helvetica', 'normal');
+    doc.setFont('courier', 'normal');
 
     const combatSkills = ['melee', 'ranged', 'spellcraft'];
     combatSkills.forEach(skillName => {
         const scores = calculateSkillScores(skillName, false);
         const skillLabel = skillName.charAt(0).toUpperCase() + skillName.slice(1);
 
-        doc.setFont('helvetica', 'bold');
+        doc.setFont('courier', 'bold');
         doc.text(skillLabel, midColX + 2, midY + 3);
 
-        doc.setFont('helvetica', 'normal');
+        doc.setFont('courier', 'normal');
         const skillText = `Ranks: ${formatScore(scores.rank)} | ${formatAttributeName(scores.attr1)}: ${formatScore(scores.score1)} | ${formatAttributeName(scores.attr2)}: ${formatScore(scores.score2)}`;
         doc.text(skillText, midColX + 20, midY + 3);
 
@@ -257,17 +257,17 @@ function generateCharacterSheetPDF() {
     midY += 4;
 
     doc.setFontSize(7);
-    doc.setFont('helvetica', 'normal');
+    doc.setFont('courier', 'normal');
 
     const generalSkills = ['maneuver', 'sneak', 'study', 'craft', 'barter', 'endure', 'deceive'];
     generalSkills.forEach(skillName => {
         const scores = calculateSkillScores(skillName, true);
         const skillLabel = skillName.charAt(0).toUpperCase() + skillName.slice(1);
 
-        doc.setFont('helvetica', 'bold');
+        doc.setFont('courier', 'bold');
         doc.text(skillLabel, midColX + 2, midY + 3);
 
-        doc.setFont('helvetica', 'normal');
+        doc.setFont('courier', 'normal');
         const skillText = `Ranks: ${formatScore(scores.rank)} | Bonus: ${formatScore(scores.bonus)} | ${formatAttributeName(scores.attr1)}: ${formatScore(scores.score1)} | ${formatAttributeName(scores.attr2)}: ${formatScore(scores.score2)}`;
         doc.text(skillText, midColX + 20, midY + 3);
 
