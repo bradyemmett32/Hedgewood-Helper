@@ -87,10 +87,10 @@ function generateCharacterSheetPDF() {
     // Format attribute names for display
     function formatAttributeName(attrName) {
         const attrMap = {
-            'toughness': 'Tough',
-            'reflexes': 'Reflex',
-            'intellect': 'Intel',
-            'willpower': 'Willp'
+            'toughness': 'TGH',
+            'reflexes': 'REF',
+            'intellect': 'INT',
+            'willpower': 'WIL'
         };
         return attrMap[attrName] || attrName;
     }
@@ -235,12 +235,19 @@ function generateCharacterSheetPDF() {
         const scores = calculateSkillScores(skillName, false);
         const skillLabel = skillName.charAt(0).toUpperCase() + skillName.slice(1);
 
+        // Column positions for combat skills
+        const col1 = midColX + 2;   // Skill name
+        const col2 = midColX + 20;  // Rnk
+        const col3 = midColX + 32;  // Attr1
+        const col4 = midColX + 45;  // Attr2
+
         doc.setFont('courier', 'bold');
-        doc.text(skillLabel, midColX + 2, midY + 3);
+        doc.text(skillLabel, col1, midY + 3);
 
         doc.setFont('courier', 'normal');
-        const skillText = `Ranks: ${formatScore(scores.rank)} | ${formatAttributeName(scores.attr1)}: ${formatScore(scores.score1)} | ${formatAttributeName(scores.attr2)}: ${formatScore(scores.score2)}`;
-        doc.text(skillText, midColX + 20, midY + 3);
+        doc.text(`Rnk: ${formatScore(scores.rank)}`, col2, midY + 3);
+        doc.text(`${formatAttributeName(scores.attr1)}: ${formatScore(scores.score1)}`, col3, midY + 3);
+        doc.text(`${formatAttributeName(scores.attr2)}: ${formatScore(scores.score2)}`, col4, midY + 3);
 
         midY += 5;
     });
@@ -264,12 +271,21 @@ function generateCharacterSheetPDF() {
         const scores = calculateSkillScores(skillName, true);
         const skillLabel = skillName.charAt(0).toUpperCase() + skillName.slice(1);
 
+        // Column positions for general skills
+        const col1 = midColX + 2;   // Skill name
+        const col2 = midColX + 18;  // Rnk
+        const col3 = midColX + 28;  // Bns
+        const col4 = midColX + 38;  // Attr1
+        const col5 = midColX + 52;  // Attr2
+
         doc.setFont('courier', 'bold');
-        doc.text(skillLabel, midColX + 2, midY + 3);
+        doc.text(skillLabel, col1, midY + 3);
 
         doc.setFont('courier', 'normal');
-        const skillText = `Ranks: ${formatScore(scores.rank)} | Bonus: ${formatScore(scores.bonus)} | ${formatAttributeName(scores.attr1)}: ${formatScore(scores.score1)} | ${formatAttributeName(scores.attr2)}: ${formatScore(scores.score2)}`;
-        doc.text(skillText, midColX + 20, midY + 3);
+        doc.text(`Rnk: ${formatScore(scores.rank)}`, col2, midY + 3);
+        doc.text(`Bns: ${formatScore(scores.bonus)}`, col3, midY + 3);
+        doc.text(`${formatAttributeName(scores.attr1)}: ${formatScore(scores.score1)}`, col4, midY + 3);
+        doc.text(`${formatAttributeName(scores.attr2)}: ${formatScore(scores.score2)}`, col5, midY + 3);
 
         midY += 4;
     });
