@@ -71,6 +71,7 @@ function generateCharacterSheetPDF() {
 
         return {
             rank: rank,
+            bonus: bonus,
             score1: score1,
             score2: score2,
             attr1: attributes[0],
@@ -81,6 +82,17 @@ function generateCharacterSheetPDF() {
     // Format score with +/- sign
     function formatScore(score) {
         return score >= 0 ? `+${score}` : `${score}`;
+    }
+
+    // Format attribute names for display
+    function formatAttributeName(attrName) {
+        const attrMap = {
+            'toughness': 'Tough',
+            'reflexes': 'Reflex',
+            'intellect': 'Int',
+            'willpower': 'Will'
+        };
+        return attrMap[attrName] || attrName;
     }
 
     // ==================== PAGE 1 ====================
@@ -227,7 +239,7 @@ function generateCharacterSheetPDF() {
         doc.text(skillLabel, midColX + 2, midY + 3);
 
         doc.setFont('helvetica', 'normal');
-        const skillText = `Rnk: ${formatScore(scores.rank)} | ${scores.attr1.substring(0, 3)}: ${formatScore(scores.score1)} | ${scores.attr2.substring(0, 3)}: ${formatScore(scores.score2)}`;
+        const skillText = `Ranks: ${formatScore(scores.rank)} | ${formatAttributeName(scores.attr1)}: ${formatScore(scores.score1)} | ${formatAttributeName(scores.attr2)}: ${formatScore(scores.score2)}`;
         doc.text(skillText, midColX + 20, midY + 3);
 
         midY += 5;
@@ -256,7 +268,7 @@ function generateCharacterSheetPDF() {
         doc.text(skillLabel, midColX + 2, midY + 3);
 
         doc.setFont('helvetica', 'normal');
-        const skillText = `${formatScore(scores.rank)} | ${formatScore(scores.score1)} | ${formatScore(scores.score2)}`;
+        const skillText = `Ranks: ${formatScore(scores.rank)} | Bonus: ${formatScore(scores.bonus)} | ${formatAttributeName(scores.attr1)}: ${formatScore(scores.score1)} | ${formatAttributeName(scores.attr2)}: ${formatScore(scores.score2)}`;
         doc.text(skillText, midColX + 20, midY + 3);
 
         midY += 4;
