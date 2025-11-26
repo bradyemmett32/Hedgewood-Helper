@@ -89,8 +89,8 @@ function generateCharacterSheetPDF() {
         const attrMap = {
             'toughness': 'Tough',
             'reflexes': 'Reflex',
-            'intellect': 'Int',
-            'willpower': 'Will'
+            'intellect': 'Intel',
+            'willpower': 'Willp'
         };
         return attrMap[attrName] || attrName;
     }
