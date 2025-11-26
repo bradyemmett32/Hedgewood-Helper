@@ -275,8 +275,8 @@ function generateCharacterSheetPDF() {
         const col1 = midColX + 2;   // Skill name
         const col2 = midColX + 18;  // Rnk
         const col3 = midColX + 30;  // Bns
-        const col4 = midColX + 42;  // Attr1
-        const col5 = midColX + 56;  // Attr2
+        const col4 = midColX + 43;  // Attr1
+        const col5 = midColX + 57;  // Attr2
 
         doc.setFont('courier', 'bold');
         doc.text(skillLabel, col1, midY + 3);
