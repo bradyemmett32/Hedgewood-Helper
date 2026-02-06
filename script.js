@@ -426,11 +426,25 @@ function adjustChannelActions(change) {
     state.channelActions = Math.max(0, Math.min(10, state.channelActions + change));
     DOM.channelCount.textContent = state.channelActions;
     updateAvailableModules();
-    
+
     const maxModules = state.channelActions + 1;
     if (state.selected.modules.length > maxModules) {
         state.selected.modules = state.selected.modules.slice(0, maxModules);
+        // Re-index extraBuffs after trimming
+        const newExtraBuffs = {};
+        let buffIdx = 0;
+        for (let i = 0; i < state.selected.modules.length; i++) {
+            if (state.selected.modules[i] === 'extraBuff') {
+                const oldKey = `extraBuff_${buffIdx}`;
+                if (state.selected.extraBuffs[oldKey]) {
+                    newExtraBuffs[`extraBuff_${buffIdx}`] = state.selected.extraBuffs[oldKey];
+                }
+                buffIdx++;
+            }
+        }
+        state.selected.extraBuffs = newExtraBuffs;
         updateModuleStates();
+        updateExtraBuffSection();
     }
 }
 
@@ -738,23 +752,56 @@ function selectEffectType(category, key) {
 }
 
 // Component Modules
+const STACKABLE_MODULES = ['extraDamage', 'extraHeal', 'extraBuff'];
+
 function renderComponentModules() {
     DOM.componentModules.innerHTML = '';
     const fragment = document.createDocumentFragment();
-    
+    const atMax = state.selected.modules.length >= (state.channelActions + 1);
+
     Object.entries(spellData.componentModules).forEach(([key, module]) => {
         if (!isModuleApplicable(module)) return;
-        
+
+        const isStackable = STACKABLE_MODULES.includes(key);
+        const isSelected = state.selected.modules.includes(key);
         const div = createElement('div', 'component-module');
         div.dataset.moduleKey = key;
-        div.innerHTML = `
-            <div class="component-module-title">${module.name}</div>
-            <div class="component-module-description">${module.description}</div>
-        `;
+
+        // Apply selected/disabled state
+        if (isSelected) {
+            div.classList.add('selected');
+            if (atMax && isStackable) div.classList.add('disabled');
+        } else if (atMax) {
+            div.classList.add('disabled');
+        }
+
+        const titleDiv = createElement('div', 'component-module-title');
+        titleDiv.textContent = module.name;
+
+        if (isStackable) {
+            const count = state.selected.modules.filter(m => m === key).length;
+            if (count > 0) {
+                const badge = createElement('span', 'stackable-badge');
+                badge.textContent = ` \u00d7${count}`;
+                titleDiv.appendChild(badge);
+
+                const removeBtn = createElement('button', 'stackable-remove');
+                removeBtn.textContent = '\u2212';
+                removeBtn.setAttribute('aria-label', `Remove one ${module.name}`);
+                removeBtn.addEventListener('click', (e) => removeStackableModule(key, e));
+                titleDiv.appendChild(removeBtn);
+            }
+        }
+
+        const descDiv = createElement('div', 'component-module-description');
+        descDiv.textContent = module.description;
+
+        div.appendChild(titleDiv);
+        div.appendChild(descDiv);
         div.addEventListener('click', () => toggleModule(key));
         fragment.appendChild(div);
     });
-    
+
     DOM.componentModules.appendChild(fragment);
 }
 
@@ -769,36 +816,60 @@ function isModuleApplicable(module) {
 function toggleModule(key) {
     const module = spellData.componentModules[key];
     if (!isModuleApplicable(module)) return;
-    
-    const index = state.selected.modules.indexOf(key);
-    if (index > -1) {
-        state.selected.modules.splice(index, 1);
-        if (key === 'extraBuff') {
-            delete state.selected.extraBuffs[`extraBuff_${index}`];
-        }
-    } else {
+
+    if (STACKABLE_MODULES.includes(key)) {
+        // Stackable modules: clicking always adds another instance if room available
         const maxModules = state.channelActions + 1;
         if (state.selected.modules.length < maxModules) {
             state.selected.modules.push(key);
         }
+    } else {
+        // Non-stackable: toggle on/off
+        const index = state.selected.modules.indexOf(key);
+        if (index > -1) {
+            state.selected.modules.splice(index, 1);
+        } else {
+            const maxModules = state.channelActions + 1;
+            if (state.selected.modules.length < maxModules) {
+                state.selected.modules.push(key);
+            }
+        }
     }
-    
+
+    updateModuleStates();
+    updateAvailableModules();
+    updateExtraBuffSection();
+}
+
+function removeStackableModule(key, event) {
+    if (event) event.stopPropagation();
+    const lastIndex = state.selected.modules.lastIndexOf(key);
+    if (lastIndex > -1) {
+        state.selected.modules.splice(lastIndex, 1);
+        if (key === 'extraBuff') {
+            // Re-index extraBuffs after removal
+            const newExtraBuffs = {};
+            let buffIdx = 0;
+            for (let i = 0; i < state.selected.modules.length; i++) {
+                if (state.selected.modules[i] === 'extraBuff') {
+                    const oldKey = `extraBuff_${buffIdx}`;
+                    if (state.selected.extraBuffs[oldKey]) {
+                        newExtraBuffs[`extraBuff_${buffIdx}`] = state.selected.extraBuffs[oldKey];
+                    }
+                    buffIdx++;
+                }
+            }
+            state.selected.extraBuffs = newExtraBuffs;
+        }
+    }
     updateModuleStates();
     updateAvailableModules();
     updateExtraBuffSection();
 }
 
 function updateModuleStates() {
-    document.querySelectorAll('.component-module').forEach(el => {
-        const key = el.dataset.moduleKey;
-        el.classList.remove('selected', 'disabled');
-        
-        if (state.selected.modules.includes(key)) {
-            el.classList.add('selected');
-        } else if (state.selected.modules.length >= (state.channelActions + 1)) {
-            el.classList.add('disabled');
-        }
-    });
+    // renderComponentModules now handles both structure and state (selected/disabled/badges)
+    renderComponentModules();
 }
 
 // Extra Buff/Debuff
@@ -977,7 +1048,8 @@ function generateSpellName(spell, baseData) {
     if (spell.modules.includes('concentration')) {
         name = "Sustained " + name;
     }
-    if (spell.modules.includes('extraDamage')) {
+    const extraDmgCount = spell.modules.filter(m => m === 'extraDamage').length;
+    if (extraDmgCount > 0) {
         name = "Empowered " + name;
     }
     
@@ -1028,25 +1100,27 @@ function generateSpellStats(spell, baseData) {
     }
     
     if (baseData.damage) {
+        const extraDamageCount = spell.modules.filter(m => m === 'extraDamage').length;
         if (spell.base.key === 'meleeStrike' || spell.base.key === 'rangedStrike') {
             let damage = baseData.damage;
-            if (spell.modules.includes('extraDamage')) {
-                damage += " + 1×" + getDamageDice();
+            if (extraDamageCount > 0) {
+                damage += " + " + extraDamageCount + "\u00d7" + getDamageDice();
             }
             stats.push({ label: "Damage", value: damage });
         } else {
             const damageDie = getDamageDice();
-            let damage = baseData.damage + "×" + damageDie;
-            if (spell.modules.includes('extraDamage')) {
-                damage += " + 1×" + damageDie;
+            let damage = baseData.damage + "\u00d7" + damageDie;
+            if (extraDamageCount > 0) {
+                damage += " + " + extraDamageCount + "\u00d7" + damageDie;
             }
             stats.push({ label: "Damage", value: damage });
         }
     } else if (baseData.healing) {
         const healingDie = getHealingDice();
-        let healing = baseData.healing + "×" + healingDie;
-        if (spell.modules.includes('extraHeal')) {
-            healing += " + 1×" + healingDie;
+        const extraHealCount = spell.modules.filter(m => m === 'extraHeal').length;
+        let healing = baseData.healing + "\u00d7" + healingDie;
+        if (extraHealCount > 0) {
+            healing += " + " + extraHealCount + "\u00d7" + healingDie;
         }
         stats.push({ label: "Healing", value: healing });
     }
