@@ -770,7 +770,6 @@ function renderComponentModules() {
         // Apply selected/disabled state
         if (isSelected) {
             div.classList.add('selected');
-            if (atMax && isStackable) div.classList.add('disabled');
         } else if (atMax) {
             div.classList.add('disabled');
         }
