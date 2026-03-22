@@ -1,0 +1,968 @@
+<style>
+/* ===================== GLOBAL ===================== */
+.sheet-container {
+    position: relative;
+    width: 780px;
+    background-color: black;
+    color: green;
+    display: inline-block;
+    border: 4px double gold;
+    border-radius: 15px;
+    padding: 10px;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+}
+
+/* ===================== SECTION HEADERS ===================== */
+.sheet-section-header {
+    font-size: 14px;
+    font-weight: bold;
+    font-variant: small-caps;
+    color: gold;
+    border-bottom: 2px double gold;
+    margin: 8px 0 5px 0;
+    padding-bottom: 2px;
+    text-align: center;
+}
+
+/* ===================== HEADER / IDENTITY ===================== */
+.sheet-header {
+    border-bottom: 4px double gold;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+}
+
+.sheet-header-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+
+.sheet-field {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 80px;
+}
+
+.sheet-field.wide { flex: 2; min-width: 140px; }
+.sheet-field.narrow { flex: 0 0 70px; }
+
+.sheet-field label {
+    font-size: 10px;
+    font-weight: bold;
+    color: #aaa;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+.sheet-field input[type="text"],
+.sheet-field input[type="number"],
+.sheet-field select,
+.sheet-field textarea {
+    background: #1a1a1a;
+    border: 1px solid gold;
+    border-radius: 4px;
+    color: white;
+    padding: 2px 4px;
+    font-size: 12px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.sheet-field textarea {
+    resize: vertical;
+    height: 80px;
+    color: white;
+}
+
+/* ===================== STATS BAR ===================== */
+.sheet-stats-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+    padding: 6px;
+    border: 1px solid #444;
+    border-radius: 8px;
+    background: #111;
+    align-items: flex-end;
+}
+
+.sheet-stat-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 55px;
+    flex: 1;
+}
+
+.sheet-stat-block label {
+    font-size: 10px;
+    font-weight: bold;
+    color: gold;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 2px;
+}
+
+.sheet-stat-block input[type="number"],
+.sheet-stat-block input[type="text"] {
+    background: #1a1a1a;
+    border: 1px solid gold;
+    border-radius: 4px;
+    color: white;
+    padding: 2px;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.sheet-stat-block .sheet-stat-fraction {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    width: 100%;
+}
+
+.sheet-stat-block .sheet-stat-fraction input[type="number"] {
+    flex: 1;
+    width: 40px;
+}
+
+.sheet-stat-block .sheet-stat-fraction span {
+    color: gold;
+    font-weight: bold;
+}
+
+.sheet-stat-separator {
+    width: 1px;
+    background: #444;
+    align-self: stretch;
+    margin: 0 2px;
+}
+
+/* ===================== ADVANTAGE BLOCK ===================== */
+.sheet-adv-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #1a1a0a;
+    border: 2px solid gold;
+    border-radius: 8px;
+    padding: 4px 8px;
+    min-width: 100px;
+}
+
+.sheet-adv-block label {
+    font-size: 10px;
+    font-weight: bold;
+    color: gold;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+.sheet-adv-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.sheet-adv-controls input[type="number"] {
+    background: #1a1a1a;
+    border: 1px solid gold;
+    border-radius: 4px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    width: 40px;
+    padding: 2px;
+}
+
+.sheet-adv-hint {
+    font-size: 10px;
+    color: #888;
+    text-align: center;
+    margin-top: 2px;
+}
+
+/* ===================== ATTRIBUTES ===================== */
+.sheet-attrs-grid {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.sheet-attr-card {
+    flex: 1;
+    background: #1a1a1a;
+    border: 1px solid gold;
+    border-radius: 8px;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sheet-attr-card .sheet-attr-name {
+    font-size: 11px;
+    font-weight: bold;
+    font-variant: small-caps;
+    color: gold;
+    margin-bottom: 4px;
+    text-align: center;
+}
+
+.sheet-attr-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 3px;
+}
+
+.sheet-attr-row label {
+    font-size: 9px;
+    color: #aaa;
+    text-transform: uppercase;
+    margin-bottom: 1px;
+}
+
+.sheet-attr-row input[type="number"] {
+    background: #111;
+    border: 1px solid #666;
+    border-radius: 3px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    width: 52px;
+    padding: 2px;
+}
+
+.sheet-attr-row input[type="number"].sheet-mod {
+    border-color: gold;
+    color: gold;
+    background: #0a0a00;
+}
+
+/* ===================== TWO-COLUMN SKILLS LAYOUT ===================== */
+.sheet-skills-container {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.sheet-skills-col {
+    flex: 1;
+    background: #111;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 6px;
+}
+
+/* ===================== SKILL TABLE ===================== */
+.sheet-skill-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.sheet-skill-table th {
+    font-size: 10px;
+    color: gold;
+    text-align: center;
+    border-bottom: 1px solid #444;
+    padding: 2px 3px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.sheet-skill-table th.left { text-align: left; }
+
+.sheet-skill-table td {
+    padding: 2px 3px;
+    vertical-align: middle;
+    text-align: center;
+    border-bottom: 1px solid #222;
+}
+
+.sheet-skill-table td.skill-name {
+    text-align: left;
+    color: white;
+    font-weight: bold;
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+.sheet-skill-table td .skill-attrs {
+    display: block;
+    font-size: 9px;
+    color: #888;
+    font-style: italic;
+}
+
+.sheet-skill-table td input[type="number"] {
+    background: #1a1a1a;
+    border: 1px solid #555;
+    border-radius: 3px;
+    color: white;
+    font-size: 12px;
+    text-align: center;
+    width: 38px;
+    padding: 1px;
+}
+
+/* ===================== ROLL BUTTONS ===================== */
+button.sheet-roll-btn {
+    background: seashell;
+    color: black;
+    border: 1px solid #888;
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+button.sheet-roll-btn:hover {
+    background: gold;
+    border-color: black;
+}
+
+/* ===================== FEATURES ===================== */
+.sheet-features-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.sheet-feature-block {
+    flex: 1;
+    min-width: 170px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sheet-feature-block label {
+    font-size: 10px;
+    font-weight: bold;
+    color: gold;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+.sheet-feature-block textarea {
+    background: #1a1a1a;
+    border: 1px solid gold;
+    border-radius: 4px;
+    color: white;
+    font-size: 11px;
+    padding: 4px;
+    resize: vertical;
+    min-height: 80px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ===================== WEAPONS REPEATING ===================== */
+.sheet-weapons-header {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 2px;
+    padding: 0 2px;
+}
+
+.sheet-weapons-header span {
+    font-size: 10px;
+    font-weight: bold;
+    color: gold;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.sheet-weapons-header .wh-name { flex: 2; text-align: left; }
+.sheet-weapons-header .wh-skill { flex: 0 0 42px; }
+.sheet-weapons-header .wh-dmg { flex: 1; }
+.sheet-weapons-header .wh-range { flex: 1; }
+.sheet-weapons-header .wh-size { flex: 0 0 40px; }
+.sheet-weapons-header .wh-prop { flex: 2; }
+.sheet-weapons-header .wh-roll { flex: 0 0 50px; }
+
+.repcontainer .repitem {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    margin-bottom: 3px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 3px;
+}
+
+.repcontainer .repitem input[type="text"],
+.repcontainer .repitem input[type="number"] {
+    background: #1a1a1a;
+    border: 1px solid #555;
+    border-radius: 3px;
+    color: white;
+    font-size: 11px;
+    padding: 2px 3px;
+    box-sizing: border-box;
+}
+
+.sheet-weapon-name { flex: 2; }
+.sheet-weapon-skill { flex: 0 0 42px; }
+.sheet-weapon-dmg { flex: 1; }
+.sheet-weapon-range { flex: 1; }
+.sheet-weapon-size { flex: 0 0 40px; }
+.sheet-weapon-prop { flex: 2; }
+.sheet-weapon-roll { flex: 0 0 50px; }
+
+/* ===================== ROLL TEMPLATES ===================== */
+.sheet-rolltemplate-basic div.sheet-template-container {
+    background: black;
+    color: white;
+    border: 2px solid gold !important;
+    border-radius: 10px;
+}
+
+.sheet-rolltemplate-basic .sheet-template-header {
+    color: green;
+    padding: 2px;
+    border-bottom: 1px solid gold;
+    line-height: 1.6em;
+    font-size: 1.2em;
+    font-weight: bold;
+    font-variant: small-caps;
+    text-align: center;
+}
+
+.sheet-rolltemplate-basic div {
+    padding: 5px;
+    border-bottom: 1px solid gold;
+}
+
+.sheet-rolltemplate-basic .inlinerollresult {
+    display: inline-block;
+    min-width: 1.5em;
+    text-align: center;
+    border: 1px solid gold;
+    border-radius: 5px;
+    background: #333333;
+}
+
+.sheet-rolltemplate-basic .inlinerollresult.fullcrit {
+    border: 2px solid gold;
+    background: green;
+    color: white;
+    font-weight: bold;
+}
+
+.sheet-rolltemplate-basic .inlinerollresult.fullfail {
+    border: 2px solid gold;
+    background: red;
+    color: white;
+    font-weight: bold;
+}
+</style>
+
+<!-- ===================== CHARACTER SHEET ===================== -->
+<div class="sheet-container">
+
+    <!-- SECTION: Character Identity -->
+    <div class="sheet-header">
+        <div class="sheet-section-header">Hedgewood Character Sheet</div>
+        <div class="sheet-header-row">
+            <div class="sheet-field wide">
+                <label>Character Name</label>
+                <input type="text" name="attr_character_name" placeholder="Character Name" />
+            </div>
+            <div class="sheet-field">
+                <label>Player Name</label>
+                <input type="text" name="attr_player_name" placeholder="Player Name" />
+            </div>
+            <div class="sheet-field">
+                <label>Species</label>
+                <input type="text" name="attr_species" placeholder="Species" />
+            </div>
+            <div class="sheet-field">
+                <label>Trade</label>
+                <input type="text" name="attr_trade" placeholder="Trade" />
+            </div>
+            <div class="sheet-field narrow">
+                <label>Size</label>
+                <input type="text" name="attr_size" placeholder="1" />
+            </div>
+        </div>
+        <div class="sheet-header-row">
+            <div class="sheet-field wide">
+                <label>Cross-class Name</label>
+                <input type="text" name="attr_crossclass" placeholder="Cross-class Name" />
+            </div>
+            <div class="sheet-field">
+                <label>Class 1</label>
+                <input type="text" name="attr_class1" placeholder="Class 1" />
+            </div>
+            <div class="sheet-field">
+                <label>Class 2</label>
+                <input type="text" name="attr_class2" placeholder="Class 2" />
+            </div>
+            <div class="sheet-field narrow">
+                <label>Level</label>
+                <input type="number" name="attr_level" value="1" min="1" max="10" />
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION: Core Stats Bar -->
+    <div class="sheet-section-header">Core Stats</div>
+    <div class="sheet-stats-bar">
+        <!-- HP -->
+        <div class="sheet-stat-block">
+            <label>HP</label>
+            <div class="sheet-stat-fraction">
+                <input type="number" name="attr_hp" value="10" min="0" title="Current HP" />
+                <span>/</span>
+                <input type="number" name="attr_hp_max" value="10" min="1" title="Max HP" />
+            </div>
+        </div>
+
+        <div class="sheet-stat-separator"></div>
+
+        <!-- Hit Dice 1 -->
+        <div class="sheet-stat-block">
+            <label>HD1 Die</label>
+            <input type="text" name="attr_hd1_die" value="d8" title="Class 1 Hit Die (e.g. d10)" style="width:40px;" />
+            <div class="sheet-stat-fraction" style="margin-top:2px;">
+                <input type="number" name="attr_hd1_current" value="1" min="0" title="Available" />
+                <span>/</span>
+                <input type="number" name="attr_hd1_total" value="1" min="0" title="Total" />
+            </div>
+        </div>
+
+        <!-- Hit Dice 2 -->
+        <div class="sheet-stat-block">
+            <label>HD2 Die</label>
+            <input type="text" name="attr_hd2_die" value="d8" title="Class 2 Hit Die" style="width:40px;" />
+            <div class="sheet-stat-fraction" style="margin-top:2px;">
+                <input type="number" name="attr_hd2_current" value="1" min="0" title="Available" />
+                <span>/</span>
+                <input type="number" name="attr_hd2_total" value="1" min="0" title="Total" />
+            </div>
+        </div>
+
+        <div class="sheet-stat-separator"></div>
+
+        <!-- MP 1 -->
+        <div class="sheet-stat-block">
+            <label>MP 1</label>
+            <div class="sheet-stat-fraction">
+                <input type="number" name="attr_mp1" value="0" min="0" title="Class 1 MP Current" />
+                <span>/</span>
+                <input type="number" name="attr_mp1_max" value="0" min="0" title="Class 1 MP Max" />
+            </div>
+        </div>
+
+        <!-- MP 2 -->
+        <div class="sheet-stat-block">
+            <label>MP 2</label>
+            <div class="sheet-stat-fraction">
+                <input type="number" name="attr_mp2" value="0" min="0" title="Class 2 MP Current" />
+                <span>/</span>
+                <input type="number" name="attr_mp2_max" value="0" min="0" title="Class 2 MP Max" />
+            </div>
+        </div>
+
+        <div class="sheet-stat-separator"></div>
+
+        <!-- Speed -->
+        <div class="sheet-stat-block">
+            <label>Speed</label>
+            <input type="number" name="attr_speed" value="6" min="0" title="Speed in squares" />
+        </div>
+
+        <!-- AC -->
+        <div class="sheet-stat-block">
+            <label>AC</label>
+            <input type="number" name="attr_ac" value="10" min="0" title="Armor Class" />
+        </div>
+
+        <!-- Fatigue -->
+        <div class="sheet-stat-block">
+            <label>Fatigue</label>
+            <input type="number" name="attr_fatigue" value="0" min="0" title="Fatigue" />
+        </div>
+
+        <div class="sheet-stat-separator"></div>
+
+        <!-- Advantage Control -->
+        <div class="sheet-adv-block">
+            <label>Advantage</label>
+            <div class="sheet-adv-controls">
+                <input type="number" name="attr_advantage" value="0" min="-1" max="10" title="-1=Disadvantage, 0=Normal, 1+=Advantage stacks" />
+            </div>
+            <div class="sheet-adv-hint">-1 Disadv | 0 Normal | +N Adv</div>
+            <div class="sheet-adv-hint">Dice: <input type="number" name="attr_dice_count" value="2" min="1" readonly style="width:28px;background:#000;border:none;color:gold;font-weight:bold;font-size:13px;text-align:center;" />d20kh1</div>
+        </div>
+    </div>
+
+    <!-- SECTION: Attributes -->
+    <div class="sheet-section-header">Attributes</div>
+    <div class="sheet-attrs-grid">
+
+        <!-- Toughness -->
+        <div class="sheet-attr-card">
+            <div class="sheet-attr-name">Toughness</div>
+            <div class="sheet-attr-row">
+                <label>Score</label>
+                <input type="number" name="attr_toughness_score" value="10" min="1" max="30" />
+            </div>
+            <div class="sheet-attr-row">
+                <label>Modifier</label>
+                <input type="number" name="attr_toughness_mod" value="0" class="sheet-mod" readonly />
+            </div>
+            <div class="sheet-attr-row">
+                <label>Defense</label>
+                <input type="number" name="attr_toughness_defense" value="10" min="1" />
+            </div>
+        </div>
+
+        <!-- Reflexes -->
+        <div class="sheet-attr-card">
+            <div class="sheet-attr-name">Reflexes</div>
+            <div class="sheet-attr-row">
+                <label>Score</label>
+                <input type="number" name="attr_reflexes_score" value="10" min="1" max="30" />
+            </div>
+            <div class="sheet-attr-row">
+                <label>Modifier</label>
+                <input type="number" name="attr_reflexes_mod" value="0" class="sheet-mod" readonly />
+            </div>
+            <div class="sheet-attr-row">
+                <label>Defense</label>
+                <input type="number" name="attr_reflexes_defense" value="10" min="1" />
+            </div>
+        </div>
+
+        <!-- Intellect -->
+        <div class="sheet-attr-card">
+            <div class="sheet-attr-name">Intellect</div>
+            <div class="sheet-attr-row">
+                <label>Score</label>
+                <input type="number" name="attr_intellect_score" value="10" min="1" max="30" />
+            </div>
+            <div class="sheet-attr-row">
+                <label>Modifier</label>
+                <input type="number" name="attr_intellect_mod" value="0" class="sheet-mod" readonly />
+            </div>
+            <div class="sheet-attr-row">
+                <label>Defense</label>
+                <input type="number" name="attr_intellect_defense" value="10" min="1" />
+            </div>
+        </div>
+
+        <!-- Willpower -->
+        <div class="sheet-attr-card">
+            <div class="sheet-attr-name">Willpower</div>
+            <div class="sheet-attr-row">
+                <label>Score</label>
+                <input type="number" name="attr_willpower_score" value="10" min="1" max="30" />
+            </div>
+            <div class="sheet-attr-row">
+                <label>Modifier</label>
+                <input type="number" name="attr_willpower_mod" value="0" class="sheet-mod" readonly />
+            </div>
+            <div class="sheet-attr-row">
+                <label>Defense</label>
+                <input type="number" name="attr_willpower_defense" value="10" min="1" />
+            </div>
+        </div>
+
+    </div>
+
+    <!-- SECTION: Skills (two columns) -->
+    <div class="sheet-section-header">Skills</div>
+    <div class="sheet-skills-container">
+
+        <!-- Combat Skills -->
+        <div class="sheet-skills-col">
+            <div class="sheet-section-header" style="font-size:12px;">Combat Skills</div>
+            <table class="sheet-skill-table">
+                <thead>
+                    <tr>
+                        <th class="left">Skill</th>
+                        <th>Rank</th>
+                        <th>Roll</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="skill-name">
+                            Melee
+                            <span class="skill-attrs">T or R</span>
+                        </td>
+                        <td><input type="number" name="attr_melee_rank" value="0" min="0" /></td>
+                        <td>
+                            <button type="roll" name="roll_melee"
+                                value="&{template:basic} {{type=Melee Attack}} {{name=@{character_name}}} {{roll=[[@{dice_count}d20kh1 + @{melee_rank} + ?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}}">
+                                Roll
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="skill-name">
+                            Ranged
+                            <span class="skill-attrs">T or R</span>
+                        </td>
+                        <td><input type="number" name="attr_ranged_rank" value="0" min="0" /></td>
+                        <td>
+                            <button type="roll" name="roll_ranged"
+                                value="&{template:basic} {{type=Ranged Attack}} {{name=@{character_name}}} {{roll=[[@{dice_count}d20kh1 + @{ranged_rank} + ?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}}">
+                                Roll
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="skill-name">
+                            Spellcraft
+                            <span class="skill-attrs">I or W</span>
+                        </td>
+                        <td><input type="number" name="attr_spellcraft_rank" value="0" min="0" /></td>
+                        <td>
+                            <button type="roll" name="roll_spellcraft"
+                                value="&{template:basic} {{type=Spellcraft}} {{name=@{character_name}}} {{roll=[[@{dice_count}d20kh1 + @{spellcraft_rank} + ?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}}">
+                                Roll
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- General Skills -->
+        <div class="sheet-skills-col">
+            <div class="sheet-section-header" style="font-size:12px;">General Skills</div>
+            <table class="sheet-skill-table">
+                <thead>
+                    <tr>
+                        <th class="left">Skill</th>
+                        <th>Rank</th>
+                        <th>Bonus</th>
+                        <th>Roll</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="skill-name">
+                            Maneuver
+                            <span class="skill-attrs">T / R</span>
+                        </td>
+                        <td><input type="number" name="attr_maneuver_rank" value="0" min="0" /></td>
+                        <td><input type="number" name="attr_maneuver_bonus" value="0" /></td>
+                        <td>
+                            <button type="roll" name="roll_maneuver"
+                                value="&{template:basic} {{type=Maneuver}} {{name=@{character_name}}} {{roll=[[@{dice_count}d20kh1 + @{maneuver_rank} + @{maneuver_bonus} + ?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}}">
+                                Roll
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="skill-name">
+                            Sneak
+                            <span class="skill-attrs">R / I</span>
+                        </td>
+                        <td><input type="number" name="attr_sneak_rank" value="0" min="0" /></td>
+                        <td><input type="number" name="attr_sneak_bonus" value="0" /></td>
+                        <td>
+                            <button type="roll" name="roll_sneak"
+                                value="&{template:basic} {{type=Sneak}} {{name=@{character_name}}} {{roll=[[@{dice_count}d20kh1 + @{sneak_rank} + @{sneak_bonus} + ?{Attribute|Reflexes,@{reflexes_mod}|Intellect,@{intellect_mod}}]]}}">
+                                Roll
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="skill-name">
+                            Study
+                            <span class="skill-attrs">I / W</span>
+                        </td>
+                        <td><input type="number" name="attr_study_rank" value="0" min="0" /></td>
+                        <td><input type="number" name="attr_study_bonus" value="0" /></td>
+                        <td>
+                            <button type="roll" name="roll_study"
+                                value="&{template:basic} {{type=Study}} {{name=@{character_name}}} {{roll=[[@{dice_count}d20kh1 + @{study_rank} + @{study_bonus} + ?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}}">
+                                Roll
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="skill-name">
+                            Craft
+                            <span class="skill-attrs">T / I</span>
+                        </td>
+                        <td><input type="number" name="attr_craft_rank" value="0" min="0" /></td>
+                        <td><input type="number" name="attr_craft_bonus" value="0" /></td>
+                        <td>
+                            <button type="roll" name="roll_craft"
+                                value="&{template:basic} {{type=Craft}} {{name=@{character_name}}} {{roll=[[@{dice_count}d20kh1 + @{craft_rank} + @{craft_bonus} + ?{Attribute|Toughness,@{toughness_mod}|Intellect,@{intellect_mod}}]]}}">
+                                Roll
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="skill-name">
+                            Barter
+                            <span class="skill-attrs">I / W</span>
+                        </td>
+                        <td><input type="number" name="attr_barter_rank" value="0" min="0" /></td>
+                        <td><input type="number" name="attr_barter_bonus" value="0" /></td>
+                        <td>
+                            <button type="roll" name="roll_barter"
+                                value="&{template:basic} {{type=Barter}} {{name=@{character_name}}} {{roll=[[@{dice_count}d20kh1 + @{barter_rank} + @{barter_bonus} + ?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}}">
+                                Roll
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="skill-name">
+                            Endure
+                            <span class="skill-attrs">T / W</span>
+                        </td>
+                        <td><input type="number" name="attr_endure_rank" value="0" min="0" /></td>
+                        <td><input type="number" name="attr_endure_bonus" value="0" /></td>
+                        <td>
+                            <button type="roll" name="roll_endure"
+                                value="&{template:basic} {{type=Endure}} {{name=@{character_name}}} {{roll=[[@{dice_count}d20kh1 + @{endure_rank} + @{endure_bonus} + ?{Attribute|Toughness,@{toughness_mod}|Willpower,@{willpower_mod}}]]}}">
+                                Roll
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="skill-name">
+                            Deceive
+                            <span class="skill-attrs">R / W</span>
+                        </td>
+                        <td><input type="number" name="attr_deceive_rank" value="0" min="0" /></td>
+                        <td><input type="number" name="attr_deceive_bonus" value="0" /></td>
+                        <td>
+                            <button type="roll" name="roll_deceive"
+                                value="&{template:basic} {{type=Deceive}} {{name=@{character_name}}} {{roll=[[@{dice_count}d20kh1 + @{deceive_rank} + @{deceive_bonus} + ?{Attribute|Reflexes,@{reflexes_mod}|Willpower,@{willpower_mod}}]]}}">
+                                Roll
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <!-- SECTION: Features -->
+    <div class="sheet-section-header">Features &amp; Abilities</div>
+    <div class="sheet-features-grid">
+        <div class="sheet-feature-block">
+            <label>Species Features</label>
+            <textarea name="attr_species_features" placeholder="Species features..."></textarea>
+        </div>
+        <div class="sheet-feature-block">
+            <label>Trade Features</label>
+            <textarea name="attr_trade_features" placeholder="Trade features..."></textarea>
+        </div>
+        <div class="sheet-feature-block">
+            <label>Class 1 Features</label>
+            <textarea name="attr_class1_features" placeholder="Class 1 features..."></textarea>
+        </div>
+        <div class="sheet-feature-block">
+            <label>Class 2 Features</label>
+            <textarea name="attr_class2_features" placeholder="Class 2 features..."></textarea>
+        </div>
+    </div>
+
+    <!-- SECTION: Weapons -->
+    <div class="sheet-section-header">Weapons</div>
+    <div class="sheet-weapons-header">
+        <span class="wh-name">Weapon</span>
+        <span class="wh-skill">Skill</span>
+        <span class="wh-dmg">Damage</span>
+        <span class="wh-range">Range</span>
+        <span class="wh-size">Size</span>
+        <span class="wh-prop">Properties &amp; Features</span>
+        <span class="wh-roll">Attack</span>
+    </div>
+    <fieldset class="repeating_weapons">
+        <input type="text" name="attr_weapon_name" class="sheet-weapon-name" placeholder="Weapon Name" style="flex:2;background:#1a1a1a;border:1px solid #555;border-radius:3px;color:white;font-size:11px;padding:2px 3px;" />
+        <input type="number" name="attr_weapon_skill" class="sheet-weapon-skill" value="0" title="Total skill bonus (rank + mod)" style="width:42px;background:#1a1a1a;border:1px solid #555;border-radius:3px;color:white;font-size:11px;padding:2px;text-align:center;" />
+        <input type="text" name="attr_weapon_damage" class="sheet-weapon-dmg" placeholder="1d6" style="flex:1;background:#1a1a1a;border:1px solid #555;border-radius:3px;color:white;font-size:11px;padding:2px 3px;" />
+        <input type="text" name="attr_weapon_range" class="sheet-weapon-range" placeholder="Melee" style="flex:1;background:#1a1a1a;border:1px solid #555;border-radius:3px;color:white;font-size:11px;padding:2px 3px;" />
+        <input type="text" name="attr_weapon_size" class="sheet-weapon-size" placeholder="1H" style="width:40px;background:#1a1a1a;border:1px solid #555;border-radius:3px;color:white;font-size:11px;padding:2px 3px;" />
+        <input type="text" name="attr_weapon_properties" class="sheet-weapon-prop" placeholder="Properties..." style="flex:2;background:#1a1a1a;border:1px solid #555;border-radius:3px;color:white;font-size:11px;padding:2px 3px;" />
+        <button type="roll" name="roll_weapon_attack" class="sheet-weapon-roll"
+            value="&{template:basic} {{type=Attack}} {{name=@{character_name}}} {{weapon=@{weapon_name}}} {{roll=[[@{dice_count}d20kh1 + @{weapon_skill}]]}} {{damage=[[@{weapon_damage}]]}}">
+            Attack
+        </button>
+    </fieldset>
+
+</div>
+
+<!-- ===================== ROLL TEMPLATES ===================== -->
+<rolltemplate class="sheet-rolltemplate-basic">
+    <div class="sheet-template-container">
+        <div class="sheet-template-header">{{type}}</div>
+        <div class="sheet-template-row">
+            <strong>{{name}}</strong>
+        </div>
+        <div class="sheet-template-row">
+            Roll: {{roll}}
+            {{#rollWasCrit() roll}}
+                <span style="color:lime;font-weight:bold;"> ★ CRITICAL HIT!</span>
+            {{/rollWasCrit() roll}}
+            {{#rollWasFumble() roll}}
+                <span style="color:red;font-weight:bold;"> ✖ FUMBLE!</span>
+            {{/rollWasFumble() roll}}
+        </div>
+        {{#weapon}}
+        <div class="sheet-template-row">Weapon: {{weapon}}</div>
+        {{/weapon}}
+        {{#damage}}
+        <div class="sheet-template-row">Damage: {{damage}}</div>
+        {{/damage}}
+    </div>
+</rolltemplate>
+
+<!-- ===================== SHEET WORKERS ===================== -->
+<script type="text/worker">
+
+// ── Attribute Modifier Calculator ──
+// Formula: floor((score - 10) / 2)
+const ATTRS = ['toughness', 'reflexes', 'intellect', 'willpower'];
+const scoreAttrs = ATTRS.map(a => a + '_score');
+
+on('change:toughness_score change:reflexes_score change:intellect_score change:willpower_score sheet:opened', function() {
+    getAttrs(scoreAttrs, function(v) {
+        const updates = {};
+        ATTRS.forEach(function(attr) {
+            const score = parseInt(v[attr + '_score']) || 10;
+            updates[attr + '_mod'] = Math.floor((score - 10) / 2);
+        });
+        setAttrs(updates);
+    });
+});
+
+// ── Dice Count Calculator (Advantage / Disadvantage) ──
+// dice_count = max(1, 2 + advantage)
+// -1 advantage → 1d20 (disadvantage)
+//  0 advantage → 2d20kh1 (normal)
+// +1 advantage → 3d20kh1 (advantage)
+// +N advantage → (2+N)d20kh1
+on('change:advantage sheet:opened', function() {
+    getAttrs(['advantage'], function(v) {
+        const adv = parseInt(v['advantage']) || 0;
+        const diceCount = Math.max(1, 2 + adv);
+        setAttrs({ dice_count: diceCount });
+    });
+});
+
+</script>
