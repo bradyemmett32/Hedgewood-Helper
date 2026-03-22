@@ -507,3 +507,17 @@ button.sheet-roll-btn:hover {
     color: white;
     font-weight: bold;
 }
+
+.sheet-rolltemplate-basic .sheet-template-crit {
+    color: lime;
+    font-weight: bold;
+}
+
+.sheet-rolltemplate-basic .sheet-template-doom {
+    background: #1a0000;
+    color: red;
+    font-weight: bold;
+    text-align: center;
+    padding: 5px;
+    border-bottom: 1px solid red;
+}

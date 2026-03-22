@@ -125,17 +125,6 @@
             <input type="number" name="attr_fatigue" value="0" min="0" title="Fatigue" />
         </div>
 
-        <div class="sheet-stat-separator"></div>
-
-        <!-- Advantage Control -->
-        <div class="sheet-adv-block">
-            <label>Advantage</label>
-            <div class="sheet-adv-controls">
-                <input type="number" name="attr_advantage" value="0" min="-1" max="10" title="-1=Disadvantage, 0=Normal, 1+=Advantage stacks" />
-            </div>
-            <div class="sheet-adv-hint">-1 Disadv | 0 Normal | +N Adv</div>
-            <div class="sheet-adv-hint">Dice: <input type="number" name="attr_dice_count" value="2" min="1" class="sheet-dice-count" readonly />d20kh1</div>
-        </div>
     </div>
 
     <!-- SECTION: Attributes -->
@@ -236,7 +225,7 @@
                         <td><input type="number" name="attr_melee_rank" value="0" min="0" /></td>
                         <td>
                             <button type="roll" name="roll_melee"
-                                value="&{template:basic} {{type=Melee Attack}} {{name=@{character_name}}} {{roll=[[@{dice_count}d20kh1 + @{melee_rank} + ?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}}">
+                                value="&{template:basic} {{type=Melee Attack}} {{name=@{character_name}}} {{attribute=?{Attribute|Toughness,Toughness|Reflexes,Reflexes}}} {{roll=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20kh1),2|+1 Advantage (3d20kh1),3|+2 Advantages (4d20kh1),4|+3 Advantages (5d20kh1),5}d20kh1 + @{melee_rank} + ?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} {{doom=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20kh1),2|+1 Advantage (3d20kh1),3|+2 Advantages (4d20kh1),4|+3 Advantages (5d20kh1),5}d20kl1]]}}">
                                 Roll
                             </button>
                         </td>
@@ -249,7 +238,7 @@
                         <td><input type="number" name="attr_ranged_rank" value="0" min="0" /></td>
                         <td>
                             <button type="roll" name="roll_ranged"
-                                value="&{template:basic} {{type=Ranged Attack}} {{name=@{character_name}}} {{roll=[[@{dice_count}d20kh1 + @{ranged_rank} + ?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}}">
+                                value="&{template:basic} {{type=Ranged Attack}} {{name=@{character_name}}} {{attribute=?{Attribute|Toughness,Toughness|Reflexes,Reflexes}}} {{roll=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20kh1),2|+1 Advantage (3d20kh1),3|+2 Advantages (4d20kh1),4|+3 Advantages (5d20kh1),5}d20kh1 + @{ranged_rank} + ?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} {{doom=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20kh1),2|+1 Advantage (3d20kh1),3|+2 Advantages (4d20kh1),4|+3 Advantages (5d20kh1),5}d20kl1]]}}">
                                 Roll
                             </button>
                         </td>
@@ -262,7 +251,7 @@
                         <td><input type="number" name="attr_spellcraft_rank" value="0" min="0" /></td>
                         <td>
                             <button type="roll" name="roll_spellcraft"
-                                value="&{template:basic} {{type=Spellcraft}} {{name=@{character_name}}} {{roll=[[@{dice_count}d20kh1 + @{spellcraft_rank} + ?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}}">
+                                value="&{template:basic} {{type=Spellcraft}} {{name=@{character_name}}} {{attribute=?{Attribute|Intellect,Intellect|Willpower,Willpower}}} {{roll=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20kh1),2|+1 Advantage (3d20kh1),3|+2 Advantages (4d20kh1),4|+3 Advantages (5d20kh1),5}d20kh1 + @{spellcraft_rank} + ?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} {{doom=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20kh1),2|+1 Advantage (3d20kh1),3|+2 Advantages (4d20kh1),4|+3 Advantages (5d20kh1),5}d20kl1]]}}">
                                 Roll
                             </button>
                         </td>
@@ -293,7 +282,7 @@
                         <td><input type="number" name="attr_maneuver_bonus" value="0" /></td>
                         <td>
                             <button type="roll" name="roll_maneuver"
-                                value="&{template:basic} {{type=Maneuver}} {{name=@{character_name}}} {{roll=[[@{dice_count}d20kh1 + @{maneuver_rank} + @{maneuver_bonus} + ?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}}">
+                                value="&{template:basic} {{type=Maneuver}} {{name=@{character_name}}} {{attribute=?{Attribute|Toughness,Toughness|Reflexes,Reflexes}}} {{roll=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20kh1),2|+1 Advantage (3d20kh1),3|+2 Advantages (4d20kh1),4|+3 Advantages (5d20kh1),5}d20kh1 + @{maneuver_rank} + @{maneuver_bonus} + ?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} {{doom=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20kh1),2|+1 Advantage (3d20kh1),3|+2 Advantages (4d20kh1),4|+3 Advantages (5d20kh1),5}d20kl1]]}}">
                                 Roll
                             </button>
                         </td>
@@ -307,7 +296,7 @@
                         <td><input type="number" name="attr_sneak_bonus" value="0" /></td>
                         <td>
                             <button type="roll" name="roll_sneak"
-                                value="&{template:basic} {{type=Sneak}} {{name=@{character_name}}} {{roll=[[@{dice_count}d20kh1 + @{sneak_rank} + @{sneak_bonus} + ?{Attribute|Reflexes,@{reflexes_mod}|Intellect,@{intellect_mod}}]]}}">
+                                value="&{template:basic} {{type=Sneak}} {{name=@{character_name}}} {{attribute=?{Attribute|Reflexes,Reflexes|Intellect,Intellect}}} {{roll=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20kh1),2|+1 Advantage (3d20kh1),3|+2 Advantages (4d20kh1),4|+3 Advantages (5d20kh1),5}d20kh1 + @{sneak_rank} + @{sneak_bonus} + ?{Attribute|Reflexes,@{reflexes_mod}|Intellect,@{intellect_mod}}]]}} {{doom=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20kh1),2|+1 Advantage (3d20kh1),3|+2 Advantages (4d20kh1),4|+3 Advantages (5d20kh1),5}d20kl1]]}}">
                                 Roll
                             </button>
                         </td>
@@ -321,7 +310,7 @@
                         <td><input type="number" name="attr_study_bonus" value="0" /></td>
                         <td>
                             <button type="roll" name="roll_study"
-                                value="&{template:basic} {{type=Study}} {{name=@{character_name}}} {{roll=[[@{dice_count}d20kh1 + @{study_rank} + @{study_bonus} + ?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}}">
+                                value="&{template:basic} {{type=Study}} {{name=@{character_name}}} {{attribute=?{Attribute|Intellect,Intellect|Willpower,Willpower}}} {{roll=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20kh1),2|+1 Advantage (3d20kh1),3|+2 Advantages (4d20kh1),4|+3 Advantages (5d20kh1),5}d20kh1 + @{study_rank} + @{study_bonus} + ?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} {{doom=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20kh1),2|+1 Advantage (3d20kh1),3|+2 Advantages (4d20kh1),4|+3 Advantages (5d20kh1),5}d20kl1]]}}">
                                 Roll
                             </button>
                         </td>
@@ -335,7 +324,7 @@
                         <td><input type="number" name="attr_craft_bonus" value="0" /></td>
                         <td>
                             <button type="roll" name="roll_craft"
-                                value="&{template:basic} {{type=Craft}} {{name=@{character_name}}} {{roll=[[@{dice_count}d20kh1 + @{craft_rank} + @{craft_bonus} + ?{Attribute|Toughness,@{toughness_mod}|Intellect,@{intellect_mod}}]]}}">
+                                value="&{template:basic} {{type=Craft}} {{name=@{character_name}}} {{attribute=?{Attribute|Toughness,Toughness|Intellect,Intellect}}} {{roll=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20kh1),2|+1 Advantage (3d20kh1),3|+2 Advantages (4d20kh1),4|+3 Advantages (5d20kh1),5}d20kh1 + @{craft_rank} + @{craft_bonus} + ?{Attribute|Toughness,@{toughness_mod}|Intellect,@{intellect_mod}}]]}} {{doom=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20kh1),2|+1 Advantage (3d20kh1),3|+2 Advantages (4d20kh1),4|+3 Advantages (5d20kh1),5}d20kl1]]}}">
                                 Roll
                             </button>
                         </td>
@@ -349,7 +338,7 @@
                         <td><input type="number" name="attr_barter_bonus" value="0" /></td>
                         <td>
                             <button type="roll" name="roll_barter"
-                                value="&{template:basic} {{type=Barter}} {{name=@{character_name}}} {{roll=[[@{dice_count}d20kh1 + @{barter_rank} + @{barter_bonus} + ?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}}">
+                                value="&{template:basic} {{type=Barter}} {{name=@{character_name}}} {{attribute=?{Attribute|Intellect,Intellect|Willpower,Willpower}}} {{roll=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20kh1),2|+1 Advantage (3d20kh1),3|+2 Advantages (4d20kh1),4|+3 Advantages (5d20kh1),5}d20kh1 + @{barter_rank} + @{barter_bonus} + ?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} {{doom=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20kh1),2|+1 Advantage (3d20kh1),3|+2 Advantages (4d20kh1),4|+3 Advantages (5d20kh1),5}d20kl1]]}}">
                                 Roll
                             </button>
                         </td>
@@ -363,7 +352,7 @@
                         <td><input type="number" name="attr_endure_bonus" value="0" /></td>
                         <td>
                             <button type="roll" name="roll_endure"
-                                value="&{template:basic} {{type=Endure}} {{name=@{character_name}}} {{roll=[[@{dice_count}d20kh1 + @{endure_rank} + @{endure_bonus} + ?{Attribute|Toughness,@{toughness_mod}|Willpower,@{willpower_mod}}]]}}">
+                                value="&{template:basic} {{type=Endure}} {{name=@{character_name}}} {{attribute=?{Attribute|Toughness,Toughness|Willpower,Willpower}}} {{roll=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20kh1),2|+1 Advantage (3d20kh1),3|+2 Advantages (4d20kh1),4|+3 Advantages (5d20kh1),5}d20kh1 + @{endure_rank} + @{endure_bonus} + ?{Attribute|Toughness,@{toughness_mod}|Willpower,@{willpower_mod}}]]}} {{doom=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20kh1),2|+1 Advantage (3d20kh1),3|+2 Advantages (4d20kh1),4|+3 Advantages (5d20kh1),5}d20kl1]]}}">
                                 Roll
                             </button>
                         </td>
@@ -377,7 +366,7 @@
                         <td><input type="number" name="attr_deceive_bonus" value="0" /></td>
                         <td>
                             <button type="roll" name="roll_deceive"
-                                value="&{template:basic} {{type=Deceive}} {{name=@{character_name}}} {{roll=[[@{dice_count}d20kh1 + @{deceive_rank} + @{deceive_bonus} + ?{Attribute|Reflexes,@{reflexes_mod}|Willpower,@{willpower_mod}}]]}}">
+                                value="&{template:basic} {{type=Deceive}} {{name=@{character_name}}} {{attribute=?{Attribute|Reflexes,Reflexes|Willpower,Willpower}}} {{roll=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20kh1),2|+1 Advantage (3d20kh1),3|+2 Advantages (4d20kh1),4|+3 Advantages (5d20kh1),5}d20kh1 + @{deceive_rank} + @{deceive_bonus} + ?{Attribute|Reflexes,@{reflexes_mod}|Willpower,@{willpower_mod}}]]}} {{doom=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20kh1),2|+1 Advantage (3d20kh1),3|+2 Advantages (4d20kh1),4|+3 Advantages (5d20kh1),5}d20kl1]]}}">
                                 Roll
                             </button>
                         </td>
@@ -428,7 +417,7 @@
         <input type="text" name="attr_weapon_size" class="sheet-weapon-size" placeholder="1H" />
         <input type="text" name="attr_weapon_properties" class="sheet-weapon-prop" placeholder="Properties..." />
         <button type="roll" name="roll_weapon_attack" class="sheet-weapon-roll"
-            value="&{template:basic} {{type=Attack}} {{name=@{character_name}}} {{weapon=@{weapon_name}}} {{roll=[[@{dice_count}d20kh1 + @{weapon_skill}]]}} {{damage=[[@{weapon_damage}]]}}">
+            value="&{template:basic} {{type=Attack}} {{name=@{character_name}}} {{weapon=@{weapon_name}}} {{roll=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20kh1),2|+1 Advantage (3d20kh1),3|+2 Advantages (4d20kh1),4|+3 Advantages (5d20kh1),5}d20kh1 + @{weapon_skill}]]}} {{doom=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20kh1),2|+1 Advantage (3d20kh1),3|+2 Advantages (4d20kh1),4|+3 Advantages (5d20kh1),5}d20kl1]]}} {{damage=[[@{weapon_damage}]]}}">
             Attack
         </button>
     </fieldset>
@@ -439,18 +428,19 @@
 <rolltemplate class="sheet-rolltemplate-basic">
     <div class="sheet-template-container">
         <div class="sheet-template-header">{{type}}</div>
-        <div class="sheet-template-row">
-            <strong>{{name}}</strong>
-        </div>
+        <div class="sheet-template-row"><strong>{{name}}</strong></div>
+        {{#attribute}}
+        <div class="sheet-template-row">Attribute: <strong>{{attribute}}</strong></div>
+        {{/attribute}}
         <div class="sheet-template-row">
             Roll: {{roll}}
             {{#rollWasCrit() roll}}
-                <span style="color:lime;font-weight:bold;"> ★ CRITICAL HIT!</span>
+                <span class="sheet-template-crit"> ★ CRITICAL HIT!</span>
             {{/rollWasCrit() roll}}
-            {{#rollWasFumble() roll}}
-                <span style="color:red;font-weight:bold;"> ✖ FUMBLE!</span>
-            {{/rollWasFumble() roll}}
         </div>
+        {{#rollTotal() doom 1}}
+        <div class="sheet-template-doom">☠ DOOM — a 1 was rolled!</div>
+        {{/rollTotal() doom 1}}
         {{#weapon}}
         <div class="sheet-template-row">Weapon: {{weapon}}</div>
         {{/weapon}}
@@ -491,20 +481,6 @@ on('change:toughness_score change:reflexes_score change:intellect_score change:w
             [attr + '_mod']: score - 10,
             [attr + '_defense']: score
         });
-    });
-});
-
-// ── Dice Count Calculator (Advantage / Disadvantage) ──
-// dice_count = max(1, 2 + advantage)
-// -1 advantage → 1d20 (disadvantage)
-//  0 advantage → 2d20kh1 (normal)
-// +1 advantage → 3d20kh1 (advantage)
-// +N advantage → (2+N)d20kh1
-on('change:advantage sheet:opened', function() {
-    getAttrs(['advantage'], function(v) {
-        const adv = parseInt(v['advantage']) || 0;
-        const diceCount = Math.max(1, 2 + adv);
-        setAttrs({ dice_count: diceCount });
     });
 });
 
