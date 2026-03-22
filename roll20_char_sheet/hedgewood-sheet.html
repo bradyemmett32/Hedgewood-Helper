@@ -463,12 +463,15 @@
 <!-- ===================== SHEET WORKERS ===================== -->
 <script type="text/worker">
 
-// ── Attribute Modifier Calculator ──
-// Formula: score - 10
+// ── Attribute Modifier & Defense Calculator ──
+// Modifier formula: score - 10
+// Defense defaults to score when score changes, but remains player-editable.
+// On sheet:opened only modifiers are recalculated so player defense edits persist.
 const ATTRS = ['toughness', 'reflexes', 'intellect', 'willpower'];
 const scoreAttrs = ATTRS.map(a => a + '_score');
 
-on('change:toughness_score change:reflexes_score change:intellect_score change:willpower_score sheet:opened', function() {
+// On sheet open: recalculate modifiers only (preserve player-set defenses)
+on('sheet:opened', function() {
     getAttrs(scoreAttrs, function(v) {
         const updates = {};
         ATTRS.forEach(function(attr) {
@@ -476,6 +479,18 @@ on('change:toughness_score change:reflexes_score change:intellect_score change:w
             updates[attr + '_mod'] = score - 10;
         });
         setAttrs(updates);
+    });
+});
+
+// On score change: update both modifier and defense default
+on('change:toughness_score change:reflexes_score change:intellect_score change:willpower_score', function(e) {
+    const attr = e.sourceAttribute.replace('_score', '');
+    getAttrs([attr + '_score'], function(v) {
+        const score = parseInt(v[attr + '_score']) || 10;
+        setAttrs({
+            [attr + '_mod']: score - 10,
+            [attr + '_defense']: score
+        });
     });
 });
 
