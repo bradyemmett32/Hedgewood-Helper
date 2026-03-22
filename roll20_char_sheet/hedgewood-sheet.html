@@ -464,7 +464,7 @@
 <script type="text/worker">
 
 // ── Attribute Modifier Calculator ──
-// Formula: floor((score - 10) / 2)
+// Formula: score - 10
 const ATTRS = ['toughness', 'reflexes', 'intellect', 'willpower'];
 const scoreAttrs = ATTRS.map(a => a + '_score');
 
@@ -473,7 +473,7 @@ on('change:toughness_score change:reflexes_score change:intellect_score change:w
         const updates = {};
         ATTRS.forEach(function(attr) {
             const score = parseInt(v[attr + '_score']) || 10;
-            updates[attr + '_mod'] = Math.floor((score - 10) / 2);
+            updates[attr + '_mod'] = score - 10;
         });
         setAttrs(updates);
     });
