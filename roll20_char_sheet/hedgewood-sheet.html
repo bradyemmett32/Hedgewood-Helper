@@ -526,19 +526,31 @@ const ADV = '?{Advantage|Disadvantage (1d20),1|Normal (2d20kh1),2|+1 Advantage (
 
 // Roll20 excludes dropped dice from the .dice array when kh1/kl1 is used,
 // so we roll Nd20 (no keep modifier) and compute keep-highest in JS instead.
+//
+// startRoll dice structure: r.results.roll.dice is an array of GROUPS (one per
+// dice expression like "5d20"). Individual die values live in group.results:
+//   r.results.roll.dice[0].results = [{v:5}, {v:19}, {v:11}, {v:9}, {v:13}]
+function flattenDice(r) {
+    var groups = (r.results.roll && r.results.roll.dice) || [];
+    var vals = [];
+    groups.forEach(function(g) {
+        (g.results || []).forEach(function(die) { vals.push(die.v); });
+    });
+    return vals;
+}
+
 function hasDoomDie(r) {
-    var dice = (r.results.roll && r.results.roll.dice) || [];
-    return dice.some(function(d) { return d.v === 1; });
+    return flattenDice(r).some(function(v) { return v === 1; });
 }
 
 // Returns max(d20s) + flat bonuses, replacing the Nd20 sum that Roll20 computed.
 function keepHighTotal(r) {
     var res = r.results.roll;
     if (!res) return 0;
-    var dice = res.dice || [];
-    if (!dice.length) return res.result || 0;
-    var maxDie  = dice.reduce(function(m, d) { return Math.max(m, d.v); }, 0);
-    var sumDice = dice.reduce(function(s, d) { return s + d.v; }, 0);
+    var vals = flattenDice(r);
+    if (!vals.length) return res.result || 0;
+    var maxDie  = vals.reduce(function(m, v) { return Math.max(m, v); }, 0);
+    var sumDice = vals.reduce(function(s, v) { return s + v; }, 0);
     return maxDie + ((res.result || 0) - sumDice);
 }
 
