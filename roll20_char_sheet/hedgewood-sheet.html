@@ -524,9 +524,22 @@ on('change:toughness_score change:reflexes_score change:intellect_score change:w
 
 const ADV = '?{Advantage|Disadvantage (1d20),1|Normal (2d20kh1),2|+1 Advantage (3d20kh1),3|+2 Advantages (4d20kh1),4|+3 Advantages (5d20kh1),5}';
 
+// Roll20 excludes dropped dice from the .dice array when kh1/kl1 is used,
+// so we roll Nd20 (no keep modifier) and compute keep-highest in JS instead.
 function hasDoomDie(r) {
     var dice = (r.results.roll && r.results.roll.dice) || [];
-    return dice.some(function(d) { return d.sides === 20 && d.v === 1; });
+    return dice.some(function(d) { return d.v === 1; });
+}
+
+// Returns max(d20s) + flat bonuses, replacing the Nd20 sum that Roll20 computed.
+function keepHighTotal(r) {
+    var res = r.results.roll;
+    if (!res) return 0;
+    var dice = res.dice || [];
+    if (!dice.length) return res.result || 0;
+    var maxDie  = dice.reduce(function(m, d) { return Math.max(m, d.v); }, 0);
+    var sumDice = dice.reduce(function(s, d) { return s + d.v; }, 0);
+    return maxDie + ((res.result || 0) - sumDice);
 }
 
 // ── Combat Skills ──
@@ -535,9 +548,9 @@ on('clicked:melee', function() {
     startRoll(
         '&{template:basic} {{type=Melee Attack}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{melee_rank}]]}} ' +
-        '{{roll=[[' + ADV + 'd20kh1 + @{melee_rank} + ?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} ' +
+        '{{roll=[[' + ADV + 'd20 + @{melee_rank} + ?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} ' +
         '{{doom=[[0]]}}',
-        function(r) { finishRoll(r.rollId, { doom: hasDoomDie(r) ? 1 : 0 }); }
+        function(r) { finishRoll(r.rollId, { roll: keepHighTotal(r), doom: hasDoomDie(r) ? 1 : 0 }); }
     );
 });
 
@@ -545,9 +558,9 @@ on('clicked:ranged', function() {
     startRoll(
         '&{template:basic} {{type=Ranged Attack}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{ranged_rank}]]}} ' +
-        '{{roll=[[' + ADV + 'd20kh1 + @{ranged_rank} + ?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} ' +
+        '{{roll=[[' + ADV + 'd20 + @{ranged_rank} + ?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} ' +
         '{{doom=[[0]]}}',
-        function(r) { finishRoll(r.rollId, { doom: hasDoomDie(r) ? 1 : 0 }); }
+        function(r) { finishRoll(r.rollId, { roll: keepHighTotal(r), doom: hasDoomDie(r) ? 1 : 0 }); }
     );
 });
 
@@ -555,9 +568,9 @@ on('clicked:spellcraft', function() {
     startRoll(
         '&{template:basic} {{type=Spellcraft}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{spellcraft_rank}]]}} ' +
-        '{{roll=[[' + ADV + 'd20kh1 + @{spellcraft_rank} + ?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} ' +
+        '{{roll=[[' + ADV + 'd20 + @{spellcraft_rank} + ?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} ' +
         '{{doom=[[0]]}}',
-        function(r) { finishRoll(r.rollId, { doom: hasDoomDie(r) ? 1 : 0 }); }
+        function(r) { finishRoll(r.rollId, { roll: keepHighTotal(r), doom: hasDoomDie(r) ? 1 : 0 }); }
     );
 });
 
@@ -567,9 +580,9 @@ on('clicked:maneuver', function() {
     startRoll(
         '&{template:basic} {{type=Maneuver}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{maneuver_rank}]]}} {{bonus=[[@{maneuver_bonus}]]}} ' +
-        '{{roll=[[' + ADV + 'd20kh1 + @{maneuver_rank} + @{maneuver_bonus} + ?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} ' +
+        '{{roll=[[' + ADV + 'd20 + @{maneuver_rank} + @{maneuver_bonus} + ?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} ' +
         '{{doom=[[0]]}}',
-        function(r) { finishRoll(r.rollId, { doom: hasDoomDie(r) ? 1 : 0 }); }
+        function(r) { finishRoll(r.rollId, { roll: keepHighTotal(r), doom: hasDoomDie(r) ? 1 : 0 }); }
     );
 });
 
@@ -577,9 +590,9 @@ on('clicked:sneak', function() {
     startRoll(
         '&{template:basic} {{type=Sneak}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{sneak_rank}]]}} {{bonus=[[@{sneak_bonus}]]}} ' +
-        '{{roll=[[' + ADV + 'd20kh1 + @{sneak_rank} + @{sneak_bonus} + ?{Attribute|Reflexes,@{reflexes_mod}|Intellect,@{intellect_mod}}]]}} ' +
+        '{{roll=[[' + ADV + 'd20 + @{sneak_rank} + @{sneak_bonus} + ?{Attribute|Reflexes,@{reflexes_mod}|Intellect,@{intellect_mod}}]]}} ' +
         '{{doom=[[0]]}}',
-        function(r) { finishRoll(r.rollId, { doom: hasDoomDie(r) ? 1 : 0 }); }
+        function(r) { finishRoll(r.rollId, { roll: keepHighTotal(r), doom: hasDoomDie(r) ? 1 : 0 }); }
     );
 });
 
@@ -587,9 +600,9 @@ on('clicked:study', function() {
     startRoll(
         '&{template:basic} {{type=Study}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{study_rank}]]}} {{bonus=[[@{study_bonus}]]}} ' +
-        '{{roll=[[' + ADV + 'd20kh1 + @{study_rank} + @{study_bonus} + ?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} ' +
+        '{{roll=[[' + ADV + 'd20 + @{study_rank} + @{study_bonus} + ?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} ' +
         '{{doom=[[0]]}}',
-        function(r) { finishRoll(r.rollId, { doom: hasDoomDie(r) ? 1 : 0 }); }
+        function(r) { finishRoll(r.rollId, { roll: keepHighTotal(r), doom: hasDoomDie(r) ? 1 : 0 }); }
     );
 });
 
@@ -597,9 +610,9 @@ on('clicked:craft', function() {
     startRoll(
         '&{template:basic} {{type=Craft}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{craft_rank}]]}} {{bonus=[[@{craft_bonus}]]}} ' +
-        '{{roll=[[' + ADV + 'd20kh1 + @{craft_rank} + @{craft_bonus} + ?{Attribute|Toughness,@{toughness_mod}|Intellect,@{intellect_mod}}]]}} ' +
+        '{{roll=[[' + ADV + 'd20 + @{craft_rank} + @{craft_bonus} + ?{Attribute|Toughness,@{toughness_mod}|Intellect,@{intellect_mod}}]]}} ' +
         '{{doom=[[0]]}}',
-        function(r) { finishRoll(r.rollId, { doom: hasDoomDie(r) ? 1 : 0 }); }
+        function(r) { finishRoll(r.rollId, { roll: keepHighTotal(r), doom: hasDoomDie(r) ? 1 : 0 }); }
     );
 });
 
@@ -607,9 +620,9 @@ on('clicked:barter', function() {
     startRoll(
         '&{template:basic} {{type=Barter}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{barter_rank}]]}} {{bonus=[[@{barter_bonus}]]}} ' +
-        '{{roll=[[' + ADV + 'd20kh1 + @{barter_rank} + @{barter_bonus} + ?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} ' +
+        '{{roll=[[' + ADV + 'd20 + @{barter_rank} + @{barter_bonus} + ?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} ' +
         '{{doom=[[0]]}}',
-        function(r) { finishRoll(r.rollId, { doom: hasDoomDie(r) ? 1 : 0 }); }
+        function(r) { finishRoll(r.rollId, { roll: keepHighTotal(r), doom: hasDoomDie(r) ? 1 : 0 }); }
     );
 });
 
@@ -617,9 +630,9 @@ on('clicked:endure', function() {
     startRoll(
         '&{template:basic} {{type=Endure}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{endure_rank}]]}} {{bonus=[[@{endure_bonus}]]}} ' +
-        '{{roll=[[' + ADV + 'd20kh1 + @{endure_rank} + @{endure_bonus} + ?{Attribute|Toughness,@{toughness_mod}|Willpower,@{willpower_mod}}]]}} ' +
+        '{{roll=[[' + ADV + 'd20 + @{endure_rank} + @{endure_bonus} + ?{Attribute|Toughness,@{toughness_mod}|Willpower,@{willpower_mod}}]]}} ' +
         '{{doom=[[0]]}}',
-        function(r) { finishRoll(r.rollId, { doom: hasDoomDie(r) ? 1 : 0 }); }
+        function(r) { finishRoll(r.rollId, { roll: keepHighTotal(r), doom: hasDoomDie(r) ? 1 : 0 }); }
     );
 });
 
@@ -627,9 +640,9 @@ on('clicked:deceive', function() {
     startRoll(
         '&{template:basic} {{type=Deceive}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{deceive_rank}]]}} {{bonus=[[@{deceive_bonus}]]}} ' +
-        '{{roll=[[' + ADV + 'd20kh1 + @{deceive_rank} + @{deceive_bonus} + ?{Attribute|Reflexes,@{reflexes_mod}|Willpower,@{willpower_mod}}]]}} ' +
+        '{{roll=[[' + ADV + 'd20 + @{deceive_rank} + @{deceive_bonus} + ?{Attribute|Reflexes,@{reflexes_mod}|Willpower,@{willpower_mod}}]]}} ' +
         '{{doom=[[0]]}}',
-        function(r) { finishRoll(r.rollId, { doom: hasDoomDie(r) ? 1 : 0 }); }
+        function(r) { finishRoll(r.rollId, { roll: keepHighTotal(r), doom: hasDoomDie(r) ? 1 : 0 }); }
     );
 });
 
@@ -641,10 +654,10 @@ on('clicked:repeating_weapons:weapon_attack', function() {
         startRoll(
             '&{template:basic} {{type=Attack}} {{name=' + v.character_name + '}} ' +
             '{{weapon=' + v.weapon_name + '}} ' +
-            '{{roll=[[' + ADV + 'd20kh1 + ' + skill + ']]}} ' +
+            '{{roll=[[' + ADV + 'd20 + ' + skill + ']]}} ' +
             '{{damage=[[' + (v.weapon_damage || '1d6') + ']]}} ' +
             '{{doom=[[0]]}}',
-            function(r) { finishRoll(r.rollId, { doom: hasDoomDie(r) ? 1 : 0 }); }
+            function(r) { finishRoll(r.rollId, { roll: keepHighTotal(r), doom: hasDoomDie(r) ? 1 : 0 }); }
         );
     });
 });
