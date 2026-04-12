@@ -472,9 +472,9 @@
                 <span class="sheet-template-crit"> ★ CRITICAL HIT!</span>
             {{/rollWasCrit() roll}}
         </div>
-        {{#rollWasFumble() doom}}
+        {{#rollTotal() doom 1}}
         <div class="sheet-template-doom">☠ DOOM — a 1 was rolled!</div>
-        {{/rollWasFumble() doom}}
+        {{/rollTotal() doom 1}}
         {{#weapon}}
         <div class="sheet-template-row">Weapon: {{weapon}}</div>
         {{/weapon}}
@@ -518,21 +518,15 @@ on('change:toughness_score change:reflexes_score change:intellect_score change:w
     });
 });
 
-// ── Skill & Weapon Roll Handlers (startRoll/finishRoll for accurate Doom detection) ──
-// Doom fires when any d20 in the actual dice pool shows a 1.
-// Using startRoll lets us inspect individual die values before the template renders.
+// ── Skill & Weapon Roll Handlers ──
+// Attack rolls use startRoll so all dice values are accessible in the callback.
+// Doom uses a separate Nd20kl1 pool (same N as the attack, from the ADV query)
+// so rollTotal() doom 1 fires naturally when the minimum die in that pool is 1.
+// Note: Roll20 template conditionals evaluate initial dice values only — finishRoll
+// overrides affect displayed numbers but cannot trigger or suppress conditionals.
 
 const ADV = '?{Advantage|Disadvantage (1d20),1|Normal (2d20kh1),2|+1 Advantage (3d20kh1),3|+2 Advantages (4d20kh1),4|+3 Advantages (5d20kh1),5}';
-
-// Doom detection: r.results.roll.dice is a flat array of raw numbers — one
-// per die rolled, including any dice dropped by kh1/kl1 (e.g. [19, 10]).
-// Example: 2d20kh1 rolling 19 and 10 → dice = [19, 10], result = 19+bonuses.
-function hasDoomDie(r) {
-    var dice = (r.results && r.results.roll && r.results.roll.dice) || [];
-    var found = dice.some(function(v) { return v === 1; });
-    log('DOOM dice (' + dice.length + '): ' + JSON.stringify(dice) + ' → hasDoom=' + found);
-    return found;
-}
+const ADV_KL = ADV; // same query — Roll20 deduplicates, player answers once for both expressions
 
 // ── Combat Skills ──
 
@@ -541,8 +535,8 @@ on('clicked:melee', function() {
         '&{template:basic} {{type=Melee Attack}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{melee_rank}]]}} ' +
         '{{roll=[[' + ADV + 'd20kh1 + @{melee_rank} + ?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} ' +
-        '{{doom=[[1d6]]}}',
-        function(r) { finishRoll(r.rollId, { doom: hasDoomDie(r) ? 1 : 0 }); }
+        '{{doom=[[' + ADV_KL + 'd20kl1]]}}',
+        function(r) { finishRoll(r.rollId, {}); }
     );
 });
 
@@ -551,8 +545,8 @@ on('clicked:ranged', function() {
         '&{template:basic} {{type=Ranged Attack}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{ranged_rank}]]}} ' +
         '{{roll=[[' + ADV + 'd20kh1 + @{ranged_rank} + ?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} ' +
-        '{{doom=[[1d6]]}}',
-        function(r) { finishRoll(r.rollId, { doom: hasDoomDie(r) ? 1 : 0 }); }
+        '{{doom=[[' + ADV_KL + 'd20kl1]]}}',
+        function(r) { finishRoll(r.rollId, {}); }
     );
 });
 
@@ -561,8 +555,8 @@ on('clicked:spellcraft', function() {
         '&{template:basic} {{type=Spellcraft}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{spellcraft_rank}]]}} ' +
         '{{roll=[[' + ADV + 'd20kh1 + @{spellcraft_rank} + ?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} ' +
-        '{{doom=[[1d6]]}}',
-        function(r) { finishRoll(r.rollId, { doom: hasDoomDie(r) ? 1 : 0 }); }
+        '{{doom=[[' + ADV_KL + 'd20kl1]]}}',
+        function(r) { finishRoll(r.rollId, {}); }
     );
 });
 
@@ -573,8 +567,8 @@ on('clicked:maneuver', function() {
         '&{template:basic} {{type=Maneuver}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{maneuver_rank}]]}} {{bonus=[[@{maneuver_bonus}]]}} ' +
         '{{roll=[[' + ADV + 'd20kh1 + @{maneuver_rank} + @{maneuver_bonus} + ?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} ' +
-        '{{doom=[[1d6]]}}',
-        function(r) { finishRoll(r.rollId, { doom: hasDoomDie(r) ? 1 : 0 }); }
+        '{{doom=[[' + ADV_KL + 'd20kl1]]}}',
+        function(r) { finishRoll(r.rollId, {}); }
     );
 });
 
@@ -583,8 +577,8 @@ on('clicked:sneak', function() {
         '&{template:basic} {{type=Sneak}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{sneak_rank}]]}} {{bonus=[[@{sneak_bonus}]]}} ' +
         '{{roll=[[' + ADV + 'd20kh1 + @{sneak_rank} + @{sneak_bonus} + ?{Attribute|Reflexes,@{reflexes_mod}|Intellect,@{intellect_mod}}]]}} ' +
-        '{{doom=[[1d6]]}}',
-        function(r) { finishRoll(r.rollId, { doom: hasDoomDie(r) ? 1 : 0 }); }
+        '{{doom=[[' + ADV_KL + 'd20kl1]]}}',
+        function(r) { finishRoll(r.rollId, {}); }
     );
 });
 
@@ -593,8 +587,8 @@ on('clicked:study', function() {
         '&{template:basic} {{type=Study}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{study_rank}]]}} {{bonus=[[@{study_bonus}]]}} ' +
         '{{roll=[[' + ADV + 'd20kh1 + @{study_rank} + @{study_bonus} + ?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} ' +
-        '{{doom=[[1d6]]}}',
-        function(r) { finishRoll(r.rollId, { doom: hasDoomDie(r) ? 1 : 0 }); }
+        '{{doom=[[' + ADV_KL + 'd20kl1]]}}',
+        function(r) { finishRoll(r.rollId, {}); }
     );
 });
 
@@ -603,8 +597,8 @@ on('clicked:craft', function() {
         '&{template:basic} {{type=Craft}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{craft_rank}]]}} {{bonus=[[@{craft_bonus}]]}} ' +
         '{{roll=[[' + ADV + 'd20kh1 + @{craft_rank} + @{craft_bonus} + ?{Attribute|Toughness,@{toughness_mod}|Intellect,@{intellect_mod}}]]}} ' +
-        '{{doom=[[1d6]]}}',
-        function(r) { finishRoll(r.rollId, { doom: hasDoomDie(r) ? 1 : 0 }); }
+        '{{doom=[[' + ADV_KL + 'd20kl1]]}}',
+        function(r) { finishRoll(r.rollId, {}); }
     );
 });
 
@@ -613,8 +607,8 @@ on('clicked:barter', function() {
         '&{template:basic} {{type=Barter}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{barter_rank}]]}} {{bonus=[[@{barter_bonus}]]}} ' +
         '{{roll=[[' + ADV + 'd20kh1 + @{barter_rank} + @{barter_bonus} + ?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} ' +
-        '{{doom=[[1d6]]}}',
-        function(r) { finishRoll(r.rollId, { doom: hasDoomDie(r) ? 1 : 0 }); }
+        '{{doom=[[' + ADV_KL + 'd20kl1]]}}',
+        function(r) { finishRoll(r.rollId, {}); }
     );
 });
 
@@ -623,8 +617,8 @@ on('clicked:endure', function() {
         '&{template:basic} {{type=Endure}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{endure_rank}]]}} {{bonus=[[@{endure_bonus}]]}} ' +
         '{{roll=[[' + ADV + 'd20kh1 + @{endure_rank} + @{endure_bonus} + ?{Attribute|Toughness,@{toughness_mod}|Willpower,@{willpower_mod}}]]}} ' +
-        '{{doom=[[1d6]]}}',
-        function(r) { finishRoll(r.rollId, { doom: hasDoomDie(r) ? 1 : 0 }); }
+        '{{doom=[[' + ADV_KL + 'd20kl1]]}}',
+        function(r) { finishRoll(r.rollId, {}); }
     );
 });
 
@@ -633,8 +627,8 @@ on('clicked:deceive', function() {
         '&{template:basic} {{type=Deceive}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{deceive_rank}]]}} {{bonus=[[@{deceive_bonus}]]}} ' +
         '{{roll=[[' + ADV + 'd20kh1 + @{deceive_rank} + @{deceive_bonus} + ?{Attribute|Reflexes,@{reflexes_mod}|Willpower,@{willpower_mod}}]]}} ' +
-        '{{doom=[[1d6]]}}',
-        function(r) { finishRoll(r.rollId, { doom: hasDoomDie(r) ? 1 : 0 }); }
+        '{{doom=[[' + ADV_KL + 'd20kl1]]}}',
+        function(r) { finishRoll(r.rollId, {}); }
     );
 });
 
@@ -648,8 +642,8 @@ on('clicked:repeating_weapons:weapon_attack', function() {
             '{{weapon=' + v.weapon_name + '}} ' +
             '{{roll=[[' + ADV + 'd20kh1 + ' + skill + ']]}} ' +
             '{{damage=[[' + (v.weapon_damage || '1d6') + ']]}} ' +
-            '{{doom=[[1d6]]}}',
-            function(r) { finishRoll(r.rollId, { doom: hasDoomDie(r) ? 1 : 0 }); }
+            '{{doom=[[' + ADV_KL + 'd20kl1]]}}',
+            function(r) { finishRoll(r.rollId, {}); }
         );
     });
 });
