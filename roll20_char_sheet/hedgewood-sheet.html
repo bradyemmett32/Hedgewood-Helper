@@ -472,9 +472,9 @@
                 <span class="sheet-template-crit"> ★ CRITICAL HIT!</span>
             {{/rollWasCrit() roll}}
         </div>
-        {{#rollTotal() doom 1}}
+        {{#doom}}
         <div class="sheet-template-doom">☠ DOOM — a 1 was rolled!</div>
-        {{/rollTotal() doom 1}}
+        {{/doom}}
         {{#weapon}}
         <div class="sheet-template-row">Weapon: {{weapon}}</div>
         {{/weapon}}
@@ -529,8 +529,9 @@ const ADV = '?{Advantage|Disadvantage (1d20),1|Normal (2d20kh1),2|+1 Advantage (
 // Example: 2d20kh1 rolling 19 and 10 → dice = [19, 10], result = 19+bonuses.
 function hasDoomDie(r) {
     var dice = (r.results && r.results.roll && r.results.roll.dice) || [];
-    log('DOOM dice (' + dice.length + '): ' + JSON.stringify(dice));
-    return dice.some(function(v) { return v === 1; });
+    var found = dice.some(function(v) { return v === 1; });
+    log('DOOM dice (' + dice.length + '): ' + JSON.stringify(dice) + ' → hasDoom=' + found);
+    return found;
 }
 
 // ── Combat Skills ──
