@@ -524,39 +524,12 @@ on('change:toughness_score change:reflexes_score change:intellect_score change:w
 
 const ADV = '?{Advantage|Disadvantage (1d20),1|Normal (2d20kh1),2|+1 Advantage (3d20kh1),3|+2 Advantages (4d20kh1),4|+3 Advantages (5d20kh1),5}';
 
-// Doom detection: inspect individual die values from the startRoll callback.
-// Roll20's result object structure is uncertain across versions; we try the
-// two known formats and fall back gracefully.
-//
-// Format A (observed in Campaign API): res.rolls is an array of expression
-//   parts; dice groups have res.rolls[i].results = [{v:X}, ...]
-// Format B (simplified sheet worker): res.dice is a flat array [{v:X}, ...]
-//   or a grouped array [{results:[{v:X},...]}]
-//
-// DEBUG: open browser console (F12) after a Melee roll to see actual structure.
-function flattenDice(r) {
-    var res = r.results && r.results.roll;
-    if (!res) return [];
-    // Try "rolls" (Roll20 Campaign API / standard JSON format)
-    var groups = res.rolls || res.dice || [];
-    var vals = [];
-    // Nested: groups[i].results = [{v:X}, ...]  (dice groups + modifier terms)
-    groups.forEach(function(g) {
-        (g.results || []).forEach(function(die) {
-            if (typeof die.v !== 'undefined') vals.push(die.v);
-        });
-    });
-    // Flat fallback: groups = [{v:X}, ...] directly
-    if (!vals.length) {
-        groups.forEach(function(d) {
-            if (typeof d.v !== 'undefined') vals.push(d.v);
-        });
-    }
-    return vals;
-}
-
+// Doom detection: r.results.roll.dice is a flat array of raw numbers — one
+// per die rolled, including any dice dropped by kh1/kl1 (e.g. [19, 10]).
+// Example: 2d20kh1 rolling 19 and 10 → dice = [19, 10], result = 19+bonuses.
 function hasDoomDie(r) {
-    return flattenDice(r).some(function(v) { return v === 1; });
+    var dice = (r.results && r.results.roll && r.results.roll.dice) || [];
+    return dice.some(function(v) { return v === 1; });
 }
 
 // ── Combat Skills ──
@@ -567,10 +540,7 @@ on('clicked:melee', function() {
         '{{showstats=1}} {{rank=[[@{melee_rank}]]}} ' +
         '{{roll=[[' + ADV + 'd20kh1 + @{melee_rank} + ?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} ' +
         '{{doom=[[0]]}}',
-        function(r) {
-            log('DOOM DEBUG roll result: ' + JSON.stringify(r.results && r.results.roll));
-            finishRoll(r.rollId, { doom: hasDoomDie(r) ? 1 : 0 });
-        }
+        function(r) { finishRoll(r.rollId, { doom: hasDoomDie(r) ? 1 : 0 }); }
     );
 });
 
