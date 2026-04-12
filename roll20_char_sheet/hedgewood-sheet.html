@@ -474,9 +474,12 @@
         {{#attribute}}
         <div class="sheet-template-row">Attribute: <strong>{{attribute}}</strong></div>
         {{/attribute}}
-        {{#rank}}
-        <div class="sheet-template-row sheet-template-breakdown">Rank: {{rank}} &nbsp;|&nbsp; Modifier: {{mod}}{{#bonus}} &nbsp;|&nbsp; Bonus: {{bonus}}{{/bonus}}</div>
-        {{/rank}}
+        {{#attribute}}
+        <div class="sheet-template-row sheet-template-breakdown">Rank: {{rank}} | Mod: {{mod}}</div>
+        {{/attribute}}
+        {{#bonus}}
+        <div class="sheet-template-row sheet-template-breakdown">Bonus: {{bonus}}</div>
+        {{/bonus}}
         <div class="sheet-template-row">
             Roll: {{roll}}
             {{#rollWasCrit() roll}}
