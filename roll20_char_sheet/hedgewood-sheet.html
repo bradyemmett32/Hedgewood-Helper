@@ -472,9 +472,9 @@
                 <span class="sheet-template-crit"> ★ CRITICAL HIT!</span>
             {{/rollWasCrit() roll}}
         </div>
-        {{#rollTotal() doom 1}}
+        {{#rollWasFumble() doom}}
         <div class="sheet-template-doom">☠ DOOM — a 1 was rolled!</div>
-        {{/rollTotal() doom 1}}
+        {{/rollWasFumble() doom}}
         {{#weapon}}
         <div class="sheet-template-row">Weapon: {{weapon}}</div>
         {{/weapon}}
