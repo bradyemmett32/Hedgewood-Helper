@@ -470,27 +470,34 @@
             <span class="sheet-col-label">Die Roll</span>
             <span class="sheet-col-label">Modified Total</span>
         </div>
-        {{#d1}}
+        {{#rollTotal() ndice 1}}
         <div class="sheet-template-row sheet-template-die-row sheet-die-best">{{d1}} → {{m1}}</div>
-        {{/d1}}
-        {{#d2}}
+        {{/rollTotal() ndice 1}}
+        {{#rollTotal() ndice 2}}
+        <div class="sheet-template-row sheet-template-die-row sheet-die-best">{{d1}} → {{m1}}</div>
         <div class="sheet-template-row sheet-template-die-row">{{d2}} → {{m2}}</div>
-        {{/d2}}
-        {{#d3}}
+        {{/rollTotal() ndice 2}}
+        {{#rollTotal() ndice 3}}
+        <div class="sheet-template-row sheet-template-die-row sheet-die-best">{{d1}} → {{m1}}</div>
+        <div class="sheet-template-row sheet-template-die-row">{{d2}} → {{m2}}</div>
         <div class="sheet-template-row sheet-template-die-row">{{d3}} → {{m3}}</div>
-        {{/d3}}
-        {{#d4}}
+        {{/rollTotal() ndice 3}}
+        {{#rollTotal() ndice 4}}
+        <div class="sheet-template-row sheet-template-die-row sheet-die-best">{{d1}} → {{m1}}</div>
+        <div class="sheet-template-row sheet-template-die-row">{{d2}} → {{m2}}</div>
+        <div class="sheet-template-row sheet-template-die-row">{{d3}} → {{m3}}</div>
         <div class="sheet-template-row sheet-template-die-row">{{d4}} → {{m4}}</div>
-        {{/d4}}
-        {{#d5}}
+        {{/rollTotal() ndice 4}}
+        {{#rollTotal() ndice 5}}
+        <div class="sheet-template-row sheet-template-die-row sheet-die-best">{{d1}} → {{m1}}</div>
+        <div class="sheet-template-row sheet-template-die-row">{{d2}} → {{m2}}</div>
+        <div class="sheet-template-row sheet-template-die-row">{{d3}} → {{m3}}</div>
+        <div class="sheet-template-row sheet-template-die-row">{{d4}} → {{m4}}</div>
         <div class="sheet-template-row sheet-template-die-row">{{d5}} → {{m5}}</div>
-        {{/d5}}
-        {{#crit}}
-        <div class="sheet-template-row sheet-template-crit-row">★ CRITICAL HIT! (natural 20)</div>
-        {{/crit}}
-        {{#doom}}
+        {{/rollTotal() ndice 5}}
+        {{#rollTotal() doom 1}}
         <div class="sheet-template-doom">☠ DOOM — a 1 was rolled!</div>
-        {{/doom}}
+        {{/rollTotal() doom 1}}
         {{#weapon}}
         <div class="sheet-template-row">Weapon: {{weapon}}</div>
         {{/weapon}}
@@ -545,15 +552,12 @@ on('change:toughness_score change:reflexes_score change:intellect_score change:w
 
 const ADV = '?{Advantage|Disadvantage (1d20),1|Normal (2d20),2|+1 Advantage (3d20),3|+2 Advantages (4d20),4|+3 Advantages (5d20),5}';
 
-// Shared field placeholders appended to every roll string.
+// Placeholder die/modified slots appended to every roll string.
+// finishRoll overrides these with sorted actual values.
 const SLOTS = '{{d1=[[0]]}} {{d2=[[0]]}} {{d3=[[0]]}} {{d4=[[0]]}} {{d5=[[0]]}} ' +
-              '{{m1=[[0]]}} {{m2=[[0]]}} {{m3=[[0]]}} {{m4=[[0]]}} {{m5=[[0]]}} ' +
-              '{{doom=[[0]]}} {{crit=[[0]]}}';
+              '{{m1=[[0]]}} {{m2=[[0]]}} {{m3=[[0]]}} {{m4=[[0]]}} {{m5=[[0]]}}';
 
-// Build finishRoll overrides from rolled dice and modifiers.
-// rank + bonus + attrmod are all added to each die value.
-// doom and crit are only included in overrides when triggered
-// (omitting them leaves the initial [[0]] = falsy = hidden in the template).
+// Build finishRoll overrides: sorts dice highest→lowest, computes modified total per die.
 function buildOverrides(dice, rank, bonus, attrmod) {
     var sorted = dice.slice().sort(function(a, b) { return b - a; });
     var overrides = {};
@@ -561,8 +565,6 @@ function buildOverrides(dice, rank, bonus, attrmod) {
         overrides['d' + (i + 1)] = v;
         overrides['m' + (i + 1)] = v + rank + bonus + attrmod;
     });
-    if (dice.some(function(v) { return v === 1; })) { overrides.doom = 1; }
-    if (sorted[0] === 20) { overrides.crit = 1; }
     return overrides;
 }
 
@@ -572,12 +574,15 @@ on('clicked:melee', function() {
     startRoll(
         '&{template:basic} {{type=Melee Attack}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{melee_rank}]]}} ' +
-        '{{dicepool=[[' + ADV + 'd20]]}} ' +
+        '{{ndice=[[' + ADV + ']]}} ' +
+        '{{roll=[[' + ADV + 'd20]]}} ' +
         '{{attrmod=[[?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} ' +
-        SLOTS,
+        SLOTS + ' {{doom=[[' + ADV + 'd20kl1]]}}',
         function(r) {
+            console.log('MELEE DEBUG roll:', JSON.stringify(r.results.roll));
+            var dice = (r.results.roll && r.results.roll.dice) || [];
             finishRoll(r.rollId, buildOverrides(
-                r.results.dicepool.dice,
+                dice,
                 r.results.rank.result, 0,
                 r.results.attrmod.result
             ));
@@ -589,12 +594,14 @@ on('clicked:ranged', function() {
     startRoll(
         '&{template:basic} {{type=Ranged Attack}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{ranged_rank}]]}} ' +
-        '{{dicepool=[[' + ADV + 'd20]]}} ' +
+        '{{ndice=[[' + ADV + ']]}} ' +
+        '{{roll=[[' + ADV + 'd20]]}} ' +
         '{{attrmod=[[?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} ' +
-        SLOTS,
+        SLOTS + ' {{doom=[[' + ADV + 'd20kl1]]}}',
         function(r) {
+            var dice = (r.results.roll && r.results.roll.dice) || [];
             finishRoll(r.rollId, buildOverrides(
-                r.results.dicepool.dice,
+                dice,
                 r.results.rank.result, 0,
                 r.results.attrmod.result
             ));
@@ -606,12 +613,14 @@ on('clicked:spellcraft', function() {
     startRoll(
         '&{template:basic} {{type=Spellcraft}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{spellcraft_rank}]]}} ' +
-        '{{dicepool=[[' + ADV + 'd20]]}} ' +
+        '{{ndice=[[' + ADV + ']]}} ' +
+        '{{roll=[[' + ADV + 'd20]]}} ' +
         '{{attrmod=[[?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} ' +
-        SLOTS,
+        SLOTS + ' {{doom=[[' + ADV + 'd20kl1]]}}',
         function(r) {
+            var dice = (r.results.roll && r.results.roll.dice) || [];
             finishRoll(r.rollId, buildOverrides(
-                r.results.dicepool.dice,
+                dice,
                 r.results.rank.result, 0,
                 r.results.attrmod.result
             ));
@@ -625,12 +634,14 @@ on('clicked:maneuver', function() {
     startRoll(
         '&{template:basic} {{type=Maneuver}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{maneuver_rank}]]}} {{bonus=[[@{maneuver_bonus}]]}} ' +
-        '{{dicepool=[[' + ADV + 'd20]]}} ' +
+        '{{ndice=[[' + ADV + ']]}} ' +
+        '{{roll=[[' + ADV + 'd20]]}} ' +
         '{{attrmod=[[?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} ' +
-        SLOTS,
+        SLOTS + ' {{doom=[[' + ADV + 'd20kl1]]}}',
         function(r) {
+            var dice = (r.results.roll && r.results.roll.dice) || [];
             finishRoll(r.rollId, buildOverrides(
-                r.results.dicepool.dice,
+                dice,
                 r.results.rank.result,
                 r.results.bonus.result,
                 r.results.attrmod.result
@@ -643,12 +654,14 @@ on('clicked:sneak', function() {
     startRoll(
         '&{template:basic} {{type=Sneak}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{sneak_rank}]]}} {{bonus=[[@{sneak_bonus}]]}} ' +
-        '{{dicepool=[[' + ADV + 'd20]]}} ' +
+        '{{ndice=[[' + ADV + ']]}} ' +
+        '{{roll=[[' + ADV + 'd20]]}} ' +
         '{{attrmod=[[?{Attribute|Reflexes,@{reflexes_mod}|Intellect,@{intellect_mod}}]]}} ' +
-        SLOTS,
+        SLOTS + ' {{doom=[[' + ADV + 'd20kl1]]}}',
         function(r) {
+            var dice = (r.results.roll && r.results.roll.dice) || [];
             finishRoll(r.rollId, buildOverrides(
-                r.results.dicepool.dice,
+                dice,
                 r.results.rank.result,
                 r.results.bonus.result,
                 r.results.attrmod.result
@@ -661,12 +674,14 @@ on('clicked:study', function() {
     startRoll(
         '&{template:basic} {{type=Study}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{study_rank}]]}} {{bonus=[[@{study_bonus}]]}} ' +
-        '{{dicepool=[[' + ADV + 'd20]]}} ' +
+        '{{ndice=[[' + ADV + ']]}} ' +
+        '{{roll=[[' + ADV + 'd20]]}} ' +
         '{{attrmod=[[?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} ' +
-        SLOTS,
+        SLOTS + ' {{doom=[[' + ADV + 'd20kl1]]}}',
         function(r) {
+            var dice = (r.results.roll && r.results.roll.dice) || [];
             finishRoll(r.rollId, buildOverrides(
-                r.results.dicepool.dice,
+                dice,
                 r.results.rank.result,
                 r.results.bonus.result,
                 r.results.attrmod.result
@@ -679,12 +694,14 @@ on('clicked:craft', function() {
     startRoll(
         '&{template:basic} {{type=Craft}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{craft_rank}]]}} {{bonus=[[@{craft_bonus}]]}} ' +
-        '{{dicepool=[[' + ADV + 'd20]]}} ' +
+        '{{ndice=[[' + ADV + ']]}} ' +
+        '{{roll=[[' + ADV + 'd20]]}} ' +
         '{{attrmod=[[?{Attribute|Toughness,@{toughness_mod}|Intellect,@{intellect_mod}}]]}} ' +
-        SLOTS,
+        SLOTS + ' {{doom=[[' + ADV + 'd20kl1]]}}',
         function(r) {
+            var dice = (r.results.roll && r.results.roll.dice) || [];
             finishRoll(r.rollId, buildOverrides(
-                r.results.dicepool.dice,
+                dice,
                 r.results.rank.result,
                 r.results.bonus.result,
                 r.results.attrmod.result
@@ -697,12 +714,14 @@ on('clicked:barter', function() {
     startRoll(
         '&{template:basic} {{type=Barter}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{barter_rank}]]}} {{bonus=[[@{barter_bonus}]]}} ' +
-        '{{dicepool=[[' + ADV + 'd20]]}} ' +
+        '{{ndice=[[' + ADV + ']]}} ' +
+        '{{roll=[[' + ADV + 'd20]]}} ' +
         '{{attrmod=[[?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} ' +
-        SLOTS,
+        SLOTS + ' {{doom=[[' + ADV + 'd20kl1]]}}',
         function(r) {
+            var dice = (r.results.roll && r.results.roll.dice) || [];
             finishRoll(r.rollId, buildOverrides(
-                r.results.dicepool.dice,
+                dice,
                 r.results.rank.result,
                 r.results.bonus.result,
                 r.results.attrmod.result
@@ -715,12 +734,14 @@ on('clicked:endure', function() {
     startRoll(
         '&{template:basic} {{type=Endure}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{endure_rank}]]}} {{bonus=[[@{endure_bonus}]]}} ' +
-        '{{dicepool=[[' + ADV + 'd20]]}} ' +
+        '{{ndice=[[' + ADV + ']]}} ' +
+        '{{roll=[[' + ADV + 'd20]]}} ' +
         '{{attrmod=[[?{Attribute|Toughness,@{toughness_mod}|Willpower,@{willpower_mod}}]]}} ' +
-        SLOTS,
+        SLOTS + ' {{doom=[[' + ADV + 'd20kl1]]}}',
         function(r) {
+            var dice = (r.results.roll && r.results.roll.dice) || [];
             finishRoll(r.rollId, buildOverrides(
-                r.results.dicepool.dice,
+                dice,
                 r.results.rank.result,
                 r.results.bonus.result,
                 r.results.attrmod.result
@@ -733,12 +754,14 @@ on('clicked:deceive', function() {
     startRoll(
         '&{template:basic} {{type=Deceive}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{deceive_rank}]]}} {{bonus=[[@{deceive_bonus}]]}} ' +
-        '{{dicepool=[[' + ADV + 'd20]]}} ' +
+        '{{ndice=[[' + ADV + ']]}} ' +
+        '{{roll=[[' + ADV + 'd20]]}} ' +
         '{{attrmod=[[?{Attribute|Reflexes,@{reflexes_mod}|Willpower,@{willpower_mod}}]]}} ' +
-        SLOTS,
+        SLOTS + ' {{doom=[[' + ADV + 'd20kl1]]}}',
         function(r) {
+            var dice = (r.results.roll && r.results.roll.dice) || [];
             finishRoll(r.rollId, buildOverrides(
-                r.results.dicepool.dice,
+                dice,
                 r.results.rank.result,
                 r.results.bonus.result,
                 r.results.attrmod.result
@@ -755,14 +778,13 @@ on('clicked:repeating_weapons:weapon_attack', function() {
         startRoll(
             '&{template:basic} {{type=Attack}} {{name=' + v.character_name + '}} ' +
             '{{weapon=' + v.weapon_name + '}} ' +
-            '{{dicepool=[[' + ADV + 'd20]]}} ' +
+            '{{ndice=[[' + ADV + ']]}} ' +
+            '{{roll=[[' + ADV + 'd20]]}} ' +
             '{{damage=[[' + (v.weapon_damage || '1d6') + ']]}} ' +
-            SLOTS,
+            SLOTS + ' {{doom=[[' + ADV + 'd20kl1]]}}',
             function(r) {
-                finishRoll(r.rollId, buildOverrides(
-                    r.results.dicepool.dice,
-                    skill, 0, 0
-                ));
+                var dice = (r.results.roll && r.results.roll.dice) || [];
+                finishRoll(r.rollId, buildOverrides(dice, skill, 0, 0));
             }
         );
     });
