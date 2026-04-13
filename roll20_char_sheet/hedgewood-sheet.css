@@ -325,6 +325,41 @@
     padding: 1px;
 }
 
+/* ===================== SKILL MOD DISPLAY ===================== */
+.skill-mods {
+    text-align: center;
+    white-space: nowrap;
+}
+
+.skill-mod-pair {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    margin-bottom: 2px;
+}
+
+.skill-mod-label {
+    font-size: 9px;
+    color: #888;
+    min-width: 14px;
+    text-align: right;
+    font-weight: bold;
+}
+
+.sheet-mod-display {
+    background: #0a0a00;
+    border: 1px solid gold;
+    border-radius: 3px;
+    color: gold;
+    font-size: 11px;
+    font-weight: bold;
+    text-align: center;
+    width: 34px;
+    padding: 1px;
+    pointer-events: none;
+}
+
 /* ===================== ROLL BUTTONS ===================== */
 button.sheet-roll-btn {
     background: seashell;
@@ -511,6 +546,12 @@ button.sheet-roll-btn:hover {
 .sheet-rolltemplate-basic .sheet-template-crit {
     color: lime;
     font-weight: bold;
+}
+
+.sheet-rolltemplate-basic .sheet-template-breakdown {
+    font-size: 0.9em;
+    color: #aaa;
+    font-style: italic;
 }
 
 .sheet-rolltemplate-basic .sheet-template-doom {
