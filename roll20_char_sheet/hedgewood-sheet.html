@@ -498,6 +498,7 @@
         {{#rollTotal() doom 1}}
         <div class="sheet-template-doom">☠ DOOM — a 1 was rolled!</div>
         {{/rollTotal() doom 1}}
+        <div class="sheet-template-row sheet-template-breakdown">finishRoll test (should be 77): {{testval}}</div>
         {{#weapon}}
         <div class="sheet-template-row">Weapon: {{weapon}}</div>
         {{/weapon}}
@@ -554,17 +555,24 @@ const ADV = '?{Advantage|Disadvantage (1d20),1|Normal (2d20),2|+1 Advantage (3d2
 
 // Placeholder die/modified slots appended to every roll string.
 // finishRoll overrides these with sorted actual values.
+// testval is a diagnostic field to verify finishRoll display works at all.
 const SLOTS = '{{d1=[[0]]}} {{d2=[[0]]}} {{d3=[[0]]}} {{d4=[[0]]}} {{d5=[[0]]}} ' +
-              '{{m1=[[0]]}} {{m2=[[0]]}} {{m3=[[0]]}} {{m4=[[0]]}} {{m5=[[0]]}}';
+              '{{m1=[[0]]}} {{m2=[[0]]}} {{m3=[[0]]}} {{m4=[[0]]}} {{m5=[[0]]}} ' +
+              '{{testval=[[0]]}}';
 
 // Build finishRoll overrides: sorts dice highest→lowest, computes modified total per die.
 function buildOverrides(dice, rank, bonus, attrmod) {
-    var sorted = dice.slice().sort(function(a, b) { return b - a; });
-    var overrides = {};
+    var r = parseInt(rank) || 0;
+    var b = parseInt(bonus) || 0;
+    var a = parseInt(attrmod) || 0;
+    var sorted = dice.slice().sort(function(x, y) { return y - x; });
+    var overrides = { testval: 77 };  // diagnostic: always 77 — checks if finishRoll works
     sorted.forEach(function(v, i) {
         overrides['d' + (i + 1)] = v;
-        overrides['m' + (i + 1)] = v + rank + bonus + attrmod;
+        overrides['m' + (i + 1)] = v + r + b + a;
     });
+    console.log('buildOverrides input dice:', JSON.stringify(dice), 'rank:', r, 'bonus:', b, 'attrmod:', a);
+    console.log('buildOverrides result:', JSON.stringify(overrides));
     return overrides;
 }
 
@@ -579,13 +587,18 @@ on('clicked:melee', function() {
         '{{attrmod=[[?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} ' +
         SLOTS + ' {{doom=[[' + ADV + 'd20kl1]]}}',
         function(r) {
-            console.log('MELEE DEBUG roll:', JSON.stringify(r.results.roll));
+            console.log('MELEE r.results keys:', Object.keys(r.results));
+            console.log('MELEE roll:', JSON.stringify(r.results.roll));
+            console.log('MELEE rank:', r.results.rank && r.results.rank.result);
+            console.log('MELEE attrmod:', r.results.attrmod && r.results.attrmod.result);
             var dice = (r.results.roll && r.results.roll.dice) || [];
-            finishRoll(r.rollId, buildOverrides(
+            var overrides = buildOverrides(
                 dice,
-                r.results.rank.result, 0,
-                r.results.attrmod.result
-            ));
+                r.results.rank && r.results.rank.result,
+                0,
+                r.results.attrmod && r.results.attrmod.result
+            );
+            finishRoll(r.rollId, overrides);
         }
     );
 });
