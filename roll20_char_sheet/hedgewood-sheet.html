@@ -466,15 +466,31 @@
         {{#bonus}}
         <div class="sheet-template-row sheet-template-breakdown">Bonus: {{bonus}}</div>
         {{/bonus}}
-        <div class="sheet-template-row">
-            Attack Total: {{roll}}
-            {{#rollWasCrit() roll}}
-                <span class="sheet-template-crit"> ★ CRITICAL HIT!</span>
-            {{/rollWasCrit() roll}}
+        <div class="sheet-template-row sheet-template-dice-header">
+            <span class="sheet-col-label">Die Roll</span>
+            <span class="sheet-col-label">Modified Total</span>
         </div>
-        {{#rollTotal() doom 1}}
+        {{#d1}}
+        <div class="sheet-template-row sheet-template-die-row sheet-die-best">{{d1}} → {{m1}}</div>
+        {{/d1}}
+        {{#d2}}
+        <div class="sheet-template-row sheet-template-die-row">{{d2}} → {{m2}}</div>
+        {{/d2}}
+        {{#d3}}
+        <div class="sheet-template-row sheet-template-die-row">{{d3}} → {{m3}}</div>
+        {{/d3}}
+        {{#d4}}
+        <div class="sheet-template-row sheet-template-die-row">{{d4}} → {{m4}}</div>
+        {{/d4}}
+        {{#d5}}
+        <div class="sheet-template-row sheet-template-die-row">{{d5}} → {{m5}}</div>
+        {{/d5}}
+        {{#crit}}
+        <div class="sheet-template-row sheet-template-crit-row">★ CRITICAL HIT! (natural 20)</div>
+        {{/crit}}
+        {{#doom}}
         <div class="sheet-template-doom">☠ DOOM — a 1 was rolled!</div>
-        {{/rollTotal() doom 1}}
+        {{/doom}}
         {{#weapon}}
         <div class="sheet-template-row">Weapon: {{weapon}}</div>
         {{/weapon}}
@@ -519,24 +535,53 @@ on('change:toughness_score change:reflexes_score change:intellect_score change:w
 });
 
 // ── Skill & Weapon Roll Handlers ──
-// Attack rolls use startRoll so all dice values are accessible in the callback.
-// Doom uses a separate Nd20kl1 pool (same N as the attack, from the ADV query)
-// so rollTotal() doom 1 fires naturally when the minimum die in that pool is 1.
-// Note: Roll20 template conditionals evaluate initial dice values only — finishRoll
-// overrides affect displayed numbers but cannot trigger or suppress conditionals.
+// All rolls use startRoll/finishRoll. Dice are rolled as Nd20 (no kh1) so ALL
+// die values are visible to the player. finishRoll:
+//   - Sorts dice highest to lowest, sets d1–d5 (shown if included, hidden if not)
+//   - Sets m1–m5 = die + rank [+ bonus] + attrmod (the modified total for each die)
+//   - Sets doom = 1 ONLY if any die shows 1 (accurate — reads actual attack dice)
+//   - Sets crit = 1 ONLY if the highest die = 20
+// Fields omitted from finishRoll keep their initial [[0]] value (falsy → hidden).
 
-const ADV = '?{Advantage|Disadvantage (1d20),1|Normal (2d20kh1),2|+1 Advantage (3d20kh1),3|+2 Advantages (4d20kh1),4|+3 Advantages (5d20kh1),5}';
-const ADV_KL = ADV; // same query — Roll20 deduplicates, player answers once for both expressions
+const ADV = '?{Advantage|Disadvantage (1d20),1|Normal (2d20),2|+1 Advantage (3d20),3|+2 Advantages (4d20),4|+3 Advantages (5d20),5}';
 
-// ── Combat Skills ──
+// Shared field placeholders appended to every roll string.
+const SLOTS = '{{d1=[[0]]}} {{d2=[[0]]}} {{d3=[[0]]}} {{d4=[[0]]}} {{d5=[[0]]}} ' +
+              '{{m1=[[0]]}} {{m2=[[0]]}} {{m3=[[0]]}} {{m4=[[0]]}} {{m5=[[0]]}} ' +
+              '{{doom=[[0]]}} {{crit=[[0]]}}';
+
+// Build finishRoll overrides from rolled dice and modifiers.
+// rank + bonus + attrmod are all added to each die value.
+// doom and crit are only included in overrides when triggered
+// (omitting them leaves the initial [[0]] = falsy = hidden in the template).
+function buildOverrides(dice, rank, bonus, attrmod) {
+    var sorted = dice.slice().sort(function(a, b) { return b - a; });
+    var overrides = {};
+    sorted.forEach(function(v, i) {
+        overrides['d' + (i + 1)] = v;
+        overrides['m' + (i + 1)] = v + rank + bonus + attrmod;
+    });
+    if (dice.some(function(v) { return v === 1; })) { overrides.doom = 1; }
+    if (sorted[0] === 20) { overrides.crit = 1; }
+    return overrides;
+}
+
+// ── Combat Skills (rank + attrmod, no bonus) ──
 
 on('clicked:melee', function() {
     startRoll(
         '&{template:basic} {{type=Melee Attack}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{melee_rank}]]}} ' +
-        '{{roll=[[' + ADV + 'd20kh1 + @{melee_rank} + ?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} ' +
-        '{{doom=[[' + ADV_KL + 'd20kl1]]}}',
-        function(r) { finishRoll(r.rollId, {}); }
+        '{{dicepool=[[' + ADV + 'd20]]}} ' +
+        '{{attrmod=[[?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} ' +
+        SLOTS,
+        function(r) {
+            finishRoll(r.rollId, buildOverrides(
+                r.results.dicepool.dice,
+                r.results.rank.result, 0,
+                r.results.attrmod.result
+            ));
+        }
     );
 });
 
@@ -544,9 +589,16 @@ on('clicked:ranged', function() {
     startRoll(
         '&{template:basic} {{type=Ranged Attack}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{ranged_rank}]]}} ' +
-        '{{roll=[[' + ADV + 'd20kh1 + @{ranged_rank} + ?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} ' +
-        '{{doom=[[' + ADV_KL + 'd20kl1]]}}',
-        function(r) { finishRoll(r.rollId, {}); }
+        '{{dicepool=[[' + ADV + 'd20]]}} ' +
+        '{{attrmod=[[?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} ' +
+        SLOTS,
+        function(r) {
+            finishRoll(r.rollId, buildOverrides(
+                r.results.dicepool.dice,
+                r.results.rank.result, 0,
+                r.results.attrmod.result
+            ));
+        }
     );
 });
 
@@ -554,21 +606,36 @@ on('clicked:spellcraft', function() {
     startRoll(
         '&{template:basic} {{type=Spellcraft}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{spellcraft_rank}]]}} ' +
-        '{{roll=[[' + ADV + 'd20kh1 + @{spellcraft_rank} + ?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} ' +
-        '{{doom=[[' + ADV_KL + 'd20kl1]]}}',
-        function(r) { finishRoll(r.rollId, {}); }
+        '{{dicepool=[[' + ADV + 'd20]]}} ' +
+        '{{attrmod=[[?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} ' +
+        SLOTS,
+        function(r) {
+            finishRoll(r.rollId, buildOverrides(
+                r.results.dicepool.dice,
+                r.results.rank.result, 0,
+                r.results.attrmod.result
+            ));
+        }
     );
 });
 
-// ── General Skills ──
+// ── General Skills (rank + bonus + attrmod) ──
 
 on('clicked:maneuver', function() {
     startRoll(
         '&{template:basic} {{type=Maneuver}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{maneuver_rank}]]}} {{bonus=[[@{maneuver_bonus}]]}} ' +
-        '{{roll=[[' + ADV + 'd20kh1 + @{maneuver_rank} + @{maneuver_bonus} + ?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} ' +
-        '{{doom=[[' + ADV_KL + 'd20kl1]]}}',
-        function(r) { finishRoll(r.rollId, {}); }
+        '{{dicepool=[[' + ADV + 'd20]]}} ' +
+        '{{attrmod=[[?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} ' +
+        SLOTS,
+        function(r) {
+            finishRoll(r.rollId, buildOverrides(
+                r.results.dicepool.dice,
+                r.results.rank.result,
+                r.results.bonus.result,
+                r.results.attrmod.result
+            ));
+        }
     );
 });
 
@@ -576,9 +643,17 @@ on('clicked:sneak', function() {
     startRoll(
         '&{template:basic} {{type=Sneak}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{sneak_rank}]]}} {{bonus=[[@{sneak_bonus}]]}} ' +
-        '{{roll=[[' + ADV + 'd20kh1 + @{sneak_rank} + @{sneak_bonus} + ?{Attribute|Reflexes,@{reflexes_mod}|Intellect,@{intellect_mod}}]]}} ' +
-        '{{doom=[[' + ADV_KL + 'd20kl1]]}}',
-        function(r) { finishRoll(r.rollId, {}); }
+        '{{dicepool=[[' + ADV + 'd20]]}} ' +
+        '{{attrmod=[[?{Attribute|Reflexes,@{reflexes_mod}|Intellect,@{intellect_mod}}]]}} ' +
+        SLOTS,
+        function(r) {
+            finishRoll(r.rollId, buildOverrides(
+                r.results.dicepool.dice,
+                r.results.rank.result,
+                r.results.bonus.result,
+                r.results.attrmod.result
+            ));
+        }
     );
 });
 
@@ -586,9 +661,17 @@ on('clicked:study', function() {
     startRoll(
         '&{template:basic} {{type=Study}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{study_rank}]]}} {{bonus=[[@{study_bonus}]]}} ' +
-        '{{roll=[[' + ADV + 'd20kh1 + @{study_rank} + @{study_bonus} + ?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} ' +
-        '{{doom=[[' + ADV_KL + 'd20kl1]]}}',
-        function(r) { finishRoll(r.rollId, {}); }
+        '{{dicepool=[[' + ADV + 'd20]]}} ' +
+        '{{attrmod=[[?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} ' +
+        SLOTS,
+        function(r) {
+            finishRoll(r.rollId, buildOverrides(
+                r.results.dicepool.dice,
+                r.results.rank.result,
+                r.results.bonus.result,
+                r.results.attrmod.result
+            ));
+        }
     );
 });
 
@@ -596,9 +679,17 @@ on('clicked:craft', function() {
     startRoll(
         '&{template:basic} {{type=Craft}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{craft_rank}]]}} {{bonus=[[@{craft_bonus}]]}} ' +
-        '{{roll=[[' + ADV + 'd20kh1 + @{craft_rank} + @{craft_bonus} + ?{Attribute|Toughness,@{toughness_mod}|Intellect,@{intellect_mod}}]]}} ' +
-        '{{doom=[[' + ADV_KL + 'd20kl1]]}}',
-        function(r) { finishRoll(r.rollId, {}); }
+        '{{dicepool=[[' + ADV + 'd20]]}} ' +
+        '{{attrmod=[[?{Attribute|Toughness,@{toughness_mod}|Intellect,@{intellect_mod}}]]}} ' +
+        SLOTS,
+        function(r) {
+            finishRoll(r.rollId, buildOverrides(
+                r.results.dicepool.dice,
+                r.results.rank.result,
+                r.results.bonus.result,
+                r.results.attrmod.result
+            ));
+        }
     );
 });
 
@@ -606,9 +697,17 @@ on('clicked:barter', function() {
     startRoll(
         '&{template:basic} {{type=Barter}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{barter_rank}]]}} {{bonus=[[@{barter_bonus}]]}} ' +
-        '{{roll=[[' + ADV + 'd20kh1 + @{barter_rank} + @{barter_bonus} + ?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} ' +
-        '{{doom=[[' + ADV_KL + 'd20kl1]]}}',
-        function(r) { finishRoll(r.rollId, {}); }
+        '{{dicepool=[[' + ADV + 'd20]]}} ' +
+        '{{attrmod=[[?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} ' +
+        SLOTS,
+        function(r) {
+            finishRoll(r.rollId, buildOverrides(
+                r.results.dicepool.dice,
+                r.results.rank.result,
+                r.results.bonus.result,
+                r.results.attrmod.result
+            ));
+        }
     );
 });
 
@@ -616,9 +715,17 @@ on('clicked:endure', function() {
     startRoll(
         '&{template:basic} {{type=Endure}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{endure_rank}]]}} {{bonus=[[@{endure_bonus}]]}} ' +
-        '{{roll=[[' + ADV + 'd20kh1 + @{endure_rank} + @{endure_bonus} + ?{Attribute|Toughness,@{toughness_mod}|Willpower,@{willpower_mod}}]]}} ' +
-        '{{doom=[[' + ADV_KL + 'd20kl1]]}}',
-        function(r) { finishRoll(r.rollId, {}); }
+        '{{dicepool=[[' + ADV + 'd20]]}} ' +
+        '{{attrmod=[[?{Attribute|Toughness,@{toughness_mod}|Willpower,@{willpower_mod}}]]}} ' +
+        SLOTS,
+        function(r) {
+            finishRoll(r.rollId, buildOverrides(
+                r.results.dicepool.dice,
+                r.results.rank.result,
+                r.results.bonus.result,
+                r.results.attrmod.result
+            ));
+        }
     );
 });
 
@@ -626,9 +733,17 @@ on('clicked:deceive', function() {
     startRoll(
         '&{template:basic} {{type=Deceive}} {{name=@{character_name}}} ' +
         '{{showstats=1}} {{rank=[[@{deceive_rank}]]}} {{bonus=[[@{deceive_bonus}]]}} ' +
-        '{{roll=[[' + ADV + 'd20kh1 + @{deceive_rank} + @{deceive_bonus} + ?{Attribute|Reflexes,@{reflexes_mod}|Willpower,@{willpower_mod}}]]}} ' +
-        '{{doom=[[' + ADV_KL + 'd20kl1]]}}',
-        function(r) { finishRoll(r.rollId, {}); }
+        '{{dicepool=[[' + ADV + 'd20]]}} ' +
+        '{{attrmod=[[?{Attribute|Reflexes,@{reflexes_mod}|Willpower,@{willpower_mod}}]]}} ' +
+        SLOTS,
+        function(r) {
+            finishRoll(r.rollId, buildOverrides(
+                r.results.dicepool.dice,
+                r.results.rank.result,
+                r.results.bonus.result,
+                r.results.attrmod.result
+            ));
+        }
     );
 });
 
@@ -640,10 +755,15 @@ on('clicked:repeating_weapons:weapon_attack', function() {
         startRoll(
             '&{template:basic} {{type=Attack}} {{name=' + v.character_name + '}} ' +
             '{{weapon=' + v.weapon_name + '}} ' +
-            '{{roll=[[' + ADV + 'd20kh1 + ' + skill + ']]}} ' +
+            '{{dicepool=[[' + ADV + 'd20]]}} ' +
             '{{damage=[[' + (v.weapon_damage || '1d6') + ']]}} ' +
-            '{{doom=[[' + ADV_KL + 'd20kl1]]}}',
-            function(r) { finishRoll(r.rollId, {}); }
+            SLOTS,
+            function(r) {
+                finishRoll(r.rollId, buildOverrides(
+                    r.results.dicepool.dice,
+                    skill, 0, 0
+                ));
+            }
         );
     });
 });
