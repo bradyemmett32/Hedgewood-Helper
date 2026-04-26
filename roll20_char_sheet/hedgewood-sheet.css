@@ -347,6 +347,35 @@
     font-weight: bold;
 }
 
+.sheet-attr-radio {
+    display: none;
+}
+
+.sheet-attr-toggle-label {
+    cursor: pointer;
+    font-size: 9px;
+    font-weight: bold;
+    min-width: 14px;
+    text-align: center;
+    padding: 1px 2px;
+    border: 1px solid #bbb;
+    border-radius: 2px;
+    background: #ddd;
+    color: #777;
+    user-select: none;
+}
+
+.sheet-attr-radio:checked + .sheet-attr-toggle-label {
+    background: gold;
+    border-color: #888;
+    color: black;
+}
+
+.sheet-attr-toggle-label:hover {
+    background: #c8c8c8;
+    border-color: #999;
+}
+
 .sheet-mod-display {
     background: #0a0a00;
     border: 1px solid gold;
@@ -358,6 +387,76 @@
     width: 34px;
     padding: 1px;
     pointer-events: none;
+}
+
+/* ===================== MACRO OPTIONS ===================== */
+.sheet-macro-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 6px 10px;
+    background: #f5f0e8;
+    border: 1px solid #c0b090;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.sheet-macro-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sheet-macro-label {
+    font-size: 11px;
+    font-weight: bold;
+    font-variant: small-caps;
+    color: #555;
+    white-space: nowrap;
+}
+
+.sheet-adv-selector {
+    display: flex;
+    gap: 3px;
+}
+
+.sheet-adv-option {
+    cursor: pointer;
+    margin: 0;
+}
+
+.sheet-adv-option input[type="radio"] {
+    display: none;
+}
+
+.sheet-adv-option span {
+    display: block;
+    padding: 3px 8px;
+    border: 1px solid #999;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: bold;
+    background: seashell;
+    white-space: nowrap;
+    color: #333;
+    user-select: none;
+}
+
+.sheet-adv-option:hover span {
+    background: gold;
+    border-color: #888;
+}
+
+.sheet-adv-option input[type="radio"]:checked + span {
+    background: #2a2a2a;
+    border-color: #111;
+    color: gold;
+}
+
+.sheet-adv-dis input[type="radio"]:checked + span {
+    background: #6b1a1a;
+    border-color: #400;
+    color: #ffcccc;
 }
 
 /* ===================== ROLL BUTTONS ===================== */
