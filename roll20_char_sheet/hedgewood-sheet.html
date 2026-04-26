@@ -127,6 +127,36 @@
 
     </div>
 
+    <!-- SECTION: Macro Options -->
+    <div class="sheet-section-header">Macro Options</div>
+    <div class="sheet-macro-options">
+        <div class="sheet-macro-row">
+            <span class="sheet-macro-label">Advantage:</span>
+            <div class="sheet-adv-selector">
+                <label class="sheet-adv-option sheet-adv-dis">
+                    <input type="radio" name="attr_advantage_mode" value="1" />
+                    <span>Disadvantage</span>
+                </label>
+                <label class="sheet-adv-option">
+                    <input type="radio" name="attr_advantage_mode" value="2" checked="checked" />
+                    <span>Normal</span>
+                </label>
+                <label class="sheet-adv-option sheet-adv-adv">
+                    <input type="radio" name="attr_advantage_mode" value="3" />
+                    <span>+1 Advantage</span>
+                </label>
+                <label class="sheet-adv-option sheet-adv-adv">
+                    <input type="radio" name="attr_advantage_mode" value="4" />
+                    <span>+2 Advantages</span>
+                </label>
+                <label class="sheet-adv-option sheet-adv-adv">
+                    <input type="radio" name="attr_advantage_mode" value="5" />
+                    <span>+3 Advantages</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
     <!-- SECTION: Attributes -->
     <div class="sheet-section-header">Attributes</div>
     <div class="sheet-attrs-grid">
@@ -225,11 +255,19 @@
                         </td>
                         <td><input type="number" name="attr_melee_rank" value="0" min="0" /></td>
                         <td class="skill-mods">
-                            <div class="skill-mod-pair"><span class="skill-mod-label">T:</span><input type="number" name="attr_toughness_mod" readonly class="sheet-mod-display" /></div>
-                            <div class="skill-mod-pair"><span class="skill-mod-label">R:</span><input type="number" name="attr_reflexes_mod" readonly class="sheet-mod-display" /></div>
+                            <div class="skill-mod-pair">
+                                <input type="radio" name="attr_melee_attr_mode" id="sheet_melee_t" value="0" checked="checked" class="sheet-attr-radio" />
+                                <label for="sheet_melee_t" class="sheet-attr-toggle-label">T:</label>
+                                <input type="number" name="attr_toughness_mod" readonly class="sheet-mod-display" />
+                            </div>
+                            <div class="skill-mod-pair">
+                                <input type="radio" name="attr_melee_attr_mode" id="sheet_melee_r" value="1" class="sheet-attr-radio" />
+                                <label for="sheet_melee_r" class="sheet-attr-toggle-label">R:</label>
+                                <input type="number" name="attr_reflexes_mod" readonly class="sheet-mod-display" />
+                            </div>
                         </td>
                         <td>
-                            <button type="roll" name="roll_melee" value="&{template:basic} {{type=Melee Attack}} {{name=@{character_name}}} {{showstats=1}} {{rank=[[@{melee_rank}]]}} {{ndice=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20),2|+1 Advantage (3d20),3|+2 Advantages (4d20),4|+3 Advantages (5d20),5}]]}} {{m1=[[1d20+@{melee_rank}+?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} {{m2=[[1d20+@{melee_rank}+?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} {{m3=[[1d20+@{melee_rank}+?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} {{m4=[[1d20+@{melee_rank}+?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} {{m5=[[1d20+@{melee_rank}+?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} {{doom=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20),2|+1 Advantage (3d20),3|+2 Advantages (4d20),4|+3 Advantages (5d20),5}d20kl1]]}}">Roll</button>
+                            <button type="roll" name="roll_melee" value="&{template:basic} {{type=Melee Attack}} {{name=@{character_name}}} {{showstats=1}} {{rank=[[@{melee_rank}]]}} {{ndice=[[@{advantage_mode}]]}} {{m1=[[1d20+@{melee_rank}+@{toughness_mod}*(1-@{melee_attr_mode})+@{reflexes_mod}*@{melee_attr_mode}]]}} {{m2=[[1d20+@{melee_rank}+@{toughness_mod}*(1-@{melee_attr_mode})+@{reflexes_mod}*@{melee_attr_mode}]]}} {{m3=[[1d20+@{melee_rank}+@{toughness_mod}*(1-@{melee_attr_mode})+@{reflexes_mod}*@{melee_attr_mode}]]}} {{m4=[[1d20+@{melee_rank}+@{toughness_mod}*(1-@{melee_attr_mode})+@{reflexes_mod}*@{melee_attr_mode}]]}} {{m5=[[1d20+@{melee_rank}+@{toughness_mod}*(1-@{melee_attr_mode})+@{reflexes_mod}*@{melee_attr_mode}]]}} {{doom=[[@{advantage_mode}d20kl1]]}}">Roll</button>
                         </td>
                     </tr>
                     <tr>
@@ -239,11 +277,19 @@
                         </td>
                         <td><input type="number" name="attr_ranged_rank" value="0" min="0" /></td>
                         <td class="skill-mods">
-                            <div class="skill-mod-pair"><span class="skill-mod-label">T:</span><input type="number" name="attr_toughness_mod" readonly class="sheet-mod-display" /></div>
-                            <div class="skill-mod-pair"><span class="skill-mod-label">R:</span><input type="number" name="attr_reflexes_mod" readonly class="sheet-mod-display" /></div>
+                            <div class="skill-mod-pair">
+                                <input type="radio" name="attr_ranged_attr_mode" id="sheet_ranged_t" value="0" checked="checked" class="sheet-attr-radio" />
+                                <label for="sheet_ranged_t" class="sheet-attr-toggle-label">T:</label>
+                                <input type="number" name="attr_toughness_mod" readonly class="sheet-mod-display" />
+                            </div>
+                            <div class="skill-mod-pair">
+                                <input type="radio" name="attr_ranged_attr_mode" id="sheet_ranged_r" value="1" class="sheet-attr-radio" />
+                                <label for="sheet_ranged_r" class="sheet-attr-toggle-label">R:</label>
+                                <input type="number" name="attr_reflexes_mod" readonly class="sheet-mod-display" />
+                            </div>
                         </td>
                         <td>
-                            <button type="roll" name="roll_ranged" value="&{template:basic} {{type=Ranged Attack}} {{name=@{character_name}}} {{showstats=1}} {{rank=[[@{ranged_rank}]]}} {{ndice=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20),2|+1 Advantage (3d20),3|+2 Advantages (4d20),4|+3 Advantages (5d20),5}]]}} {{m1=[[1d20+@{ranged_rank}+?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} {{m2=[[1d20+@{ranged_rank}+?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} {{m3=[[1d20+@{ranged_rank}+?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} {{m4=[[1d20+@{ranged_rank}+?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} {{m5=[[1d20+@{ranged_rank}+?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} {{doom=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20),2|+1 Advantage (3d20),3|+2 Advantages (4d20),4|+3 Advantages (5d20),5}d20kl1]]}}">Roll</button>
+                            <button type="roll" name="roll_ranged" value="&{template:basic} {{type=Ranged Attack}} {{name=@{character_name}}} {{showstats=1}} {{rank=[[@{ranged_rank}]]}} {{ndice=[[@{advantage_mode}]]}} {{m1=[[1d20+@{ranged_rank}+@{toughness_mod}*(1-@{ranged_attr_mode})+@{reflexes_mod}*@{ranged_attr_mode}]]}} {{m2=[[1d20+@{ranged_rank}+@{toughness_mod}*(1-@{ranged_attr_mode})+@{reflexes_mod}*@{ranged_attr_mode}]]}} {{m3=[[1d20+@{ranged_rank}+@{toughness_mod}*(1-@{ranged_attr_mode})+@{reflexes_mod}*@{ranged_attr_mode}]]}} {{m4=[[1d20+@{ranged_rank}+@{toughness_mod}*(1-@{ranged_attr_mode})+@{reflexes_mod}*@{ranged_attr_mode}]]}} {{m5=[[1d20+@{ranged_rank}+@{toughness_mod}*(1-@{ranged_attr_mode})+@{reflexes_mod}*@{ranged_attr_mode}]]}} {{doom=[[@{advantage_mode}d20kl1]]}}">Roll</button>
                         </td>
                     </tr>
                     <tr>
@@ -253,11 +299,19 @@
                         </td>
                         <td><input type="number" name="attr_spellcraft_rank" value="0" min="0" /></td>
                         <td class="skill-mods">
-                            <div class="skill-mod-pair"><span class="skill-mod-label">I:</span><input type="number" name="attr_intellect_mod" readonly class="sheet-mod-display" /></div>
-                            <div class="skill-mod-pair"><span class="skill-mod-label">W:</span><input type="number" name="attr_willpower_mod" readonly class="sheet-mod-display" /></div>
+                            <div class="skill-mod-pair">
+                                <input type="radio" name="attr_spellcraft_attr_mode" id="sheet_spell_i" value="0" checked="checked" class="sheet-attr-radio" />
+                                <label for="sheet_spell_i" class="sheet-attr-toggle-label">I:</label>
+                                <input type="number" name="attr_intellect_mod" readonly class="sheet-mod-display" />
+                            </div>
+                            <div class="skill-mod-pair">
+                                <input type="radio" name="attr_spellcraft_attr_mode" id="sheet_spell_w" value="1" class="sheet-attr-radio" />
+                                <label for="sheet_spell_w" class="sheet-attr-toggle-label">W:</label>
+                                <input type="number" name="attr_willpower_mod" readonly class="sheet-mod-display" />
+                            </div>
                         </td>
                         <td>
-                            <button type="roll" name="roll_spellcraft" value="&{template:basic} {{type=Spellcraft}} {{name=@{character_name}}} {{showstats=1}} {{rank=[[@{spellcraft_rank}]]}} {{ndice=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20),2|+1 Advantage (3d20),3|+2 Advantages (4d20),4|+3 Advantages (5d20),5}]]}} {{m1=[[1d20+@{spellcraft_rank}+?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} {{m2=[[1d20+@{spellcraft_rank}+?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} {{m3=[[1d20+@{spellcraft_rank}+?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} {{m4=[[1d20+@{spellcraft_rank}+?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} {{m5=[[1d20+@{spellcraft_rank}+?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} {{doom=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20),2|+1 Advantage (3d20),3|+2 Advantages (4d20),4|+3 Advantages (5d20),5}d20kl1]]}}">Roll</button>
+                            <button type="roll" name="roll_spellcraft" value="&{template:basic} {{type=Spellcraft}} {{name=@{character_name}}} {{showstats=1}} {{rank=[[@{spellcraft_rank}]]}} {{ndice=[[@{advantage_mode}]]}} {{m1=[[1d20+@{spellcraft_rank}+@{intellect_mod}*(1-@{spellcraft_attr_mode})+@{willpower_mod}*@{spellcraft_attr_mode}]]}} {{m2=[[1d20+@{spellcraft_rank}+@{intellect_mod}*(1-@{spellcraft_attr_mode})+@{willpower_mod}*@{spellcraft_attr_mode}]]}} {{m3=[[1d20+@{spellcraft_rank}+@{intellect_mod}*(1-@{spellcraft_attr_mode})+@{willpower_mod}*@{spellcraft_attr_mode}]]}} {{m4=[[1d20+@{spellcraft_rank}+@{intellect_mod}*(1-@{spellcraft_attr_mode})+@{willpower_mod}*@{spellcraft_attr_mode}]]}} {{m5=[[1d20+@{spellcraft_rank}+@{intellect_mod}*(1-@{spellcraft_attr_mode})+@{willpower_mod}*@{spellcraft_attr_mode}]]}} {{doom=[[@{advantage_mode}d20kl1]]}}">Roll</button>
                         </td>
                     </tr>
                 </tbody>
@@ -286,11 +340,19 @@
                         <td><input type="number" name="attr_maneuver_rank" value="0" min="0" /></td>
                         <td><input type="number" name="attr_maneuver_bonus" value="0" /></td>
                         <td class="skill-mods">
-                            <div class="skill-mod-pair"><span class="skill-mod-label">T:</span><input type="number" name="attr_toughness_mod" readonly class="sheet-mod-display" /></div>
-                            <div class="skill-mod-pair"><span class="skill-mod-label">R:</span><input type="number" name="attr_reflexes_mod" readonly class="sheet-mod-display" /></div>
+                            <div class="skill-mod-pair">
+                                <input type="radio" name="attr_maneuver_attr_mode" id="sheet_maneuver_t" value="0" checked="checked" class="sheet-attr-radio" />
+                                <label for="sheet_maneuver_t" class="sheet-attr-toggle-label">T:</label>
+                                <input type="number" name="attr_toughness_mod" readonly class="sheet-mod-display" />
+                            </div>
+                            <div class="skill-mod-pair">
+                                <input type="radio" name="attr_maneuver_attr_mode" id="sheet_maneuver_r" value="1" class="sheet-attr-radio" />
+                                <label for="sheet_maneuver_r" class="sheet-attr-toggle-label">R:</label>
+                                <input type="number" name="attr_reflexes_mod" readonly class="sheet-mod-display" />
+                            </div>
                         </td>
                         <td>
-                            <button type="roll" name="roll_maneuver" value="&{template:basic} {{type=Maneuver}} {{name=@{character_name}}} {{showstats=1}} {{rank=[[@{maneuver_rank}]]}} {{bonus=[[@{maneuver_bonus}]]}} {{ndice=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20),2|+1 Advantage (3d20),3|+2 Advantages (4d20),4|+3 Advantages (5d20),5}]]}} {{m1=[[1d20+@{maneuver_rank}+@{maneuver_bonus}+?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} {{m2=[[1d20+@{maneuver_rank}+@{maneuver_bonus}+?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} {{m3=[[1d20+@{maneuver_rank}+@{maneuver_bonus}+?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} {{m4=[[1d20+@{maneuver_rank}+@{maneuver_bonus}+?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} {{m5=[[1d20+@{maneuver_rank}+@{maneuver_bonus}+?{Attribute|Toughness,@{toughness_mod}|Reflexes,@{reflexes_mod}}]]}} {{doom=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20),2|+1 Advantage (3d20),3|+2 Advantages (4d20),4|+3 Advantages (5d20),5}d20kl1]]}}">Roll</button>
+                            <button type="roll" name="roll_maneuver" value="&{template:basic} {{type=Maneuver}} {{name=@{character_name}}} {{showstats=1}} {{rank=[[@{maneuver_rank}]]}} {{bonus=[[@{maneuver_bonus}]]}} {{ndice=[[@{advantage_mode}]]}} {{m1=[[1d20+@{maneuver_rank}+@{maneuver_bonus}+@{toughness_mod}*(1-@{maneuver_attr_mode})+@{reflexes_mod}*@{maneuver_attr_mode}]]}} {{m2=[[1d20+@{maneuver_rank}+@{maneuver_bonus}+@{toughness_mod}*(1-@{maneuver_attr_mode})+@{reflexes_mod}*@{maneuver_attr_mode}]]}} {{m3=[[1d20+@{maneuver_rank}+@{maneuver_bonus}+@{toughness_mod}*(1-@{maneuver_attr_mode})+@{reflexes_mod}*@{maneuver_attr_mode}]]}} {{m4=[[1d20+@{maneuver_rank}+@{maneuver_bonus}+@{toughness_mod}*(1-@{maneuver_attr_mode})+@{reflexes_mod}*@{maneuver_attr_mode}]]}} {{m5=[[1d20+@{maneuver_rank}+@{maneuver_bonus}+@{toughness_mod}*(1-@{maneuver_attr_mode})+@{reflexes_mod}*@{maneuver_attr_mode}]]}} {{doom=[[@{advantage_mode}d20kl1]]}}">Roll</button>
                         </td>
                     </tr>
                     <tr>
@@ -301,11 +363,19 @@
                         <td><input type="number" name="attr_sneak_rank" value="0" min="0" /></td>
                         <td><input type="number" name="attr_sneak_bonus" value="0" /></td>
                         <td class="skill-mods">
-                            <div class="skill-mod-pair"><span class="skill-mod-label">R:</span><input type="number" name="attr_reflexes_mod" readonly class="sheet-mod-display" /></div>
-                            <div class="skill-mod-pair"><span class="skill-mod-label">I:</span><input type="number" name="attr_intellect_mod" readonly class="sheet-mod-display" /></div>
+                            <div class="skill-mod-pair">
+                                <input type="radio" name="attr_sneak_attr_mode" id="sheet_sneak_r" value="0" checked="checked" class="sheet-attr-radio" />
+                                <label for="sheet_sneak_r" class="sheet-attr-toggle-label">R:</label>
+                                <input type="number" name="attr_reflexes_mod" readonly class="sheet-mod-display" />
+                            </div>
+                            <div class="skill-mod-pair">
+                                <input type="radio" name="attr_sneak_attr_mode" id="sheet_sneak_i" value="1" class="sheet-attr-radio" />
+                                <label for="sheet_sneak_i" class="sheet-attr-toggle-label">I:</label>
+                                <input type="number" name="attr_intellect_mod" readonly class="sheet-mod-display" />
+                            </div>
                         </td>
                         <td>
-                            <button type="roll" name="roll_sneak" value="&{template:basic} {{type=Sneak}} {{name=@{character_name}}} {{showstats=1}} {{rank=[[@{sneak_rank}]]}} {{bonus=[[@{sneak_bonus}]]}} {{ndice=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20),2|+1 Advantage (3d20),3|+2 Advantages (4d20),4|+3 Advantages (5d20),5}]]}} {{m1=[[1d20+@{sneak_rank}+@{sneak_bonus}+?{Attribute|Reflexes,@{reflexes_mod}|Intellect,@{intellect_mod}}]]}} {{m2=[[1d20+@{sneak_rank}+@{sneak_bonus}+?{Attribute|Reflexes,@{reflexes_mod}|Intellect,@{intellect_mod}}]]}} {{m3=[[1d20+@{sneak_rank}+@{sneak_bonus}+?{Attribute|Reflexes,@{reflexes_mod}|Intellect,@{intellect_mod}}]]}} {{m4=[[1d20+@{sneak_rank}+@{sneak_bonus}+?{Attribute|Reflexes,@{reflexes_mod}|Intellect,@{intellect_mod}}]]}} {{m5=[[1d20+@{sneak_rank}+@{sneak_bonus}+?{Attribute|Reflexes,@{reflexes_mod}|Intellect,@{intellect_mod}}]]}} {{doom=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20),2|+1 Advantage (3d20),3|+2 Advantages (4d20),4|+3 Advantages (5d20),5}d20kl1]]}}">Roll</button>
+                            <button type="roll" name="roll_sneak" value="&{template:basic} {{type=Sneak}} {{name=@{character_name}}} {{showstats=1}} {{rank=[[@{sneak_rank}]]}} {{bonus=[[@{sneak_bonus}]]}} {{ndice=[[@{advantage_mode}]]}} {{m1=[[1d20+@{sneak_rank}+@{sneak_bonus}+@{reflexes_mod}*(1-@{sneak_attr_mode})+@{intellect_mod}*@{sneak_attr_mode}]]}} {{m2=[[1d20+@{sneak_rank}+@{sneak_bonus}+@{reflexes_mod}*(1-@{sneak_attr_mode})+@{intellect_mod}*@{sneak_attr_mode}]]}} {{m3=[[1d20+@{sneak_rank}+@{sneak_bonus}+@{reflexes_mod}*(1-@{sneak_attr_mode})+@{intellect_mod}*@{sneak_attr_mode}]]}} {{m4=[[1d20+@{sneak_rank}+@{sneak_bonus}+@{reflexes_mod}*(1-@{sneak_attr_mode})+@{intellect_mod}*@{sneak_attr_mode}]]}} {{m5=[[1d20+@{sneak_rank}+@{sneak_bonus}+@{reflexes_mod}*(1-@{sneak_attr_mode})+@{intellect_mod}*@{sneak_attr_mode}]]}} {{doom=[[@{advantage_mode}d20kl1]]}}">Roll</button>
                         </td>
                     </tr>
                     <tr>
@@ -316,11 +386,19 @@
                         <td><input type="number" name="attr_study_rank" value="0" min="0" /></td>
                         <td><input type="number" name="attr_study_bonus" value="0" /></td>
                         <td class="skill-mods">
-                            <div class="skill-mod-pair"><span class="skill-mod-label">I:</span><input type="number" name="attr_intellect_mod" readonly class="sheet-mod-display" /></div>
-                            <div class="skill-mod-pair"><span class="skill-mod-label">W:</span><input type="number" name="attr_willpower_mod" readonly class="sheet-mod-display" /></div>
+                            <div class="skill-mod-pair">
+                                <input type="radio" name="attr_study_attr_mode" id="sheet_study_i" value="0" checked="checked" class="sheet-attr-radio" />
+                                <label for="sheet_study_i" class="sheet-attr-toggle-label">I:</label>
+                                <input type="number" name="attr_intellect_mod" readonly class="sheet-mod-display" />
+                            </div>
+                            <div class="skill-mod-pair">
+                                <input type="radio" name="attr_study_attr_mode" id="sheet_study_w" value="1" class="sheet-attr-radio" />
+                                <label for="sheet_study_w" class="sheet-attr-toggle-label">W:</label>
+                                <input type="number" name="attr_willpower_mod" readonly class="sheet-mod-display" />
+                            </div>
                         </td>
                         <td>
-                            <button type="roll" name="roll_study" value="&{template:basic} {{type=Study}} {{name=@{character_name}}} {{showstats=1}} {{rank=[[@{study_rank}]]}} {{bonus=[[@{study_bonus}]]}} {{ndice=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20),2|+1 Advantage (3d20),3|+2 Advantages (4d20),4|+3 Advantages (5d20),5}]]}} {{m1=[[1d20+@{study_rank}+@{study_bonus}+?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} {{m2=[[1d20+@{study_rank}+@{study_bonus}+?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} {{m3=[[1d20+@{study_rank}+@{study_bonus}+?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} {{m4=[[1d20+@{study_rank}+@{study_bonus}+?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} {{m5=[[1d20+@{study_rank}+@{study_bonus}+?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} {{doom=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20),2|+1 Advantage (3d20),3|+2 Advantages (4d20),4|+3 Advantages (5d20),5}d20kl1]]}}">Roll</button>
+                            <button type="roll" name="roll_study" value="&{template:basic} {{type=Study}} {{name=@{character_name}}} {{showstats=1}} {{rank=[[@{study_rank}]]}} {{bonus=[[@{study_bonus}]]}} {{ndice=[[@{advantage_mode}]]}} {{m1=[[1d20+@{study_rank}+@{study_bonus}+@{intellect_mod}*(1-@{study_attr_mode})+@{willpower_mod}*@{study_attr_mode}]]}} {{m2=[[1d20+@{study_rank}+@{study_bonus}+@{intellect_mod}*(1-@{study_attr_mode})+@{willpower_mod}*@{study_attr_mode}]]}} {{m3=[[1d20+@{study_rank}+@{study_bonus}+@{intellect_mod}*(1-@{study_attr_mode})+@{willpower_mod}*@{study_attr_mode}]]}} {{m4=[[1d20+@{study_rank}+@{study_bonus}+@{intellect_mod}*(1-@{study_attr_mode})+@{willpower_mod}*@{study_attr_mode}]]}} {{m5=[[1d20+@{study_rank}+@{study_bonus}+@{intellect_mod}*(1-@{study_attr_mode})+@{willpower_mod}*@{study_attr_mode}]]}} {{doom=[[@{advantage_mode}d20kl1]]}}">Roll</button>
                         </td>
                     </tr>
                     <tr>
@@ -331,11 +409,19 @@
                         <td><input type="number" name="attr_craft_rank" value="0" min="0" /></td>
                         <td><input type="number" name="attr_craft_bonus" value="0" /></td>
                         <td class="skill-mods">
-                            <div class="skill-mod-pair"><span class="skill-mod-label">T:</span><input type="number" name="attr_toughness_mod" readonly class="sheet-mod-display" /></div>
-                            <div class="skill-mod-pair"><span class="skill-mod-label">I:</span><input type="number" name="attr_intellect_mod" readonly class="sheet-mod-display" /></div>
+                            <div class="skill-mod-pair">
+                                <input type="radio" name="attr_craft_attr_mode" id="sheet_craft_t" value="0" checked="checked" class="sheet-attr-radio" />
+                                <label for="sheet_craft_t" class="sheet-attr-toggle-label">T:</label>
+                                <input type="number" name="attr_toughness_mod" readonly class="sheet-mod-display" />
+                            </div>
+                            <div class="skill-mod-pair">
+                                <input type="radio" name="attr_craft_attr_mode" id="sheet_craft_i" value="1" class="sheet-attr-radio" />
+                                <label for="sheet_craft_i" class="sheet-attr-toggle-label">I:</label>
+                                <input type="number" name="attr_intellect_mod" readonly class="sheet-mod-display" />
+                            </div>
                         </td>
                         <td>
-                            <button type="roll" name="roll_craft" value="&{template:basic} {{type=Craft}} {{name=@{character_name}}} {{showstats=1}} {{rank=[[@{craft_rank}]]}} {{bonus=[[@{craft_bonus}]]}} {{ndice=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20),2|+1 Advantage (3d20),3|+2 Advantages (4d20),4|+3 Advantages (5d20),5}]]}} {{m1=[[1d20+@{craft_rank}+@{craft_bonus}+?{Attribute|Toughness,@{toughness_mod}|Intellect,@{intellect_mod}}]]}} {{m2=[[1d20+@{craft_rank}+@{craft_bonus}+?{Attribute|Toughness,@{toughness_mod}|Intellect,@{intellect_mod}}]]}} {{m3=[[1d20+@{craft_rank}+@{craft_bonus}+?{Attribute|Toughness,@{toughness_mod}|Intellect,@{intellect_mod}}]]}} {{m4=[[1d20+@{craft_rank}+@{craft_bonus}+?{Attribute|Toughness,@{toughness_mod}|Intellect,@{intellect_mod}}]]}} {{m5=[[1d20+@{craft_rank}+@{craft_bonus}+?{Attribute|Toughness,@{toughness_mod}|Intellect,@{intellect_mod}}]]}} {{doom=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20),2|+1 Advantage (3d20),3|+2 Advantages (4d20),4|+3 Advantages (5d20),5}d20kl1]]}}">Roll</button>
+                            <button type="roll" name="roll_craft" value="&{template:basic} {{type=Craft}} {{name=@{character_name}}} {{showstats=1}} {{rank=[[@{craft_rank}]]}} {{bonus=[[@{craft_bonus}]]}} {{ndice=[[@{advantage_mode}]]}} {{m1=[[1d20+@{craft_rank}+@{craft_bonus}+@{toughness_mod}*(1-@{craft_attr_mode})+@{intellect_mod}*@{craft_attr_mode}]]}} {{m2=[[1d20+@{craft_rank}+@{craft_bonus}+@{toughness_mod}*(1-@{craft_attr_mode})+@{intellect_mod}*@{craft_attr_mode}]]}} {{m3=[[1d20+@{craft_rank}+@{craft_bonus}+@{toughness_mod}*(1-@{craft_attr_mode})+@{intellect_mod}*@{craft_attr_mode}]]}} {{m4=[[1d20+@{craft_rank}+@{craft_bonus}+@{toughness_mod}*(1-@{craft_attr_mode})+@{intellect_mod}*@{craft_attr_mode}]]}} {{m5=[[1d20+@{craft_rank}+@{craft_bonus}+@{toughness_mod}*(1-@{craft_attr_mode})+@{intellect_mod}*@{craft_attr_mode}]]}} {{doom=[[@{advantage_mode}d20kl1]]}}">Roll</button>
                         </td>
                     </tr>
                     <tr>
@@ -346,11 +432,19 @@
                         <td><input type="number" name="attr_barter_rank" value="0" min="0" /></td>
                         <td><input type="number" name="attr_barter_bonus" value="0" /></td>
                         <td class="skill-mods">
-                            <div class="skill-mod-pair"><span class="skill-mod-label">I:</span><input type="number" name="attr_intellect_mod" readonly class="sheet-mod-display" /></div>
-                            <div class="skill-mod-pair"><span class="skill-mod-label">W:</span><input type="number" name="attr_willpower_mod" readonly class="sheet-mod-display" /></div>
+                            <div class="skill-mod-pair">
+                                <input type="radio" name="attr_barter_attr_mode" id="sheet_barter_i" value="0" checked="checked" class="sheet-attr-radio" />
+                                <label for="sheet_barter_i" class="sheet-attr-toggle-label">I:</label>
+                                <input type="number" name="attr_intellect_mod" readonly class="sheet-mod-display" />
+                            </div>
+                            <div class="skill-mod-pair">
+                                <input type="radio" name="attr_barter_attr_mode" id="sheet_barter_w" value="1" class="sheet-attr-radio" />
+                                <label for="sheet_barter_w" class="sheet-attr-toggle-label">W:</label>
+                                <input type="number" name="attr_willpower_mod" readonly class="sheet-mod-display" />
+                            </div>
                         </td>
                         <td>
-                            <button type="roll" name="roll_barter" value="&{template:basic} {{type=Barter}} {{name=@{character_name}}} {{showstats=1}} {{rank=[[@{barter_rank}]]}} {{bonus=[[@{barter_bonus}]]}} {{ndice=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20),2|+1 Advantage (3d20),3|+2 Advantages (4d20),4|+3 Advantages (5d20),5}]]}} {{m1=[[1d20+@{barter_rank}+@{barter_bonus}+?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} {{m2=[[1d20+@{barter_rank}+@{barter_bonus}+?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} {{m3=[[1d20+@{barter_rank}+@{barter_bonus}+?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} {{m4=[[1d20+@{barter_rank}+@{barter_bonus}+?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} {{m5=[[1d20+@{barter_rank}+@{barter_bonus}+?{Attribute|Intellect,@{intellect_mod}|Willpower,@{willpower_mod}}]]}} {{doom=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20),2|+1 Advantage (3d20),3|+2 Advantages (4d20),4|+3 Advantages (5d20),5}d20kl1]]}}">Roll</button>
+                            <button type="roll" name="roll_barter" value="&{template:basic} {{type=Barter}} {{name=@{character_name}}} {{showstats=1}} {{rank=[[@{barter_rank}]]}} {{bonus=[[@{barter_bonus}]]}} {{ndice=[[@{advantage_mode}]]}} {{m1=[[1d20+@{barter_rank}+@{barter_bonus}+@{intellect_mod}*(1-@{barter_attr_mode})+@{willpower_mod}*@{barter_attr_mode}]]}} {{m2=[[1d20+@{barter_rank}+@{barter_bonus}+@{intellect_mod}*(1-@{barter_attr_mode})+@{willpower_mod}*@{barter_attr_mode}]]}} {{m3=[[1d20+@{barter_rank}+@{barter_bonus}+@{intellect_mod}*(1-@{barter_attr_mode})+@{willpower_mod}*@{barter_attr_mode}]]}} {{m4=[[1d20+@{barter_rank}+@{barter_bonus}+@{intellect_mod}*(1-@{barter_attr_mode})+@{willpower_mod}*@{barter_attr_mode}]]}} {{m5=[[1d20+@{barter_rank}+@{barter_bonus}+@{intellect_mod}*(1-@{barter_attr_mode})+@{willpower_mod}*@{barter_attr_mode}]]}} {{doom=[[@{advantage_mode}d20kl1]]}}">Roll</button>
                         </td>
                     </tr>
                     <tr>
@@ -361,11 +455,19 @@
                         <td><input type="number" name="attr_endure_rank" value="0" min="0" /></td>
                         <td><input type="number" name="attr_endure_bonus" value="0" /></td>
                         <td class="skill-mods">
-                            <div class="skill-mod-pair"><span class="skill-mod-label">T:</span><input type="number" name="attr_toughness_mod" readonly class="sheet-mod-display" /></div>
-                            <div class="skill-mod-pair"><span class="skill-mod-label">W:</span><input type="number" name="attr_willpower_mod" readonly class="sheet-mod-display" /></div>
+                            <div class="skill-mod-pair">
+                                <input type="radio" name="attr_endure_attr_mode" id="sheet_endure_t" value="0" checked="checked" class="sheet-attr-radio" />
+                                <label for="sheet_endure_t" class="sheet-attr-toggle-label">T:</label>
+                                <input type="number" name="attr_toughness_mod" readonly class="sheet-mod-display" />
+                            </div>
+                            <div class="skill-mod-pair">
+                                <input type="radio" name="attr_endure_attr_mode" id="sheet_endure_w" value="1" class="sheet-attr-radio" />
+                                <label for="sheet_endure_w" class="sheet-attr-toggle-label">W:</label>
+                                <input type="number" name="attr_willpower_mod" readonly class="sheet-mod-display" />
+                            </div>
                         </td>
                         <td>
-                            <button type="roll" name="roll_endure" value="&{template:basic} {{type=Endure}} {{name=@{character_name}}} {{showstats=1}} {{rank=[[@{endure_rank}]]}} {{bonus=[[@{endure_bonus}]]}} {{ndice=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20),2|+1 Advantage (3d20),3|+2 Advantages (4d20),4|+3 Advantages (5d20),5}]]}} {{m1=[[1d20+@{endure_rank}+@{endure_bonus}+?{Attribute|Toughness,@{toughness_mod}|Willpower,@{willpower_mod}}]]}} {{m2=[[1d20+@{endure_rank}+@{endure_bonus}+?{Attribute|Toughness,@{toughness_mod}|Willpower,@{willpower_mod}}]]}} {{m3=[[1d20+@{endure_rank}+@{endure_bonus}+?{Attribute|Toughness,@{toughness_mod}|Willpower,@{willpower_mod}}]]}} {{m4=[[1d20+@{endure_rank}+@{endure_bonus}+?{Attribute|Toughness,@{toughness_mod}|Willpower,@{willpower_mod}}]]}} {{m5=[[1d20+@{endure_rank}+@{endure_bonus}+?{Attribute|Toughness,@{toughness_mod}|Willpower,@{willpower_mod}}]]}} {{doom=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20),2|+1 Advantage (3d20),3|+2 Advantages (4d20),4|+3 Advantages (5d20),5}d20kl1]]}}">Roll</button>
+                            <button type="roll" name="roll_endure" value="&{template:basic} {{type=Endure}} {{name=@{character_name}}} {{showstats=1}} {{rank=[[@{endure_rank}]]}} {{bonus=[[@{endure_bonus}]]}} {{ndice=[[@{advantage_mode}]]}} {{m1=[[1d20+@{endure_rank}+@{endure_bonus}+@{toughness_mod}*(1-@{endure_attr_mode})+@{willpower_mod}*@{endure_attr_mode}]]}} {{m2=[[1d20+@{endure_rank}+@{endure_bonus}+@{toughness_mod}*(1-@{endure_attr_mode})+@{willpower_mod}*@{endure_attr_mode}]]}} {{m3=[[1d20+@{endure_rank}+@{endure_bonus}+@{toughness_mod}*(1-@{endure_attr_mode})+@{willpower_mod}*@{endure_attr_mode}]]}} {{m4=[[1d20+@{endure_rank}+@{endure_bonus}+@{toughness_mod}*(1-@{endure_attr_mode})+@{willpower_mod}*@{endure_attr_mode}]]}} {{m5=[[1d20+@{endure_rank}+@{endure_bonus}+@{toughness_mod}*(1-@{endure_attr_mode})+@{willpower_mod}*@{endure_attr_mode}]]}} {{doom=[[@{advantage_mode}d20kl1]]}}">Roll</button>
                         </td>
                     </tr>
                     <tr>
@@ -376,11 +478,19 @@
                         <td><input type="number" name="attr_deceive_rank" value="0" min="0" /></td>
                         <td><input type="number" name="attr_deceive_bonus" value="0" /></td>
                         <td class="skill-mods">
-                            <div class="skill-mod-pair"><span class="skill-mod-label">R:</span><input type="number" name="attr_reflexes_mod" readonly class="sheet-mod-display" /></div>
-                            <div class="skill-mod-pair"><span class="skill-mod-label">W:</span><input type="number" name="attr_willpower_mod" readonly class="sheet-mod-display" /></div>
+                            <div class="skill-mod-pair">
+                                <input type="radio" name="attr_deceive_attr_mode" id="sheet_deceive_r" value="0" checked="checked" class="sheet-attr-radio" />
+                                <label for="sheet_deceive_r" class="sheet-attr-toggle-label">R:</label>
+                                <input type="number" name="attr_reflexes_mod" readonly class="sheet-mod-display" />
+                            </div>
+                            <div class="skill-mod-pair">
+                                <input type="radio" name="attr_deceive_attr_mode" id="sheet_deceive_w" value="1" class="sheet-attr-radio" />
+                                <label for="sheet_deceive_w" class="sheet-attr-toggle-label">W:</label>
+                                <input type="number" name="attr_willpower_mod" readonly class="sheet-mod-display" />
+                            </div>
                         </td>
                         <td>
-                            <button type="roll" name="roll_deceive" value="&{template:basic} {{type=Deceive}} {{name=@{character_name}}} {{showstats=1}} {{rank=[[@{deceive_rank}]]}} {{bonus=[[@{deceive_bonus}]]}} {{ndice=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20),2|+1 Advantage (3d20),3|+2 Advantages (4d20),4|+3 Advantages (5d20),5}]]}} {{m1=[[1d20+@{deceive_rank}+@{deceive_bonus}+?{Attribute|Reflexes,@{reflexes_mod}|Willpower,@{willpower_mod}}]]}} {{m2=[[1d20+@{deceive_rank}+@{deceive_bonus}+?{Attribute|Reflexes,@{reflexes_mod}|Willpower,@{willpower_mod}}]]}} {{m3=[[1d20+@{deceive_rank}+@{deceive_bonus}+?{Attribute|Reflexes,@{reflexes_mod}|Willpower,@{willpower_mod}}]]}} {{m4=[[1d20+@{deceive_rank}+@{deceive_bonus}+?{Attribute|Reflexes,@{reflexes_mod}|Willpower,@{willpower_mod}}]]}} {{m5=[[1d20+@{deceive_rank}+@{deceive_bonus}+?{Attribute|Reflexes,@{reflexes_mod}|Willpower,@{willpower_mod}}]]}} {{doom=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20),2|+1 Advantage (3d20),3|+2 Advantages (4d20),4|+3 Advantages (5d20),5}d20kl1]]}}">Roll</button>
+                            <button type="roll" name="roll_deceive" value="&{template:basic} {{type=Deceive}} {{name=@{character_name}}} {{showstats=1}} {{rank=[[@{deceive_rank}]]}} {{bonus=[[@{deceive_bonus}]]}} {{ndice=[[@{advantage_mode}]]}} {{m1=[[1d20+@{deceive_rank}+@{deceive_bonus}+@{reflexes_mod}*(1-@{deceive_attr_mode})+@{willpower_mod}*@{deceive_attr_mode}]]}} {{m2=[[1d20+@{deceive_rank}+@{deceive_bonus}+@{reflexes_mod}*(1-@{deceive_attr_mode})+@{willpower_mod}*@{deceive_attr_mode}]]}} {{m3=[[1d20+@{deceive_rank}+@{deceive_bonus}+@{reflexes_mod}*(1-@{deceive_attr_mode})+@{willpower_mod}*@{deceive_attr_mode}]]}} {{m4=[[1d20+@{deceive_rank}+@{deceive_bonus}+@{reflexes_mod}*(1-@{deceive_attr_mode})+@{willpower_mod}*@{deceive_attr_mode}]]}} {{m5=[[1d20+@{deceive_rank}+@{deceive_bonus}+@{reflexes_mod}*(1-@{deceive_attr_mode})+@{willpower_mod}*@{deceive_attr_mode}]]}} {{doom=[[@{advantage_mode}d20kl1]]}}">Roll</button>
                         </td>
                     </tr>
                 </tbody>
@@ -428,7 +538,7 @@
         <input type="text" name="attr_weapon_range" class="sheet-weapon-range" placeholder="Melee" />
         <input type="text" name="attr_weapon_size" class="sheet-weapon-size" placeholder="1H" />
         <input type="text" name="attr_weapon_properties" class="sheet-weapon-prop" placeholder="Properties..." />
-        <button type="roll" name="roll_weapon_attack" class="sheet-weapon-roll sheet-roll-btn" value="&{template:basic} {{type=Attack}} {{name=@{character_name}}} {{weapon=@{weapon_name}}} {{ndice=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20),2|+1 Advantage (3d20),3|+2 Advantages (4d20),4|+3 Advantages (5d20),5}]]}} {{m1=[[1d20+@{weapon_skill}]]}} {{m2=[[1d20+@{weapon_skill}]]}} {{m3=[[1d20+@{weapon_skill}]]}} {{m4=[[1d20+@{weapon_skill}]]}} {{m5=[[1d20+@{weapon_skill}]]}} {{damage=[[@{weapon_damage}]]}} {{doom=[[?{Advantage|Disadvantage (1d20),1|Normal (2d20),2|+1 Advantage (3d20),3|+2 Advantages (4d20),4|+3 Advantages (5d20),5}d20kl1]]}}">Attack</button>
+        <button type="roll" name="roll_weapon_attack" class="sheet-weapon-roll sheet-roll-btn" value="&{template:basic} {{type=Attack}} {{name=@{character_name}}} {{weapon=@{weapon_name}}} {{ndice=[[@{advantage_mode}]]}} {{m1=[[1d20+@{weapon_skill}]]}} {{m2=[[1d20+@{weapon_skill}]]}} {{m3=[[1d20+@{weapon_skill}]]}} {{m4=[[1d20+@{weapon_skill}]]}} {{m5=[[1d20+@{weapon_skill}]]}} {{damage=[[@{weapon_damage}]]}} {{doom=[[@{advantage_mode}d20kl1]]}}">Attack</button>
     </fieldset>
 
 </div>
