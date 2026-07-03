@@ -2,107 +2,145 @@
 // Main JavaScript file
 
 // Character data structure
-let currentCharacter = {
-    characterInfo: {
-        characterName: "",
-        playerName: "",
-        multiClassName: "",
-        species: "",
-        trade: "",
-        class1: "",
-        class2: "",
-        level: 1,
-        size: 1,
-        experiencePoints: { current: 0, nextLevel: 300 }
-    },
-    attributes: {
-        toughness: { score: 10, modifier: 0, defense: 10 },
-        reflexes: { score: 10, modifier: 0, defense: 10 },
-        intellect: { score: 10, modifier: 0, defense: 10 },
-        willpower: { score: 10, modifier: 0, defense: 10 }
-    },
-    hitPoints: {
-        current: 10,
-        maximum: 10,
-        temporary: 0,
-        bloodiedThreshold: 5,
-        isBloodied: false
-    },
-    hitDice: {
-        class1: { dieType: "d6", total: 1, current: 1, expended: 0 },
-        class2: { dieType: "d6", total: 1, current: 1, expended: 0 }
-    },
-    magickPoints: {
-        class1: {
-            hasSpellcasting: false,
-            current: 0,
-            maximum: 0,
-            spellcastingAttribute: "intellect",
-            magickTypes: [],
-            damageDie: "",
-            healingDie: "",
-            damageTypes: []
+function createDefaultCharacter() {
+    return {
+        characterInfo: {
+            characterName: "",
+            playerName: "",
+            multiClassName: "",
+            species: "",
+            trade: "",
+            class1: "",
+            class2: "",
+            level: 1,
+            size: 1,
+            experiencePoints: { current: 0, nextLevel: 300 }
         },
-        class2: {
-            hasSpellcasting: false,
-            current: 0,
-            maximum: 0,
-            spellcastingAttribute: "intellect",
-            magickTypes: [],
-            damageDie: "",
-            healingDie: "",
-            damageTypes: []
-        }
-    },
-    bloodiedStatus: {
-        isBloodied: false,
-        activeBloodiedEffect: "class1",
-        encounterTracker: {
-            becameBloodiedThisEncounter: false,
-            encounterStartedBloodied: false
-        }
-    },
-    combat: {
-        armorClass: 10,
-        speed: 6,
-        combatSkills: {
-            melee: { rank: 0 },
-            ranged: { rank: 0 },
-            spellcraft: { rank: 0 }
-        }
-    },
-    generalSkills: {
-        maneuver: { rank: 0, bonus: 0 },
-        sneak: { rank: 0, bonus: 0 },
-        study: { rank: 0, bonus: 0 },
-        craft: { rank: 0, bonus: 0 },
-        barter: { rank: 0, bonus: 0 },
-        endure: { rank: 0, bonus: 0 },
-        deceive: { rank: 0, bonus: 0 }
-    },
-    equipment: {
-        weapons: [],
-        armor: [],
-        otherEffects: [],
-        inventory: [],
-        currency: { shells: 0 },
-        carryCapacity: { current: 0, maximum: 10 }
-    },
-    features: {
-        classFeatures: {
-            class1Features: {
-                generalFeatures: "",
-                bloodiedEffect: { name: "", description: "", mechanics: "" }
+        attributes: {
+            toughness: { score: 10, modifier: 0, defense: 10 },
+            reflexes: { score: 10, modifier: 0, defense: 10 },
+            intellect: { score: 10, modifier: 0, defense: 10 },
+            willpower: { score: 10, modifier: 0, defense: 10 }
+        },
+        hitPoints: {
+            current: 10,
+            maximum: 10,
+            temporary: 0,
+            bloodiedThreshold: 5,
+            isBloodied: false
+        },
+        hitDice: {
+            class1: { dieType: "d6", total: 1, current: 1, expended: 0 },
+            class2: { dieType: "d6", total: 1, current: 1, expended: 0 }
+        },
+        magickPoints: {
+            class1: {
+                hasSpellcasting: false,
+                current: 0,
+                maximum: 0,
+                spellcastingAttribute: "intellect",
+                magickTypes: [],
+                damageDie: "",
+                healingDie: "",
+                damageTypes: []
             },
-            class2Features: {
-                generalFeatures: "",
-                bloodiedEffect: { name: "", description: "", mechanics: "" }
+            class2: {
+                hasSpellcasting: false,
+                current: 0,
+                maximum: 0,
+                spellcastingAttribute: "intellect",
+                magickTypes: [],
+                damageDie: "",
+                healingDie: "",
+                damageTypes: []
             }
         },
-        speciesFeatures: "",
-        tradeFeatures: ""
-    }
-};
+        bloodiedStatus: {
+            isBloodied: false,
+            activeBloodiedEffect: "class1",
+            encounterTracker: {
+                becameBloodiedThisEncounter: false,
+                encounterStartedBloodied: false
+            }
+        },
+        combat: {
+            armorClass: 10,
+            speed: 6,
+            combatSkills: {
+                melee: { rank: 0 },
+                ranged: { rank: 0 },
+                spellcraft: { rank: 0 }
+            }
+        },
+        generalSkills: {
+            maneuver: { rank: 0, bonus: 0 },
+            sneak: { rank: 0, bonus: 0 },
+            study: { rank: 0, bonus: 0 },
+            craft: { rank: 0, bonus: 0 },
+            barter: { rank: 0, bonus: 0 },
+            endure: { rank: 0, bonus: 0 },
+            deceive: { rank: 0, bonus: 0 }
+        },
+        equipment: {
+            weapons: [],
+            armor: [],
+            otherEffects: [],
+            inventory: [],
+            currency: { shells: 0 },
+            carryCapacity: { current: 0, maximum: 10 }
+        },
+        features: {
+            classFeatures: {
+                class1Features: {
+                    generalFeatures: "",
+                    bloodiedEffect: { name: "", description: "", mechanics: "" }
+                },
+                class2Features: {
+                    generalFeatures: "",
+                    bloodiedEffect: { name: "", description: "", mechanics: "" }
+                }
+            },
+            speciesFeatures: "",
+            tradeFeatures: ""
+        }
+    };
+}
+
+// Security: Recursively merge loaded/imported data onto a fresh default
+// character so missing or malformed fields fall back to safe defaults
+// instead of leaving `undefined`s that crash downstream calculations.
+// Only ever writes keys that exist on `defaults` (a trusted, hardcoded
+// shape), so attacker-controlled keys like `__proto__` can't get through.
+function isPlainObject(value) {
+    return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+
+function mergeCharacterData(loaded, defaults) {
+    if (!isPlainObject(loaded)) return defaults;
+
+    const result = {};
+
+    Object.keys(defaults).forEach(key => {
+        if (key === '__proto__' || key === 'constructor' || key === 'prototype') return;
+
+        const defaultValue = defaults[key];
+        const loadedValue = loaded[key];
+
+        if (Array.isArray(defaultValue)) {
+            result[key] = Array.isArray(loadedValue) ? loadedValue : defaultValue;
+        } else if (isPlainObject(defaultValue)) {
+            result[key] = mergeCharacterData(loadedValue, defaultValue);
+        } else {
+            result[key] = (loadedValue !== undefined && loadedValue !== null && typeof loadedValue === typeof defaultValue)
+                ? loadedValue
+                : defaultValue;
+        }
+    });
+
+    return result;
+}
+
+let currentCharacter = createDefaultCharacter();
 
 let currentSlot = 1;
 
@@ -1200,107 +1238,7 @@ window.removeInventoryItem = function(index) {
 // Character Management
 function newCharacter() {
     if (confirm('Create a new character? This will clear the current character data.')) {
-        currentCharacter = JSON.parse(JSON.stringify({
-            characterInfo: {
-                characterName: "",
-                playerName: "",
-                multiClassName: "",
-                species: "",
-                trade: "",
-                class1: "",
-                class2: "",
-                level: 1,
-                size: 1,
-                experiencePoints: { current: 0, nextLevel: 300 }
-            },
-            attributes: {
-                toughness: { score: 10, modifier: 0, defense: 10 },
-                reflexes: { score: 10, modifier: 0, defense: 10 },
-                intellect: { score: 10, modifier: 0, defense: 10 },
-                willpower: { score: 10, modifier: 0, defense: 10 }
-            },
-            hitPoints: {
-                current: 10,
-                maximum: 10,
-                temporary: 0,
-                bloodiedThreshold: 5,
-                isBloodied: false
-            },
-            hitDice: {
-                class1: { dieType: "d6", total: 1, current: 1, expended: 0 },
-                class2: { dieType: "d6", total: 1, current: 1, expended: 0 }
-            },
-            magickPoints: {
-                class1: {
-                    hasSpellcasting: false,
-                    current: 0,
-                    maximum: 0,
-                    spellcastingAttribute: "intellect",
-                    magickTypes: [],
-                    damageDie: "",
-                    healingDie: "",
-                    damageTypes: []
-                },
-                class2: {
-                    hasSpellcasting: false,
-                    current: 0,
-                    maximum: 0,
-                    spellcastingAttribute: "intellect",
-                    magickTypes: [],
-                    damageDie: "",
-                    healingDie: "",
-                    damageTypes: []
-                }
-            },
-            bloodiedStatus: {
-                isBloodied: false,
-                activeBloodiedEffect: "class1",
-                encounterTracker: {
-                    becameBloodiedThisEncounter: false,
-                    encounterStartedBloodied: false
-                }
-            },
-            combat: {
-                armorClass: 10,
-                speed: 6,
-                combatSkills: {
-                    melee: { rank: 0 },
-                    ranged: { rank: 0 },
-                    spellcraft: { rank: 0 }
-                }
-            },
-            generalSkills: {
-                maneuver: { rank: 0, bonus: 0 },
-                sneak: { rank: 0, bonus: 0 },
-                study: { rank: 0, bonus: 0 },
-                craft: { rank: 0, bonus: 0 },
-                barter: { rank: 0, bonus: 0 },
-                endure: { rank: 0, bonus: 0 },
-                deceive: { rank: 0, bonus: 0 }
-            },
-            equipment: {
-                weapons: [],
-                armor: [],
-                otherEffects: [],
-                inventory: [],
-                currency: { shells: 0 },
-                carryCapacity: { current: 0, maximum: 10 }
-            },
-            features: {
-                classFeatures: {
-                    class1Features: {
-                        generalFeatures: "",
-                        bloodiedEffect: { name: "", description: "", mechanics: "" }
-                    },
-                    class2Features: {
-                        generalFeatures: "",
-                        bloodiedEffect: { name: "", description: "", mechanics: "" }
-                    }
-                },
-                speciesFeatures: "",
-                tradeFeatures: ""
-            }
-        }));
+        currentCharacter = createDefaultCharacter();
 
         loadCharacterToUI();
         saveCharacter();
@@ -1318,7 +1256,16 @@ function loadCharacter(slot) {
     const saved = localStorage.getItem(key);
 
     if (saved) {
-        currentCharacter = JSON.parse(saved);
+        try {
+            const parsed = JSON.parse(saved);
+            currentCharacter = mergeCharacterData(parsed, createDefaultCharacter());
+        } catch (error) {
+            console.error('Failed to load saved character, resetting to defaults:', error);
+            currentCharacter = createDefaultCharacter();
+            showNotification('Saved character data was corrupted and has been reset', 'error');
+        }
+    } else {
+        currentCharacter = createDefaultCharacter();
     }
 
     loadCharacterToUI();
@@ -1374,7 +1321,7 @@ function showImportDialog() {
         reader.onload = function(event) {
             try {
                 const imported = JSON.parse(event.target.result);
-                currentCharacter = imported;
+                currentCharacter = mergeCharacterData(imported, createDefaultCharacter());
                 loadCharacterToUI();
                 saveCharacter();
                 showNotification('Character imported successfully!', 'success');
