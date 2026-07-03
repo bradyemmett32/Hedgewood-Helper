@@ -306,8 +306,9 @@ function generateCharacterSheetPDF() {
     doc.setFontSize(7);
     doc.setFont('helvetica', 'normal');
 
-    if (charData.equipment.weapons.length > 0) {
-        charData.equipment.weapons.forEach(weapon => {
+    const equippedWeapons = charData.equipment.weapons.filter(weapon => weapon.equipped);
+    if (equippedWeapons.length > 0) {
+        equippedWeapons.forEach(weapon => {
             const weaponText = `${weapon.name} | ${weapon.range} | Dmg: ${weapon.damage}`;
             doc.text(weaponText, midColX + 2, midY + 2);
             midY += 4;
@@ -332,8 +333,9 @@ function generateCharacterSheetPDF() {
     doc.setFontSize(7);
     doc.setFont('helvetica', 'normal');
 
-    if (charData.equipment.armor.length > 0) {
-        charData.equipment.armor.forEach(armor => {
+    const equippedArmor = charData.equipment.armor.filter(armor => armor.equipped);
+    if (equippedArmor.length > 0) {
+        equippedArmor.forEach(armor => {
             const armorText = `${armor.name} | AC +${armor.acBonus} | Spd -${armor.speedReduction}`;
             doc.text(armorText, midColX + 2, midY + 2);
             midY += 4;
@@ -417,7 +419,7 @@ function generateCharacterSheetPDF() {
 
             // Draw checkboxes
             let boxX = rightColX;
-            const boxY = rightY;
+            let boxY = rightY;
             const boxesPerRow = Math.floor(rightColWidth / 4);
             for (let i = 0; i < maxMP; i++) {
                 drawCheckbox(boxX, boxY, 3, i < (maxMP - currentMP));
@@ -426,11 +428,11 @@ function generateCharacterSheetPDF() {
                 // Wrap to next line if needed
                 if ((i + 1) % boxesPerRow === 0 && i < maxMP - 1) {
                     boxX = rightColX;
-                    rightY += 4;
+                    boxY += 4;
                 }
             }
 
-            rightY += 6;
+            rightY = boxY + 6;
         });
         rightY += 3;
     }
@@ -683,7 +685,7 @@ function generateCharacterSheetPDF() {
         yPos += 4;
         doc.setFont('helvetica', 'normal');
 
-        const bloodiedText = `${class1Bloodied.description} ${class1Bloodied.mechanics || ''}`;
+        const bloodiedText = `Trigger: ${class1Bloodied.trigger || 'N/A'}. ${class1Bloodied.description} (Duration: ${class1Bloodied.duration || 'N/A'})`;
         const wrappedBloodied1 = wrapText(bloodiedText, contentWidth - 4);
         wrappedBloodied1.forEach(line => {
             doc.text(line, margin + 2, yPos + 2);
@@ -699,7 +701,7 @@ function generateCharacterSheetPDF() {
         yPos += 4;
         doc.setFont('helvetica', 'normal');
 
-        const bloodiedText = `${class2Bloodied.description} ${class2Bloodied.mechanics || ''}`;
+        const bloodiedText = `Trigger: ${class2Bloodied.trigger || 'N/A'}. ${class2Bloodied.description} (Duration: ${class2Bloodied.duration || 'N/A'})`;
         const wrappedBloodied2 = wrapText(bloodiedText, contentWidth - 4);
         wrappedBloodied2.forEach(line => {
             doc.text(line, margin + 2, yPos + 2);
