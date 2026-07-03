@@ -93,11 +93,11 @@ function createDefaultCharacter() {
             classFeatures: {
                 class1Features: {
                     generalFeatures: "",
-                    bloodiedEffect: { name: "", description: "", mechanics: "" }
+                    bloodiedEffect: { name: "", trigger: "", description: "", duration: "" }
                 },
                 class2Features: {
                     generalFeatures: "",
-                    bloodiedEffect: { name: "", description: "", mechanics: "" }
+                    bloodiedEffect: { name: "", trigger: "", description: "", duration: "" }
                 }
             },
             speciesFeatures: "",
@@ -935,7 +935,6 @@ function createBloodiedEffectCard(className, effect) {
             <h4>${effect.name} (${className})</h4>
             <p><strong>Trigger:</strong> ${effect.trigger}</p>
             <p><strong>Effect:</strong> ${effect.description}</p>
-            <p><strong>Mechanics:</strong> ${effect.mechanics}</p>
             <p><strong>Duration:</strong> ${effect.duration}</p>
         </div>
     `;
