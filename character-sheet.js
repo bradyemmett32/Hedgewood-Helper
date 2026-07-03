@@ -294,9 +294,6 @@ function handleAction(e) {
         case 'add-inventory':
             addInventoryItem();
             break;
-        case 'close-modal':
-            closeModal();
-            break;
     }
 }
 
@@ -1386,14 +1383,6 @@ function showImportDialog() {
     };
 
     input.click();
-}
-
-// Modal functions
-function closeModal() {
-    const modal = document.getElementById('importExportModal');
-    if (modal) {
-        modal.classList.remove('active');
-    }
 }
 
 // Notification system
