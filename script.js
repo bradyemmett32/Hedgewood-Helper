@@ -708,7 +708,7 @@ function renderEffectTypes() {
     }
 }
 
-function renderEffectCategory(title, effects, category) {
+function renderEffectCategory(title, effects, category, target = DOM.typeOptions, onSelect = selectEffectType) {
     const categoryDiv = createElement('div', 'damage-type-category', title);
     const grid = createElement('div', 'damage-type-grid');
     const fragment = document.createDocumentFragment();
@@ -734,13 +734,13 @@ function renderEffectCategory(title, effects, category) {
             div.appendChild(detailDiv);
         }
 
-        div.addEventListener('click', () => selectEffectType(category, key));
+        div.addEventListener('click', () => onSelect(category, key));
         fragment.appendChild(div);
     });
 
     grid.appendChild(fragment);
-    DOM.typeOptions.appendChild(categoryDiv);
-    DOM.typeOptions.appendChild(grid);
+    target.appendChild(categoryDiv);
+    target.appendChild(grid);
 }
 
 function selectEffectType(category, key) {
@@ -904,25 +904,17 @@ function updateExtraBuffSection() {
 
 function renderExtraBuffOptions(index) {
     const container = document.getElementById(`extraBuffOptions_${index}`);
-    renderEffectCategory('Positive Effects (Allies)', spellData.positiveEffects, 'positive');
-    renderEffectCategory('Negative Effects (Enemies)', spellData.negativeEffects, 'negative');
-    
+    const onSelect = (category, key) => selectExtraBuff(index, category, key);
+
+    renderEffectCategory('Positive Effects (Allies)', spellData.positiveEffects, 'positive', container, onSelect);
+    renderEffectCategory('Negative Effects (Enemies)', spellData.negativeEffects, 'negative', container, onSelect);
+
     const visibleConditions = Object.entries(spellData.conditions)
         .filter(([, condition]) => condition.level <= state.playerLevel);
-    
+
     if (visibleConditions.length > 0) {
-        renderEffectCategory('Conditions', Object.fromEntries(visibleConditions), 'condition');
+        renderEffectCategory('Conditions', Object.fromEntries(visibleConditions), 'condition', container, onSelect);
     }
-    
-    // Re-append to correct container
-    while (DOM.typeOptions.firstChild) {
-        container.appendChild(DOM.typeOptions.firstChild);
-    }
-    
-    // Add click handlers for extra buffs
-    container.querySelectorAll('.damage-type-option').forEach(el => {
-        el.addEventListener('click', () => selectExtraBuff(index, el.dataset.effectCategory, el.dataset.effectKey));
-    });
 }
 
 function selectExtraBuff(index, category, key) {
